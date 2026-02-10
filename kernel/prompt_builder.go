@@ -93,7 +93,7 @@ func (pb *PromptBuilder) buildSystemPromptZH() string {
 			"reasoning": "详细的推理过程，说明为什么做出这个决策"
 		}
 		]
-		```
+		` + "```" + `
 
 		### 字段说明
 
@@ -231,7 +231,7 @@ func (pb *PromptBuilder) buildSystemPromptEN() string {
 			"reasoning": "Detailed reasoning explaining why this decision was made"
 		}
 		]
-		```
+		` + "```" + `
 
 		### Field Descriptions
 
