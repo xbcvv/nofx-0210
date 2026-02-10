@@ -251,7 +251,7 @@ Access Web Interface: **http://127.0.0.1:3000**
 2. **Run NOFX**
    ```powershell
    # Open PowerShell and run:
-   curl -o docker-compose.prod.yml https://raw.githubusercontent.com/NoFxAiOS/nofx/main/docker-compose.prod.yml
+   curl -o docker-compose.prod.yml https://raw.githubusercontent.com/xbcvv/nofx-0210/main/docker-compose.prod.yml
    docker compose -f docker-compose.prod.yml up -d
    ```
 
@@ -295,8 +295,8 @@ Access Web Interface: **http://127.0.0.1:3000**
 
 4. **Clone and Run NOFX**
    ```bash
-   git clone https://github.com/NoFxAiOS/nofx.git
-   cd nofx
+   git clone https://github.com/xbcvv/nofx-0210.git
+   cd nofx-0210
 
    # Build and run backend
    go build -o nofx && ./nofx
@@ -315,7 +315,7 @@ Access Web Interface: **http://127.0.0.1:3000**
 
 2. **Run from WSL2 terminal**
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash
    ```
 
 ---
@@ -328,7 +328,7 @@ By default, transport encryption is **disabled**, allowing you to access NOFX vi
 
 ```bash
 # Deploy to your server
-curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash
 ```
 
 Access via `http://YOUR_SERVER_IP:3000` - works immediately.

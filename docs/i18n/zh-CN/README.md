@@ -222,7 +222,7 @@ npm run dev
 2. **运行 NOFX**
    ```powershell
    # 打开 PowerShell 运行：
-   curl -o docker-compose.prod.yml https://raw.githubusercontent.com/NoFxAiOS/nofx/main/docker-compose.prod.yml
+   curl -o docker-compose.prod.yml https://raw.githubusercontent.com/xbcvv/nofx-0210/main/docker-compose.prod.yml
    docker compose -f docker-compose.prod.yml up -d
    ```
 
@@ -266,8 +266,8 @@ npm run dev
 
 4. **克隆并运行 NOFX**
    ```bash
-   git clone https://github.com/NoFxAiOS/nofx.git
-   cd nofx
+   git clone https://github.com/xbcvv/nofx-0210.git
+   cd nofx-0210
 
    # 构建并运行后端
    go build -o nofx && ./nofx
@@ -286,7 +286,7 @@ npm run dev
 
 2. **在 WSL2 终端运行**
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash
    ```
 
 ---
@@ -299,7 +299,7 @@ npm run dev
 
 ```bash
 # 部署到你的服务器
-curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash
 ```
 
 通过 `http://你的服务器IP:3000` 访问 - 立即可用。
