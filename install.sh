@@ -24,8 +24,8 @@ INSTALL_DIR="${1:-$HOME/nofx}"
 COMPOSE_FILE="docker-compose.prod.yml"
 # Configuration
 GITHUB_RAW="https://raw.githubusercontent.com/xbcvv/nofx-0210/main"
-DOCKER_IMAGE_BACKEND="xbcvv/nofx-backend:latest"
-DOCKER_IMAGE_FRONTEND="xbcvv/nofx-frontend:latest"
+DOCKER_IMAGE_BACKEND="ghcr.io/xbcvv/nofx-backend:latest"
+DOCKER_IMAGE_FRONTEND="ghcr.io/xbcvv/nofx-frontend:latest"
 
 echo -e "${BLUE}"
 echo "╔════════════════════════════════════════════════════════════╗"

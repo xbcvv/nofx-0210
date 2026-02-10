@@ -35,7 +35,7 @@ services:
       start_period: 60s
 
   nofx-frontend:
-    image: xbcvv/nofx-frontend:latest
+    image: ghcr.io/xbcvv/nofx-frontend:latest
     container_name: nofx-frontend
     restart: unless-stopped
     ports:
