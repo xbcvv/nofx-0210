@@ -35,7 +35,7 @@ services:
       start_period: 60s
 
   nofx-frontend:
-    image: ghcr.io/nofxaios/nofx/nofx-frontend:latest
+    image: qdw1010/nofx-frontend:latest
     container_name: nofx-frontend
     restart: unless-stopped
     ports:
