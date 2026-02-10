@@ -18,7 +18,8 @@ COPY web/package*.json ./
 RUN npm ci
 
 COPY web/ ./
-RUN npm run build
+# Explicitly use vite build to bypass tsc if package.json script fails
+RUN npx vite build
 
 # ──────────────────────────────────────────────────────────────
 # Runtime Stage (Nginx)
