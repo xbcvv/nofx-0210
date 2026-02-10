@@ -178,7 +178,7 @@ See the comprehensive [Troubleshooting Guide](TROUBLESHOOTING.md) for:
 
 ### How do I report a bug?
 1. Check [Troubleshooting Guide](TROUBLESHOOTING.md) first
-2. Search [existing issues](https://github.com/NoFxAiOS/nofx/issues)
+2. Search [existing issues](https://github.com/xbcvv/nofx-0210/issues)
 3. If not found, use our [Bug Report Template](../../.github/ISSUE_TEMPLATE/bug_report.md)
 
 ### Where can I get help?

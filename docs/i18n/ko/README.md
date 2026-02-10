@@ -5,6 +5,10 @@
 </p>
 
 <p align="center">
+  <h2>⚠️ 本项目是基于 <a href="https://github.com/NoFxAiOS/nofx/tree/main">NoFxAiOS/nofx</a> 的 main 版本（2026-02-10）进行的修改</h2>
+</p>
+
+<p align="center">
   <a href="https://github.com/NoFxAiOS/nofx/stargazers"><img src="https://img.shields.io/github/stars/NoFxAiOS/nofx?style=for-the-badge" alt="Stars"></a>
   <a href="https://github.com/NoFxAiOS/nofx/releases"><img src="https://img.shields.io/github/v/release/NoFxAiOS/nofx?style=for-the-badge" alt="Release"></a>
   <a href="https://github.com/NoFxAiOS/nofx/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg?style=for-the-badge" alt="License"></a>
@@ -95,7 +99,7 @@ NOFX를 사용하려면 다음이 필요합니다:
 ### 옵션 1: Docker 배포 (권장)
 
 ```bash
-git clone https://github.com/NoFxAiOS/nofx.git
+git clone https://github.com/xbcvv/nofx-0210.git nofx
 cd nofx
 chmod +x ./start.sh
 ./start.sh start --build
@@ -108,7 +112,7 @@ chmod +x ./start.sh
 > **💡 업데이트가 빈번합니다.** 최신 기능과 수정 사항을 받으려면 매일 이 명령을 실행하세요:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash
 ```
 
 이 명령은 최신 공식 이미지를 가져오고 서비스를 자동으로 다시 시작합니다.
@@ -316,4 +320,4 @@ sudo apt-get install libta-lib0-dev
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=NoFxAiOS/nofx&type=Date)](https://star-history.com/#NoFxAiOS/nofx&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=xbcvv/nofx-0210&type=Date)](https://star-history.com/#xbcvv/nofx-0210&Date)

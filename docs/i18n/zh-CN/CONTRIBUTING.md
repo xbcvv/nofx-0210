@@ -442,7 +442,7 @@ docs: update Docker deployment guide
 
 ### 工作方式
 
-1. 查看[悬赏 issue](https://github.com/NoFxAiOS/nofx/labels/bounty)
+1. 查看[悬赏 issue](https://github.com/xbcvv/nofx-0210/labels/bounty)
 2. 评论认领（先到先得）
 3. 在截止日期前完成工作
 4. 提交 PR 并填写悬赏认领部分
@@ -461,7 +461,7 @@ docs: update Docker deployment guide
 ## ❓ 问题？
 
 - **一般问题：** 加入我们的 [Telegram 社区](https://t.me/nofx_dev_community)
-- **技术问题：** 开启[讨论](https://github.com/NoFxAiOS/nofx/discussions)
+- **技术问题：** 开启[讨论](https://github.com/xbcvv/nofx-0210/discussions)
 - **安全问题：** 查看[安全政策](../../../SECURITY.md)
 - **Bug 报告：** 使用 [Bug 报告模板](../../../.github/ISSUE_TEMPLATE/bug_report.md)
 

@@ -157,7 +157,7 @@ To use NOFX, you'll need:
 
 **Linux / macOS:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash
 ```
 
 That's it! Open **http://127.0.0.1:3000** in your browser.
@@ -174,7 +174,7 @@ After deployment, Railway will provide a public URL to access your NOFX instance
 
 ```bash
 # Download and start
-curl -O https://raw.githubusercontent.com/NoFxAiOS/nofx/main/docker-compose.prod.yml
+curl -O https://raw.githubusercontent.com/xbcvv/nofx-0210/main/docker-compose.prod.yml
 docker compose -f docker-compose.prod.yml up -d
 ```
 
@@ -219,7 +219,7 @@ sudo apt-get install libta-lib0-dev
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/NoFxAiOS/nofx.git
+git clone https://github.com/xbcvv/nofx-0210.git nofx
 cd nofx
 
 # 2. Install backend dependencies
@@ -524,6 +524,6 @@ Thanks to all our sponsors!
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=NoFxAiOS/nofx&type=Date)](https://star-history.com/#NoFxAiOS/nofx&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=xbcvv/nofx-0210&type=Date)](https://star-history.com/#xbcvv/nofx-0210&Date)
 
 <!-- Trigger Actions -->

@@ -794,7 +794,7 @@ export const translations = {
       'Four simple steps to start your AI automated trading journey',
     step1Title: 'Clone GitHub Repository',
     step1Desc:
-      'git clone https://github.com/NoFxAiOS/nofx and switch to dev branch to test new features.',
+      'git clone https://github.com/xbcvv/nofx-0210 and switch to main branch to test new features.',
     step2Title: 'Configure Environment',
     step2Desc:
       'Frontend setup for exchange APIs (like Binance, Hyperliquid), AI models and custom prompts.',
@@ -888,7 +888,7 @@ export const translations = {
     // ===== INSTALLATION =====
     faqHowToInstall: 'How do I install NOFX?',
     faqHowToInstallAnswer:
-      'Easiest method (Linux/macOS): Run "curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash" - this installs Docker containers automatically. Then open http://127.0.0.1:3000 in your browser. For manual installation or development, clone the repository and follow the README instructions.',
+      'Easiest method (Linux/macOS): Run "curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash" - this installs Docker containers automatically. Then open http://127.0.0.1:3000 in your browser. For manual installation or development, clone the repository and follow the README instructions.',
 
     faqWindowsInstallation: 'How do I install on Windows?',
     faqWindowsInstallationAnswer:
@@ -1063,7 +1063,7 @@ export const translations = {
 
     faqPRGuidelines: 'What are the PR guidelines?',
     faqPRGuidelinesAnswer:
-      'PR Process: 1) Fork repo to your account; 2) Create feature branch from dev: "git checkout -b feat/your-feature"; 3) Make changes, run lint: "npm --prefix web run lint"; 4) Commit with Conventional Commits format; 5) Push and create PR to NoFxAiOS/nofx:dev; 6) Reference related issue (Closes #123); 7) Wait for review. Keep PRs small and focused.',
+      'PR Process: 1) Fork repo to your account; 2) Create feature branch from main: "git checkout -b feat/your-feature"; 3) Make changes, run lint: "npm --prefix web run lint"; 4) Commit with Conventional Commits format; 5) Push and create PR to xbcvv/nofx-0210:main; 6) Reference related issue (Closes #123); 7) Wait for review. Keep PRs small and focused.',
 
     faqBountyProgram: 'Is there a bounty program?',
     faqBountyProgramAnswer:
@@ -1996,7 +1996,7 @@ export const translations = {
     fourSimpleSteps: '四个简单步骤，开启 AI 自动交易之旅',
     step1Title: '拉取 GitHub 仓库',
     step1Desc:
-      'git clone https://github.com/NoFxAiOS/nofx 并切换到 dev 分支测试新功能。',
+      'git clone https://github.com/xbcvv/nofx-0210 并切换到 main 分支测试新功能。',
     step2Title: '配置环境',
     step2Desc:
       '前端设置交易所 API（如 Binance、Hyperliquid）、AI 模型和自定义提示词。',
@@ -2261,7 +2261,7 @@ export const translations = {
 
     faqPRGuidelines: 'PR 指南是什么？',
     faqPRGuidelinesAnswer:
-      'PR 流程：1）Fork 仓库到您的账户；2）从 dev 创建功能分支："git checkout -b feat/your-feature"；3）修改代码，运行 lint："npm --prefix web run lint"；4）使用 Conventional Commits 格式提交；5）推送并创建 PR 到 NoFxAiOS/nofx:dev；6）关联相关 issue（Closes #123）；7）等待审核。保持 PR 小而聚焦。',
+      'PR 流程：1）Fork 仓库到您的账户；2）从 main 创建功能分支："git checkout -b feat/your-feature"；3）修改代码，运行 lint："npm --prefix web run lint"；4）使用 Conventional Commits 格式提交；5）推送并创建 PR 到 xbcvv/nofx-0210:main；6）关联相关 issue（Closes #123）；7）等待审核。保持 PR 小而聚焦。',
 
     faqBountyProgram: '有赏金计划吗？',
     faqBountyProgramAnswer:

@@ -226,7 +226,7 @@ docker info | grep -A 10 "Registry Mirrors"
 # Should show your configured mirrors
 ```
 
-**Related Issue:** [#168](https://github.com/NoFxAiOS/nofx/issues/168)
+**Related Issue:** [#168](https://github.com/xbcvv/nofx-0210/issues/168)
 
 ---
 

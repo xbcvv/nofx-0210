@@ -5,6 +5,10 @@
 </p>
 
 <p align="center">
+  <h2>⚠️ 本项目是基于 <a href="https://github.com/NoFxAiOS/nofx/tree/main">NoFxAiOS/nofx</a> 的 main 版本（2026-02-10）进行的修改</h2>
+</p>
+
+<p align="center">
   <a href="https://github.com/NoFxAiOS/nofx/stargazers"><img src="https://img.shields.io/github/stars/NoFxAiOS/nofx?style=for-the-badge" alt="Stars"></a>
   <a href="https://github.com/NoFxAiOS/nofx/releases"><img src="https://img.shields.io/github/v/release/NoFxAiOS/nofx?style=for-the-badge" alt="Release"></a>
   <a href="https://github.com/NoFxAiOS/nofx/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg?style=for-the-badge" alt="License"></a>
@@ -95,7 +99,7 @@
 ### Вариант 1: Docker развёртывание (рекомендуется)
 
 ```bash
-git clone https://github.com/NoFxAiOS/nofx.git
+git clone https://github.com/xbcvv/nofx-0210.git nofx
 cd nofx
 chmod +x ./start.sh
 ./start.sh start --build
@@ -108,7 +112,7 @@ chmod +x ./start.sh
 > **💡 Обновления выходят часто.** Запускайте эту команду ежедневно для получения последних функций и исправлений:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash
 ```
 
 Эта команда загружает последние официальные образы и автоматически перезапускает сервисы.
@@ -122,7 +126,7 @@ curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bas
 brew install ta-lib
 
 # Клонирование и настройка
-git clone https://github.com/NoFxAiOS/nofx.git
+git clone https://github.com/xbcvv/nofx-0210.git
 cd nofx
 go mod download
 cd web && npm install && cd ..

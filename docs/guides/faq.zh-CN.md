@@ -80,7 +80,7 @@ AI 交易是**实验性**的，**不保证盈利**。请始终用小额资金测
 
 **原因**：NOFX 使用 `PositionSide(LONG/SHORT)`，需要双向持仓模式。
 
-参见 [Issue #202](https://github.com/NoFxAiOS/nofx/issues/202) 和[故障排查指南](TROUBLESHOOTING.zh-CN.md#-只开空单-issue-202)。
+参见83→参见 [Issue #202](https://github.com/xbcvv/nofx-0210/issues/202) 和[故障排查指南](TROUBLESHOOTING.zh-CN.md#-只开空单-issue-202)。
 
 ---
 
@@ -182,7 +182,7 @@ docker compose exec postgres \
 3. 如果没找到，使用我们的 [Bug 报告模板](../../.github/ISSUE_TEMPLATE/bug_report.md)
 
 ### 在哪里可以获得帮助？
-- [GitHub Discussions](https://github.com/NoFxAiOS/nofx/discussions)
+- [GitHub Discussions](https://github.com/xbcvv/nofx-0210/discussions)
 - [Telegram 社区](https://t.me/nofx_dev_community)
 - [GitHub Issues](https://github.com/NoFxAiOS/nofx/issues)
 
@@ -198,7 +198,7 @@ docker compose exec postgres \
 - 查看[贡献指南](../CONTRIBUTING.md)
 
 ### 如何建议新功能？
-提交 [Feature Request](https://github.com/NoFxAiOS/nofx/issues/new/choose) 说明您的想法！
+提交 [Feature Request](https://github.com/xbcvv/nofx-0210/issues/new/choose) 说明您的想法！
 
 ---
 
