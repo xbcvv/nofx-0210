@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to the NOFX project will be documented in this file.
 
@@ -196,8 +196,9 @@ When releasing a new version, move [Unreleased] items to a new version section w
 - [Documentation](docs/README.md)
 - [Contributing Guidelines](CONTRIBUTING.md)
 - [Security Policy](SECURITY.md)
-- [GitHub Repository](https://github.com/NoFxAiOS/nofx)
+- [GitHub Repository](https://github.com/xbcvv/nofx-0210)
 
 ---
 
 **Last Updated:** 2025-11-01
+

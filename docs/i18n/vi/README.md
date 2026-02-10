@@ -1,17 +1,17 @@
-<h1 align="center">NOFX — Hệ Điều Hành Giao Dịch AI Mã Nguồn Mở</h1>
+﻿<h1 align="center">NOFX — Hệ Điều Hành Giao Dịch AI Mã Nguồn Mở</h1>
 
 <p align="center">
   <strong>Lớp cơ sở hạ tầng cho giao dịch tài chính AI-powered</strong>
 </p>
 
 <p align="center">
-  <h2>⚠️ 本项目是基于 <a href="https://github.com/NoFxAiOS/nofx/tree/main">NoFxAiOS/nofx</a> 的 main 版本（2026-02-10）进行的修改</h2>
+  <h2>⚠️ 本项目是基于 <a href="https://github.com/xbcvv/nofx-0210/tree/main">xbcvv/nofx-0210</a> 的 main 版本（2026-02-10）进行的修改</h2>
 </p>
 
 <p align="center">
-  <a href="https://github.com/NoFxAiOS/nofx/stargazers"><img src="https://img.shields.io/github/stars/NoFxAiOS/nofx?style=for-the-badge" alt="Stars"></a>
-  <a href="https://github.com/NoFxAiOS/nofx/releases"><img src="https://img.shields.io/github/v/release/NoFxAiOS/nofx?style=for-the-badge" alt="Release"></a>
-  <a href="https://github.com/NoFxAiOS/nofx/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg?style=for-the-badge" alt="License"></a>
+  <a href="https://github.com/xbcvv/nofx-0210/stargazers"><img src="https://img.shields.io/github/stars/xbcvv/nofx-0210?style=for-the-badge" alt="Stars"></a>
+  <a href="https://github.com/xbcvv/nofx-0210/releases"><img src="https://img.shields.io/github/v/release/xbcvv/nofx-0210?style=for-the-badge" alt="Release"></a>
+  <a href="https://github.com/xbcvv/nofx-0210/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg?style=for-the-badge" alt="License"></a>
   <a href="https://t.me/nofx_dev_community"><img src="https://img.shields.io/badge/Telegram-Community-blue?style=for-the-badge&logo=telegram" alt="Telegram"></a>
 </p>
 
@@ -166,5 +166,6 @@ cd web && npm run dev
 
 ## Liên Hệ
 
-- **GitHub Issues**: [Gửi Issue](https://github.com/NoFxAiOS/nofx/issues)
+- **GitHub Issues**: [Gửi Issue](https://github.com/xbcvv/nofx-0210/issues)
 - **Cộng đồng Nhà phát triển**: [Nhóm Telegram](https://t.me/nofx_dev_community)
+

@@ -1,17 +1,17 @@
-<h1 align="center">NOFX — Open Source AI Trading OS</h1>
+﻿<h1 align="center">NOFX — Open Source AI Trading OS</h1>
 
 <p align="center">
   <strong>The infrastructure layer for AI-powered financial trading.</strong>
 </p>
 
 <p align="center">
-  <h2>⚠️ 本项目是基于 <a href="https://github.com/NoFxAiOS/nofx/tree/main">NoFxAiOS/nofx</a> 的 main 版本（2026-02-10）进行的修改</h2>
+  <h2>⚠️ 本项目是基于 <a href="https://github.com/xbcvv/nofx-0210/tree/main">xbcvv/nofx-0210</a> 的 main 版本（2026-02-10）进行的修改</h2>
 </p>
 
 <p align="center">
-  <a href="https://github.com/NoFxAiOS/nofx/stargazers"><img src="https://img.shields.io/github/stars/NoFxAiOS/nofx?style=for-the-badge" alt="Stars"></a>
-  <a href="https://github.com/NoFxAiOS/nofx/releases"><img src="https://img.shields.io/github/v/release/NoFxAiOS/nofx?style=for-the-badge" alt="Release"></a>
-  <a href="https://github.com/NoFxAiOS/nofx/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg?style=for-the-badge" alt="License"></a>
+  <a href="https://github.com/xbcvv/nofx-0210/stargazers"><img src="https://img.shields.io/github/stars/xbcvv/nofx-0210?style=for-the-badge" alt="Stars"></a>
+  <a href="https://github.com/xbcvv/nofx-0210/releases"><img src="https://img.shields.io/github/v/release/xbcvv/nofx-0210?style=for-the-badge" alt="Release"></a>
+  <a href="https://github.com/xbcvv/nofx-0210/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg?style=for-the-badge" alt="License"></a>
   <a href="https://t.me/nofx_dev_community"><img src="https://img.shields.io/badge/Telegram-Community-blue?style=for-the-badge&logo=telegram" alt="Telegram"></a>
 </p>
 
@@ -193,7 +193,7 @@ docker compose -f docker-compose.prod.yml pull && docker compose -f docker-compo
 > **💡 Updates are frequent.** Run this command daily to stay current with the latest features and fixes:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash
 ```
 
 This one-liner pulls the latest official images and restarts services automatically.
@@ -482,7 +482,7 @@ We welcome contributions! See:
 
 All contributions are tracked on GitHub. When NOFX generates revenue, contributors will receive airdrops based on their contributions.
 
-**PRs that resolve [Pinned Issues](https://github.com/NoFxAiOS/nofx/issues) receive the HIGHEST rewards!**
+**PRs that resolve [Pinned Issues](https://github.com/xbcvv/nofx-0210/issues) receive the HIGHEST rewards!**
 
 | Contribution Type | Weight |
 |------------------|:------:|
@@ -497,7 +497,7 @@ All contributions are tracked on GitHub. When NOFX generates revenue, contributo
 
 ## Contact
 
-- **GitHub Issues**: [Submit an Issue](https://github.com/NoFxAiOS/nofx/issues)
+- **GitHub Issues**: [Submit an Issue](https://github.com/xbcvv/nofx-0210/issues)
 - **Developer Community**: [Telegram Group](https://t.me/nofx_dev_community)
 
 ---
@@ -527,3 +527,4 @@ Thanks to all our sponsors!
 [![Star History Chart](https://api.star-history.com/svg?repos=xbcvv/nofx-0210&type=Date)](https://star-history.com/#xbcvv/nofx-0210&Date)
 
 <!-- Trigger Actions -->
+

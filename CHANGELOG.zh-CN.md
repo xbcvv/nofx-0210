@@ -1,4 +1,4 @@
-# 更新日志
+﻿# 更新日志
 
 NOFX 项目的所有重要更改都将记录在此文件中。
 
@@ -196,8 +196,9 @@ NOFX 项目的所有重要更改都将记录在此文件中。
 - [文档](docs/README.md)
 - [贡献指南](CONTRIBUTING.md)
 - [安全策略](SECURITY.md)
-- [GitHub 仓库](https://github.com/NoFxAiOS/nofx)
+- [GitHub 仓库](https://github.com/xbcvv/nofx-0210)
 
 ---
 
 **最后更新:** 2025-11-01
+

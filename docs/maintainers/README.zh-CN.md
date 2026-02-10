@@ -1,4 +1,4 @@
-# 📚 维护者文档
+﻿# 📚 维护者文档
 
 **语言：** [English](README.md) | [中文](README.zh-CN.md)
 
@@ -42,10 +42,11 @@
 
 ## 📞 问题？
 
-- **公开问题：** 使用 [GitHub Discussions](https://github.com/NoFxAiOS/nofx/discussions)
+- **公开问题：** 使用 [GitHub Discussions](https://github.com/xbcvv/nofx-0210/discussions)
 - **维护者问题：** 使用维护者频道
 - **迁移问题：** 查看[迁移公告](../community/MIGRATION_ANNOUNCEMENT.zh-CN.md)
 
 ---
 
 **记住：** 我们正在建立一个开放、热情的社区。文档应该赋能贡献者，同时保持项目质量。🚀
+

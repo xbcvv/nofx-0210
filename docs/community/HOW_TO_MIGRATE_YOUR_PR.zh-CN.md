@@ -1,4 +1,4 @@
-# 🔄 如何将你的 PR 迁移到新格式
+﻿# 🔄 如何将你的 PR 迁移到新格式
 
 **语言：** [English](HOW_TO_MIGRATE_YOUR_PR.md) | [中文](HOW_TO_MIGRATE_YOUR_PR.zh-CN.md)
 
@@ -83,7 +83,7 @@ git push -f origin <your-pr-branch>
 
 ```bash
 # 如果还没添加 upstream，添加它
-git remote add upstream https://github.com/NoFxAiOS/nofx.git
+git remote add upstream https://github.com/xbcvv/nofx-0210.git
 
 # 获取最新更改
 git fetch upstream
@@ -255,7 +255,7 @@ git push -f origin <your-pr-branch>
 **迁移遇到困难？**
 - 在你的 PR 中评论
 - 在 [Telegram](https://t.me/nofx_dev_community) 提问
-- 开启 [Discussion](https://github.com/NoFxAiOS/nofx/discussions)
+- 开启 [Discussion](https://github.com/xbcvv/nofx-0210/discussions)
 
 **我们在这里帮助你成功！** 🚀
 
@@ -270,3 +270,4 @@ git push -f origin <your-pr-branch>
 4. ✅ 合并时庆祝！🎉
 
 **感谢你为 NOFX 做出贡献！**
+

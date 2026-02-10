@@ -1,4 +1,4 @@
-# NOFX Architecture Documentation
+﻿# NOFX Architecture Documentation
 
 **Language:** [English](README.md) | [中文](README.zh-CN.md)
 
@@ -154,11 +154,12 @@ nofx/
 
 **Want to contribute?**
 - Read the module documentation above
-- Check [Open Issues](https://github.com/NoFxAiOS/nofx/issues)
+- Check [Open Issues](https://github.com/xbcvv/nofx-0210/issues)
 - Join our community
 
-**Repository:** https://github.com/NoFxAiOS/nofx
+**Repository:** https://github.com/xbcvv/nofx-0210
 
 ---
 
 [← Back to Documentation](../README.md)
+

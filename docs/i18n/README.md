@@ -1,4 +1,4 @@
-# 🌍 International Documentation / 国际化文档
+﻿# 🌍 International Documentation / 国际化文档
 
 NOFX documentation is available in multiple languages.
 
@@ -219,7 +219,7 @@ faq.zh-CN.md                 → Chinese FAQ
 
 **Questions? / 有问题？**
 - 💬 Ask in [Telegram Community](https://t.me/nofx_dev_community)
-- 🐙 Open a [GitHub Issue](https://github.com/NoFxAiOS/nofx/issues)
+- 🐙 Open a [GitHub Issue](https://github.com/xbcvv/nofx-0210/issues)
 - 📧 Contact maintainers
 
 **Resources / 资源:**
@@ -229,3 +229,4 @@ faq.zh-CN.md                 → Chinese FAQ
 ---
 
 [← Back to Documentation Home](../README.md)
+

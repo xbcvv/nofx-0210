@@ -1,4 +1,4 @@
-# 常见问题（FAQ）
+﻿# 常见问题（FAQ）
 
 快速解答常见问题。详细故障排查请参考[故障排查指南](TROUBLESHOOTING.zh-CN.md)。
 
@@ -178,13 +178,13 @@ docker compose exec postgres \
 
 ### 如何报告 Bug？
 1. 先查看[故障排查指南](TROUBLESHOOTING.zh-CN.md)
-2. 搜索[现有 Issues](https://github.com/NoFxAiOS/nofx/issues)
+2. 搜索[现有 Issues](https://github.com/xbcvv/nofx-0210/issues)
 3. 如果没找到，使用我们的 [Bug 报告模板](../../.github/ISSUE_TEMPLATE/bug_report.md)
 
 ### 在哪里可以获得帮助？
 - [GitHub Discussions](https://github.com/xbcvv/nofx-0210/discussions)
 - [Telegram 社区](https://t.me/nofx_dev_community)
-- [GitHub Issues](https://github.com/NoFxAiOS/nofx/issues)
+- [GitHub Issues](https://github.com/xbcvv/nofx-0210/issues)
 
 ---
 
@@ -203,3 +203,4 @@ docker compose exec postgres \
 ---
 
 **最后更新：** 2025-11-02
+

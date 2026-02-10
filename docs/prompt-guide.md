@@ -1,4 +1,4 @@
-# 📖 NoFx Prompt Writing Guide
+﻿# 📖 NoFx Prompt Writing Guide
 
 **Version**: v1.0
 **Last Updated**: 2025-01-09
@@ -1481,7 +1481,7 @@ Chain of thought analysis
 
 ### Official Resources
 
-- **GitHub Issues**: https://github.com/NoFxAiOS/nofx/issues
+- **GitHub Issues**: https://github.com/xbcvv/nofx-0210/issues
 - **Official Documentation**: See project README
 - **Community Discussion**: GitHub Discussions
 
@@ -1525,3 +1525,4 @@ Actual Behavior: [What actually happened]
 **Document Version**: v1.0
 **Last Updated**: 2025-01-09
 **Maintainer**: Nofx Team CoderMageFox
+

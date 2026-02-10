@@ -1,4 +1,4 @@
-# 📖 NoFx Prompt 编写指南
+﻿# 📖 NoFx Prompt 编写指南
 
 **版本**: v1.0
 **更新日期**: 2025-01-09
@@ -1482,7 +1482,7 @@ unrealized_pnl, peak_pnl_pct, margin_used, leverage, holding_duration
 
 ### 官方资源
 
-- **GitHub Issues**: https://github.com/NoFxAiOS/nofx/issues
+- **GitHub Issues**: https://github.com/xbcvv/nofx-0210/issues
 - **官方文档**: 查看项目 README
 - **社区讨论**: GitHub Discussions
 
@@ -1526,3 +1526,4 @@ Prompt 内容：
 **文档版本**: v1.0
 **最后更新**: 2025-01-09
 **维护者**: Nofx Team CoderMageFox
+

@@ -1,4 +1,4 @@
-# 📘 NOFX 使用指南
+﻿# 📘 NOFX 使用指南
 
 **语言:** [English](README.md) | [中文](README.zh-CN.md)
 
@@ -129,9 +129,10 @@ sudo apt-get install libta-lib0-dev
 
 **找不到您需要的内容？**
 - 💬 [Telegram 社区](https://t.me/nofx_dev_community)
-- 🐛 [GitHub Issues](https://github.com/NoFxAiOS/nofx/issues)
+- 🐛 [GitHub Issues](https://github.com/xbcvv/nofx-0210/issues)
 - 🐦 [Twitter @nofx_official](https://x.com/nofx_official)
 
 ---
 
 [← 返回文档首页](../README.md)
+

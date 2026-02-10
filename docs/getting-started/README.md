@@ -1,6 +1,6 @@
-# 🚀 Getting Started with NOFX
+﻿# 🚀 Getting Started with NOFX
 
-## ⚠️ This project is a modification based on the main version (2026-02-10) of [NoFxAiOS/nofx](https://github.com/NoFxAiOS/nofx/tree/main)
+## ⚠️ This project is a modification based on the main version (2026-02-10) of [xbcvv/nofx-0210](https://github.com/xbcvv/nofx-0210/tree/main)
 
 **Language:** [English](README.md) | [中文](README.zh-CN.md)
 
@@ -122,3 +122,4 @@ For single-tenant/self-hosted usage, you can enable strict admin-only access:
 ---
 
 [← Back to Documentation Home](../README.md)
+

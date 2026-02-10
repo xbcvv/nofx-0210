@@ -1,4 +1,4 @@
-# NOFX 架构文档
+﻿# NOFX 架构文档
 
 **语言:** [English](README.md) | [中文](README.zh-CN.md)
 
@@ -154,11 +154,12 @@ nofx/
 
 **想要贡献？**
 - 阅读上方的模块文档
-- 查看 [Open Issues](https://github.com/NoFxAiOS/nofx/issues)
+- 查看 [Open Issues](https://github.com/xbcvv/nofx-0210/issues)
 - 加入我们的社区
 
-**代码仓库:** https://github.com/NoFxAiOS/nofx
+**代码仓库:** https://github.com/xbcvv/nofx-0210
 
 ---
 
 [← 返回文档首页](../README.md)
+

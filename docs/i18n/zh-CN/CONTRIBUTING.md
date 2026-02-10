@@ -1,4 +1,4 @@
-# 🤝 为 NOFX 做贡献
+﻿# 🤝 为 NOFX 做贡献
 
 **语言：** [English](../../../CONTRIBUTING.md) | [中文](CONTRIBUTING.md)
 
@@ -87,7 +87,7 @@ git clone https://github.com/YOUR_USERNAME/nofx.git
 cd nofx
 
 # 添加 upstream remote
-git remote add upstream https://github.com/NoFxAiOS/nofx.git
+git remote add upstream https://github.com/xbcvv/nofx-0210.git
 ```
 
 ### 2. 创建功能分支
@@ -481,3 +481,4 @@ docs: update Docker deployment guide
 你的贡献让 NOFX 变得更好。我们感谢你的时间和努力！
 
 **编码愉快！🚀**
+

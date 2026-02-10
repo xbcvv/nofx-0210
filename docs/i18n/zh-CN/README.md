@@ -1,17 +1,17 @@
-<h1 align="center">NOFX — 开源 AI 交易操作系统</h1>
+﻿<h1 align="center">NOFX — 开源 AI 交易操作系统</h1>
 
 <p align="center">
   <strong>AI 驱动金融交易的基础设施层</strong>
 </p>
 
 <p align="center">
-  <h2>⚠️ 本项目是基于 <a href="https://github.com/NoFxAiOS/nofx/tree/main">NoFxAiOS/nofx</a> 的 main 版本（2026-02-10）进行的修改</h2>
+  <h2>⚠️ 本项目是基于 <a href="https://github.com/xbcvv/nofx-0210/tree/main">xbcvv/nofx-0210</a> 的 main 版本（2026-02-10）进行的修改</h2>
 </p>
 
 <p align="center">
-  <a href="https://github.com/NoFxAiOS/nofx/stargazers"><img src="https://img.shields.io/github/stars/NoFxAiOS/nofx?style=for-the-badge" alt="Stars"></a>
-  <a href="https://github.com/NoFxAiOS/nofx/releases"><img src="https://img.shields.io/github/v/release/NoFxAiOS/nofx?style=for-the-badge" alt="Release"></a>
-  <a href="https://github.com/NoFxAiOS/nofx/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg?style=for-the-badge" alt="License"></a>
+  <a href="https://github.com/xbcvv/nofx-0210/stargazers"><img src="https://img.shields.io/github/stars/xbcvv/nofx-0210?style=for-the-badge" alt="Stars"></a>
+  <a href="https://github.com/xbcvv/nofx-0210/releases"><img src="https://img.shields.io/github/v/release/xbcvv/nofx-0210?style=for-the-badge" alt="Release"></a>
+  <a href="https://github.com/xbcvv/nofx-0210/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg?style=for-the-badge" alt="License"></a>
   <a href="https://t.me/nofx_dev_community"><img src="https://img.shields.io/badge/Telegram-Community-blue?style=for-the-badge&logo=telegram" alt="Telegram"></a>
 </p>
 
@@ -128,7 +128,7 @@
 
 **Linux / macOS:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash
 ```
 
 完成！打开浏览器访问 **http://127.0.0.1:3000**
@@ -145,7 +145,7 @@ curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bas
 
 ```bash
 # 下载并启动
-curl -O https://raw.githubusercontent.com/NoFxAiOS/nofx/main/docker-compose.prod.yml
+curl -O https://raw.githubusercontent.com/xbcvv/nofx-0210/main/docker-compose.prod.yml
 docker compose -f docker-compose.prod.yml up -d
 ```
 
@@ -164,7 +164,7 @@ docker compose -f docker-compose.prod.yml pull && docker compose -f docker-compo
 > **💡 更新频繁。** 每天运行以下命令以获取最新功能和修复：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash
 ```
 
 此命令会拉取最新官方镜像并自动重启服务。
@@ -190,7 +190,7 @@ sudo apt-get install libta-lib0-dev
 
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/NoFxAiOS/nofx.git
+git clone https://github.com/xbcvv/nofx-0210.git
 cd nofx
 
 # 2. 安装后端依赖
@@ -439,7 +439,7 @@ sudo apt-get install libta-lib0-dev
 
 所有贡献都在 GitHub 上追踪。当 NOFX 产生收入时，贡献者将根据其贡献获得空投。
 
-**解决 [置顶 Issue](https://github.com/NoFxAiOS/nofx/issues) 的 PR 获得最高奖励！**
+**解决 [置顶 Issue](https://github.com/xbcvv/nofx-0210/issues) 的 PR 获得最高奖励！**
 
 | 贡献类型 | 权重 |
 |------------------|:------:|
@@ -454,11 +454,12 @@ sudo apt-get install libta-lib0-dev
 
 ## 联系方式
 
-- **GitHub Issues**: [提交 Issue](https://github.com/NoFxAiOS/nofx/issues)
+- **GitHub Issues**: [提交 Issue](https://github.com/xbcvv/nofx-0210/issues)
 - **开发者社区**: [Telegram 群组](https://t.me/nofx_dev_community)
 
 ---
 
 ## Star 历史
 
-[![Star History Chart](https://api.star-history.com/svg?repos=NoFxAiOS/nofx&type=Date)](https://star-history.com/#NoFxAiOS/nofx&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=xbcvv/nofx-0210&type=Date)](https://star-history.com/#xbcvv/nofx-0210&Date)
+

@@ -1,13 +1,13 @@
-<h1 align="center">NOFX — オープンソース AI トレーディング OS</h1>
+﻿<h1 align="center">NOFX — オープンソース AI トレーディング OS</h1>
 
 <p align="center">
   <strong>AI 駆動金融取引のインフラストラクチャレイヤー</strong>
 </p>
 
 <p align="center">
-  <a href="https://github.com/NoFxAiOS/nofx/stargazers"><img src="https://img.shields.io/github/stars/NoFxAiOS/nofx?style=for-the-badge" alt="Stars"></a>
-  <a href="https://github.com/NoFxAiOS/nofx/releases"><img src="https://img.shields.io/github/v/release/NoFxAiOS/nofx?style=for-the-badge" alt="Release"></a>
-  <a href="https://github.com/NoFxAiOS/nofx/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg?style=for-the-badge" alt="License"></a>
+  <a href="https://github.com/xbcvv/nofx-0210/stargazers"><img src="https://img.shields.io/github/stars/xbcvv/nofx-0210?style=for-the-badge" alt="Stars"></a>
+  <a href="https://github.com/xbcvv/nofx-0210/releases"><img src="https://img.shields.io/github/v/release/xbcvv/nofx-0210?style=for-the-badge" alt="Release"></a>
+  <a href="https://github.com/xbcvv/nofx-0210/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg?style=for-the-badge" alt="License"></a>
   <a href="https://t.me/nofx_dev_community"><img src="https://img.shields.io/badge/Telegram-Community-blue?style=for-the-badge&logo=telegram" alt="Telegram"></a>
 </p>
 
@@ -95,7 +95,7 @@ NOFXを使用するには以下が必要です:
 ### オプション 1: Docker デプロイ（推奨）
 
 ```bash
-git clone https://github.com/NoFxAiOS/nofx.git
+git clone https://github.com/xbcvv/nofx-0210.git
 cd nofx
 chmod +x ./start.sh
 ./start.sh start --build
@@ -108,7 +108,7 @@ Web インターフェースにアクセス: **http://localhost:3000**
 > **💡 更新は頻繁です。** 最新の機能と修正を取得するために、毎日このコマンドを実行してください：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash
 ```
 
 このコマンドは最新の公式イメージを取得し、サービスを自動的に再起動します。
@@ -122,7 +122,7 @@ curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bas
 brew install ta-lib
 
 # クローンとセットアップ
-git clone https://github.com/NoFxAiOS/nofx.git
+git clone https://github.com/xbcvv/nofx-0210.git
 cd nofx
 go mod download
 cd web && npm install && cd ..
@@ -162,7 +162,7 @@ cd web && npm run dev
 
 ```bash
 # サーバーにデプロイ
-curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash
 ```
 
 `http://YOUR_SERVER_IP:3000` 経由でアクセス - すぐに動作します。
@@ -285,7 +285,7 @@ sudo apt-get install libta-lib0-dev
 
 すべての貢献はGitHubで追跡されます。NOFXが収益を生み出すと、貢献者は貢献に基づいてエアドロップを受け取ります。
 
-**[ピン留めされたIssue](https://github.com/NoFxAiOS/nofx/issues)を解決するPRは最高報酬を受け取ります！**
+**[ピン留めされたIssue](https://github.com/xbcvv/nofx-0210/issues)を解決するPRは最高報酬を受け取ります！**
 
 | 貢献タイプ | 重み |
 |------------------|:------:|
@@ -308,11 +308,12 @@ sudo apt-get install libta-lib0-dev
 
 ## コンタクト
 
-- **GitHub Issues**: [Issue を提出](https://github.com/NoFxAiOS/nofx/issues)
+- **GitHub Issues**: [Issue を提出](https://github.com/xbcvv/nofx-0210/issues)
 - **開発者コミュニティ**: [Telegram グループ](https://t.me/nofx_dev_community)
 
 ---
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=NoFxAiOS/nofx&type=Date)](https://star-history.com/#NoFxAiOS/nofx&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=xbcvv/nofx-0210&type=Date)](https://star-history.com/#xbcvv/nofx-0210&Date)
+

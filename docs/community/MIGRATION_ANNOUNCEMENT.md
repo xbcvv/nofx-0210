@@ -1,4 +1,4 @@
-# 📢 PR Management System Update - What Contributors Need to Know
+﻿# 📢 PR Management System Update - What Contributors Need to Know
 
 **Language:** [English](MIGRATION_ANNOUNCEMENT.md) | [中文](MIGRATION_ANNOUNCEMENT.zh-CN.md)
 
@@ -246,7 +246,7 @@ Don't panic! We're here to help.
   - Merge conflicts → Rebase on latest `dev`
 
 **Need help?** Just ask! Comment in your PR or reach out:
-- [GitHub Discussions](https://github.com/NoFxAiOS/nofx/discussions)
+- [GitHub Discussions](https://github.com/xbcvv/nofx-0210/discussions)
 - [Telegram Community](https://t.me/nofx_dev_community)
 
 ---
@@ -323,11 +323,11 @@ This new system helps YOU by:
 
 ### Helpful Links
 - [Conventional Commits](https://www.conventionalcommits.org/) - Commit format
-- [Good First Issues](https://github.com/NoFxAiOS/nofx/labels/good%20first%20issue) - Beginner-friendly tasks
+- [Good First Issues](https://github.com/xbcvv/nofx-0210/labels/good%20first%20issue) - Beginner-friendly tasks
 - [Bounty Program](../bounty-guide.md) - Get paid to contribute
 
 ### Get Help
-- [GitHub Discussions](https://github.com/NoFxAiOS/nofx/discussions) - Ask questions
+- [GitHub Discussions](https://github.com/xbcvv/nofx-0210/discussions) - Ask questions
 - [Telegram](https://t.me/nofx_dev_community) - Community chat
 - [Twitter](https://x.com/nofx_official) - Updates and announcements
 
@@ -341,7 +341,7 @@ This is a new system and we want YOUR input:
 - 🤔 What concerns do you have?
 - 💡 How can we improve?
 
-Share in the [Migration Feedback Discussion](https://github.com/NoFxAiOS/nofx/discussions) (link TBD)
+Share in the [Migration Feedback Discussion](https://github.com/xbcvv/nofx-0210/discussions) (link TBD)
 
 ---
 
@@ -356,3 +356,4 @@ We appreciate your contributions and patience during this transition. Together, 
 **Last Updated:** 2025-01-XX
 **Status:** Announcement (Week 0)
 **Full Launch:** Week 4+ (TBD)
+

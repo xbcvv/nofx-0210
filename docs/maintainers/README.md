@@ -1,4 +1,4 @@
-# 📚 Maintainer Documentation
+﻿# 📚 Maintainer Documentation
 
 **Language:** [English](README.md) | [中文](README.zh-CN.md)
 
@@ -42,10 +42,11 @@ Everything here is transparent and designed to help you contribute successfully!
 
 ## 📞 Questions?
 
-- **Public questions:** Use [GitHub Discussions](https://github.com/NoFxAiOS/nofx/discussions)
+- **Public questions:** Use [GitHub Discussions](https://github.com/xbcvv/nofx-0210/discussions)
 - **Maintainer questions:** Use the maintainer channel
 - **Migration questions:** See [Migration Announcement](../community/MIGRATION_ANNOUNCEMENT.md)
 
 ---
 
 **Remember:** We're building an open, welcoming community. Documentation should empower contributors while maintaining project quality. 🚀
+

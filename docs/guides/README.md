@@ -1,4 +1,4 @@
-# 📘 NOFX User Guides
+﻿# 📘 NOFX User Guides
 
 **Language:** [English](README.md) | [中文](README.zh-CN.md)
 
@@ -130,9 +130,10 @@ Run multiple AI models simultaneously:
 
 **Can't find what you need?**
 - 💬 [Telegram Community](https://t.me/nofx_dev_community)
-- 🐛 [GitHub Issues](https://github.com/NoFxAiOS/nofx/issues)
+- 🐛 [GitHub Issues](https://github.com/xbcvv/nofx-0210/issues)
 - 🐦 [Twitter @nofx_official](https://x.com/nofx_official)
 
 ---
 
 [← Back to Documentation Home](../README.md)
+
