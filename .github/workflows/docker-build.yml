@@ -151,19 +151,22 @@ jobs:
           echo "Ref name: ${REF_NAME}"
 
           docker buildx imagetools create -t "${GHCR_IMAGE}:${REF_NAME}" \
-            "${GHCR_IMAGE}:${REF_NAME}-amd64"
+            "${GHCR_IMAGE}:${REF_NAME}-amd64" \
+            "${GHCR_IMAGE}:${REF_NAME}-arm64"
 
           # Only main branch gets the 'latest' tag (not dev)
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             docker buildx imagetools create -t "${GHCR_IMAGE}:latest" \
-              "${GHCR_IMAGE}:${REF_NAME}-amd64"
+              "${GHCR_IMAGE}:${REF_NAME}-amd64" \
+              "${GHCR_IMAGE}:${REF_NAME}-arm64"
             echo "✅ Created latest tag (main branch only)"
           fi
 
           # release/stable branch gets the 'stable' tag
           if [[ "${{ github.ref }}" == "refs/heads/release/stable" ]]; then
             docker buildx imagetools create -t "${GHCR_IMAGE}:stable" \
-              "${GHCR_IMAGE}:${REF_NAME}-amd64"
+              "${GHCR_IMAGE}:${REF_NAME}-amd64" \
+              "${GHCR_IMAGE}:${REF_NAME}-arm64"
             echo "✅ Created stable tag (release/stable branch)"
           fi
 
@@ -172,12 +175,14 @@ jobs:
             
             # Create manifest for the current ref (e.g., main, v1.0.0)
             docker buildx imagetools create -t "${DOCKERHUB_IMAGE}:${REF_NAME}" \
-              "${DOCKERHUB_IMAGE}:${REF_NAME}-amd64" || true
+              "${DOCKERHUB_IMAGE}:${REF_NAME}-amd64" \
+              "${DOCKERHUB_IMAGE}:${REF_NAME}-arm64" || true
             
             # If on main branch, also update 'latest' tag on Docker Hub
             if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
                docker buildx imagetools create -t "${DOCKERHUB_IMAGE}:latest" \
-                "${DOCKERHUB_IMAGE}:${REF_NAME}-amd64" || true
+                "${DOCKERHUB_IMAGE}:${REF_NAME}-amd64" \
+                "${DOCKERHUB_IMAGE}:${REF_NAME}-arm64" || true
                echo "✅ Created Docker Hub latest tag"
             fi
             
