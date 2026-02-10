@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 
 # 🔄 PR Migration Script for Contributors
 # This script helps you migrate your PR to the new format
@@ -104,7 +104,7 @@ log_info "Step 1: Verifying upstream sync..."
 # Check if upstream remote exists
 if ! git remote | grep -q "^upstream$"; then
     log_warning "Upstream remote not found. Adding it..."
-    git remote add upstream https://github.com/NoFxAiOS/nofx.git
+    git remote add upstream https://github.com/xbcvv/nofx-0210.git
     git fetch upstream
     log_success "Added upstream remote"
 fi
@@ -333,3 +333,4 @@ log_info "Telegram: https://t.me/nofx_dev_community"
 echo ""
 log_success "Thank you for contributing to NOFX! 🚀"
 echo ""
+

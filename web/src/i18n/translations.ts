@@ -999,7 +999,7 @@ export const translations = {
 
     faqDockerPullFailed: 'Docker image pull failed or slow',
     faqDockerPullFailedAnswer:
-      'Docker Hub can be slow in some regions. Solutions: 1) Configure a Docker mirror in /etc/docker/daemon.json: {"registry-mirrors": ["https://mirror.gcr.io"]}; 2) Restart Docker; 3) Retry pull. Alternatively, use GitHub Container Registry (ghcr.io) which may have better connectivity in your region.',
+      'Docker Hub can be slow in some regions. Solutions: 1) Configure a Docker mirror in /etc/docker/daemon.json: {"registry-mirrors": ["https://mirror.gcr.io"]}; 2) Restart Docker; 3) Retry pull.',
 
     // ===== SECURITY =====
     faqAPIKeyStorage: 'How are API keys stored?',
@@ -2098,7 +2098,7 @@ export const translations = {
 
     faqManualInstallation: '如何手动安装用于开发？',
     faqManualInstallationAnswer:
-      '前置条件：Go 1.21+、Node.js 18+、TA-Lib。步骤：1）克隆仓库："git clone https://github.com/NoFxAiOS/nofx.git"；2）安装后端依赖："go mod download"；3）安装前端依赖："cd web && npm install"；4）构建后端："go build -o nofx"；5）运行后端："./nofx"；6）运行前端（新终端）："cd web && npm run dev"。访问 http://127.0.0.1:3000',
+      '前置条件：Go 1.21+、Node.js 18+、TA-Lib。步骤：1）克隆仓库："git clone https://github.com/xbcvv/nofx-0210.git"；2）安装后端依赖："go mod download"；3）安装前端依赖："cd web && npm install"；4）构建后端："go build -o nofx"；5）运行后端："./nofx"；6）运行前端（新终端）："cd web && npm run dev"。访问 http://127.0.0.1:3000',
 
     faqServerDeployment: '如何部署到远程服务器？',
     faqServerDeploymentAnswer:
@@ -2197,7 +2197,7 @@ export const translations = {
 
     faqDockerPullFailed: 'Docker 镜像拉取失败或缓慢',
     faqDockerPullFailedAnswer:
-      'Docker Hub 在某些地区可能较慢。解决方案：1）在 /etc/docker/daemon.json 配置 Docker 镜像：{"registry-mirrors": ["https://mirror.gcr.io"]}；2）重启 Docker；3）重试拉取。或使用 GitHub Container Registry（ghcr.io）在您的地区可能连接更好。',
+      'Docker Hub 在某些地区可能较慢。解决方案：1）在 /etc/docker/daemon.json 配置 Docker 镜像：{"registry-mirrors": ["https://mirror.gcr.io"]}；2）重启 Docker；3）重试拉取。',
 
     // ===== 安全相关 =====
     faqAPIKeyStorage: 'API 密钥如何存储？',

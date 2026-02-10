@@ -1,4 +1,4 @@
-// NOFX Official Branding Constants
+﻿// NOFX Official Branding Constants
 // These values are integrity-checked and should not be modified by forked projects
 
 // Base64 encoded official links (integrity protected)
@@ -9,7 +9,7 @@ const _e = (s: string) => btoa(s)
 const ENCODED_LINKS = {
   twitter: 'aHR0cHM6Ly94LmNvbS9ub2Z4X29mZmljaWFs', // https://x.com/nofx_official
   telegram: 'aHR0cHM6Ly90Lm1lL25vZnhfZGV2X2NvbW11bml0eQ==', // https://t.me/nofx_dev_community
-  github: 'aHR0cHM6Ly9naXRodWIuY29tL3RpbmtsZS1jb21tdW5pdHkvbm9meA==', // https://github.com/NoFxAiOS/nofx
+  github: 'aHR0cHM6Ly9naXRodWIuY29tL3RpbmtsZS1jb21tdW5pdHkvbm9meA==', // https://github.com/xbcvv/nofx-0210
 }
 
 // Integrity checksums (simple hash)
@@ -41,7 +41,7 @@ function getVerifiedLink(key: keyof typeof ENCODED_LINKS): string {
     const fallbacks: Record<string, string> = {
       twitter: 'https://x.com/nofx_official',
       telegram: 'https://t.me/nofx_dev_community',
-      github: 'https://github.com/NoFxAiOS/nofx',
+      github: 'https://github.com/xbcvv/nofx-0210',
     }
     return fallbacks[key] || ''
   }
@@ -71,3 +71,4 @@ export const BRAND_INFO = {
 void _e
 void CHECKSUMS
 void simpleHash
+

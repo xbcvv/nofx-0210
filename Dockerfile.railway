@@ -2,10 +2,10 @@
 # 从现有镜像提取内容，合并到一个容器
 
 # 从后端镜像提取二进制
-FROM ghcr.io/nofxaios/nofx/nofx-backend:latest AS backend
+FROM xbcvv/nofx-backend:latest AS backend
 
 # 从前端镜像提取静态文件
-FROM ghcr.io/nofxaios/nofx/nofx-frontend:latest AS frontend
+FROM xbcvv/nofx-frontend:latest AS frontend
 
 # 最终镜像
 FROM alpine:latest

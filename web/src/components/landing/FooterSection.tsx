@@ -1,4 +1,4 @@
-import { Github, Send, ExternalLink } from 'lucide-react'
+﻿import { Github, Send, ExternalLink } from 'lucide-react'
 import { t, Language } from '../../i18n/translations'
 import { OFFICIAL_LINKS } from '../../constants/branding'
 
@@ -24,10 +24,10 @@ export default function FooterSection({ language }: FooterSectionProps) {
     resources: [
       {
         name: language === 'zh' ? '文档' : 'Documentation',
-        href: 'https://github.com/NoFxAiOS/nofx/blob/main/README.md',
+        href: 'https://github.com/xbcvv/nofx-0210/blob/main/README.md',
       },
-      { name: 'Issues', href: 'https://github.com/NoFxAiOS/nofx/issues' },
-      { name: 'Pull Requests', href: 'https://github.com/NoFxAiOS/nofx/pulls' },
+      { name: 'Issues', href: 'https://github.com/xbcvv/nofx-0210/issues' },
+      { name: 'Pull Requests', href: 'https://github.com/xbcvv/nofx-0210/pulls' },
     ],
     supporters: [
       { name: 'Binance', href: 'https://www.binance.com/join?ref=NOFXENG' },
@@ -158,3 +158,4 @@ export default function FooterSection({ language }: FooterSectionProps) {
     </footer>
   )
 }
+

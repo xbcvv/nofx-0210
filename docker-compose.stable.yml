@@ -1,9 +1,9 @@
-# NOFX Stable Release Deployment
+﻿# NOFX Stable Release Deployment
 # Production-ready stable version
 
 services:
   nofx:
-    image: ghcr.io/nofxaios/nofx/nofx-backend:stable
+    image: xbcvv/nofx-backend:latest
     container_name: nofx-trading
     restart: unless-stopped
     stop_grace_period: 30s
@@ -27,7 +27,7 @@ services:
       start_period: 60s
 
   nofx-frontend:
-    image: ghcr.io/nofxaios/nofx/nofx-frontend:stable
+    image: xbcvv/nofx-frontend:latest
     container_name: nofx-frontend
     restart: unless-stopped
     ports:
@@ -46,3 +46,4 @@ services:
 networks:
   nofx-network:
     driver: bridge
+

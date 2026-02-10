@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+﻿import { useState, useMemo } from 'react'
 import { HelpCircle } from 'lucide-react'
 import { DeepVoidBackground } from '../DeepVoidBackground'
 import { t, type Language } from '../../i18n/translations'
@@ -146,7 +146,7 @@ export function FAQLayout({ language }: FAQLayoutProps) {
           </p>
           <div className="flex items-center justify-center gap-4">
             <a
-              href="https://github.com/NoFxAiOS/nofx"
+              href="https://github.com/xbcvv/nofx-0210"
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 rounded-lg font-semibold transition-all hover:scale-105"
@@ -176,3 +176,4 @@ export function FAQLayout({ language }: FAQLayoutProps) {
     </DeepVoidBackground>
   )
 }
+
