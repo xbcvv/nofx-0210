@@ -169,8 +169,18 @@ jobs:
 
           if [[ -n "${{ secrets.DOCKERHUB_USERNAME }}" && -n "${{ secrets.DOCKERHUB_TOKEN }}" ]]; then
             DOCKERHUB_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/nofx-${{ matrix.image_suffix }}"
+            
+            # Create manifest for the current ref (e.g., main, v1.0.0)
             docker buildx imagetools create -t "${DOCKERHUB_IMAGE}:${REF_NAME}" \
               "${DOCKERHUB_IMAGE}:${REF_NAME}-amd64" || true
+            
+            # If on main branch, also update 'latest' tag on Docker Hub
+            if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+               docker buildx imagetools create -t "${DOCKERHUB_IMAGE}:latest" \
+                "${DOCKERHUB_IMAGE}:${REF_NAME}-amd64" || true
+               echo "✅ Created Docker Hub latest tag"
+            fi
+            
             echo "✅ Created Docker Hub manifest"
           fi
 
