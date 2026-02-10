@@ -99,6 +99,7 @@ type AutoTraderConfig struct {
 	MaxDailyLoss    float64       // Maximum daily loss percentage (hint)
 	MaxDrawdown     float64       // Maximum drawdown percentage (hint)
 	StopTradingTime time.Duration // Pause duration after risk control triggers
+	MinOpenInterval time.Duration // Minimum interval between open positions
 
 	// Position mode
 	IsCrossMargin bool // true=cross margin mode, false=isolated margin mode
@@ -140,6 +141,7 @@ type AutoTrader struct {
 	peakPnLCache          map[string]float64 // Peak profit cache (symbol -> peak P&L percentage)
 	peakPnLCacheMutex     sync.RWMutex       // Cache read-write lock
 	lastBalanceSyncTime   time.Time          // Last balance sync time
+	lastOpenTime          time.Time          // Last time a position was opened
 	userID                string             // User ID
 	gridState             *GridState         // Grid trading state (only used when StrategyType == "grid_trading")
 }
@@ -160,6 +162,11 @@ func NewAutoTrader(config AutoTraderConfig, st *store.Store, userID string) (*Au
 		} else {
 			config.AIModel = "deepseek"
 		}
+	}
+
+	// Set default MinOpenInterval if not set
+	if config.MinOpenInterval <= 0 {
+		config.MinOpenInterval = 30 * time.Second
 	}
 
 	// Initialize AI client based on provider
@@ -362,6 +369,7 @@ func NewAutoTrader(config AutoTraderConfig, st *store.Store, userID string) (*Au
 		peakPnLCache:          make(map[string]float64),
 		peakPnLCacheMutex:     sync.RWMutex{},
 		lastBalanceSyncTime:   time.Now(),
+		lastOpenTime:          time.Now().Add(-config.MinOpenInterval), // Allow immediate opening
 		userID:                userID,
 	}, nil
 }
@@ -1048,12 +1056,107 @@ func (at *AutoTrader) executeDecisionWithRecord(decision *kernel.Decision, actio
 		return at.executeCloseLongWithRecord(decision, actionRecord)
 	case "close_short":
 		return at.executeCloseShortWithRecord(decision, actionRecord)
+	case "partial_close", "PARTIAL_CLOSE":
+		return at.executePartialCloseWithRecord(decision, actionRecord)
 	case "hold", "wait":
-		// No execution needed, just record
-		return nil
+		// [MODIFIED] Allow hold to update StopLoss/TakeProfit
+		return at.executeHoldWithRecord(decision, actionRecord)
 	default:
 		return fmt.Errorf("unknown action: %s", decision.Action)
 	}
+}
+
+// executeHoldWithRecord executes hold action but checks for updates (SL/TP)
+func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRecord *store.DecisionAction) error {
+	// If StopLoss or TakeProfit is provided, update them
+	if decision.StopLoss > 0 || decision.TakeProfit > 0 {
+		logger.Infof("  🔒 Hold with updates: %s (SL: %.4f, TP: %.4f)", decision.Symbol, decision.StopLoss, decision.TakeProfit)
+		
+		// Find position to determine side
+		positions, err := at.trader.GetPositions()
+		if err != nil {
+			return err
+		}
+		
+		var foundPos map[string]interface{}
+		for _, pos := range positions {
+			if pos["symbol"] == decision.Symbol {
+				// Check quantity > 0
+				if qty, ok := pos["positionAmt"].(float64); ok && qty != 0 {
+					foundPos = pos
+					break
+				}
+			}
+		}
+		
+		if foundPos != nil {
+			side := foundPos["side"].(string) // "long" or "short"
+			qty := foundPos["positionAmt"].(float64)
+			if qty < 0 { qty = -qty }
+			
+			// Convert side to "LONG" or "SHORT" for SetStopLoss/SetTakeProfit
+			positionSide := "LONG"
+			if side == "short" {
+				positionSide = "SHORT"
+			}
+			
+			if decision.StopLoss > 0 {
+				if err := at.trader.SetStopLoss(decision.Symbol, positionSide, qty, decision.StopLoss); err != nil {
+					logger.Warnf("Failed to update StopLoss: %v", err)
+				} else {
+					logger.Infof("  ✓ Updated StopLoss to %.4f", decision.StopLoss)
+				}
+			}
+			
+			if decision.TakeProfit > 0 {
+				if err := at.trader.SetTakeProfit(decision.Symbol, positionSide, qty, decision.TakeProfit); err != nil {
+					logger.Warnf("Failed to update TakeProfit: %v", err)
+				} else {
+					logger.Infof("  ✓ Updated TakeProfit to %.4f", decision.TakeProfit)
+				}
+			}
+		}
+	}
+	return nil
+}
+
+// executePartialCloseWithRecord executes partial close
+func (at *AutoTrader) executePartialCloseWithRecord(decision *kernel.Decision, actionRecord *store.DecisionAction) error {
+	logger.Infof("  ✂️ Partial Close: %s (%.1f%%)", decision.Symbol, decision.ClosePercentage*100)
+	
+	if decision.ClosePercentage <= 0 || decision.ClosePercentage > 1 {
+		return fmt.Errorf("invalid close percentage: %.2f", decision.ClosePercentage)
+	}
+
+	// Find position to determine side
+	positions, err := at.trader.GetPositions()
+	if err != nil {
+		return err
+	}
+	
+	var foundPos map[string]interface{}
+	for _, pos := range positions {
+		if pos["symbol"] == decision.Symbol {
+			if qty, ok := pos["positionAmt"].(float64); ok && qty != 0 {
+				foundPos = pos
+				break
+			}
+		}
+	}
+	
+	if foundPos == nil {
+		return fmt.Errorf("no position found for %s to partial close", decision.Symbol)
+	}
+	
+	side := foundPos["side"].(string) // "long" or "short"
+	
+	if side == "long" {
+		return at.executeCloseLongWithRecord(decision, actionRecord)
+	} else if side == "short" {
+		return at.executeCloseShortWithRecord(decision, actionRecord)
+	}
+	
+	return fmt.Errorf("unknown position side: %s", side)
 }
 
 // ExecuteDecision executes a trading decision from external sources (e.g., debate consensus)
@@ -1086,6 +1189,14 @@ func (at *AutoTrader) ExecuteDecision(d *kernel.Decision) error {
 // executeOpenLongWithRecord executes open long position and records detailed information
 func (at *AutoTrader) executeOpenLongWithRecord(decision *kernel.Decision, actionRecord *store.DecisionAction) error {
 	logger.Infof("  📈 Open long: %s", decision.Symbol)
+
+	// [RATE LIMIT] Check minimum time interval between opening positions
+	if time.Since(at.lastOpenTime) < at.config.MinOpenInterval {
+		msg := fmt.Sprintf("⚠️ Rate limit: skipping open long for %s (last open was %v ago, min interval %v)",
+			decision.Symbol, time.Since(at.lastOpenTime).Round(time.Second), at.config.MinOpenInterval)
+		logger.Warn(msg)
+		return fmt.Errorf(msg)
+	}
 
 	// ⚠️ Get current positions for multiple checks
 	positions, err := at.trader.GetPositions()
@@ -1314,6 +1425,9 @@ func (at *AutoTrader) executeOpenShortWithRecord(decision *kernel.Decision, acti
 		logger.Infof("  ⚠ Failed to set take profit: %v", err)
 	}
 
+	// Update last open time
+	at.lastOpenTime = time.Now()
+
 	return nil
 }
 
@@ -1363,8 +1477,15 @@ func (at *AutoTrader) executeCloseLongWithRecord(decision *kernel.Decision, acti
 		logger.Infof("  📊 Using exchange position data: qty=%.8f, entry=%.2f", quantity, entryPrice)
 	}
 
+	// Calculate close quantity
+	closeQuantity := 0.0
+	if decision.ClosePercentage > 0 && decision.ClosePercentage <= 1.0 {
+		closeQuantity = quantity * decision.ClosePercentage
+		logger.Infof("  ✂️ Partial closing %.1f%%: %.6f / %.6f", decision.ClosePercentage*100, closeQuantity, quantity)
+	}
+
 	// Close position
-	order, err := at.trader.CloseLong(decision.Symbol, 0) // 0 = close all
+	order, err := at.trader.CloseLong(decision.Symbol, closeQuantity) // 0 = close all
 	if err != nil {
 		return err
 	}
@@ -1427,8 +1548,15 @@ func (at *AutoTrader) executeCloseShortWithRecord(decision *kernel.Decision, act
 		logger.Infof("  📊 Using exchange position data: qty=%.8f, entry=%.2f", quantity, entryPrice)
 	}
 
+	// Calculate close quantity
+	closeQuantity := 0.0
+	if decision.ClosePercentage > 0 && decision.ClosePercentage <= 1.0 {
+		closeQuantity = quantity * decision.ClosePercentage
+		logger.Infof("  ✂️ Partial closing %.1f%%: %.6f / %.6f", decision.ClosePercentage*100, closeQuantity, quantity)
+	}
+
 	// Close position
-	order, err := at.trader.CloseShort(decision.Symbol, 0) // 0 = close all
+	order, err := at.trader.CloseShort(decision.Symbol, closeQuantity) // 0 = close all
 	if err != nil {
 		return err
 	}
@@ -1859,19 +1987,21 @@ func (at *AutoTrader) checkPositionDrawdown() {
 		}
 
 		// Check close position condition: profit > 5% and drawdown >= 40%
-		if currentPnLPct > 5.0 && drawdownPct >= 40.0 {
-			logger.Infof("🚨 Drawdown close position condition triggered: %s %s | Current profit: %.2f%% | Peak profit: %.2f%% | Drawdown: %.2f%%",
-				symbol, side, currentPnLPct, peakPnLPct, drawdownPct)
+		// [REMOVED BY USER REQUEST] "Hidden Stop-Loss" lock removed
+		// if currentPnLPct > 5.0 && drawdownPct >= 40.0 {
+		// 	logger.Infof("🚨 Drawdown close position condition triggered: %s %s | Current profit: %.2f%% | Peak profit: %.2f%% | Drawdown: %.2f%%",
+		// 		symbol, side, currentPnLPct, peakPnLPct, drawdownPct)
 
-			// Execute close position
-			if err := at.emergencyClosePosition(symbol, side); err != nil {
-				logger.Infof("❌ Drawdown close position failed (%s %s): %v", symbol, side, err)
-			} else {
-				logger.Infof("✅ Drawdown close position succeeded: %s %s", symbol, side)
-				// Clear cache for this position after closing
-				at.ClearPeakPnLCache(symbol, side)
-			}
-		} else if currentPnLPct > 5.0 {
+		// 	// Execute close position
+		// 	if err := at.emergencyClosePosition(symbol, side); err != nil {
+		// 		logger.Infof("❌ Drawdown close position failed (%s %s): %v", symbol, side, err)
+		// 	} else {
+		// 		logger.Infof("✅ Drawdown close position succeeded: %s %s", symbol, side)
+		// 		// Clear cache for this position after closing
+		// 		at.ClearPeakPnLCache(symbol, side)
+		// 	}
+		// } else if currentPnLPct > 5.0 {
+		if currentPnLPct > 5.0 {
 			// Record situations close to close position condition (for debugging)
 			logger.Infof("📊 Drawdown monitoring: %s %s | Profit: %.2f%% | Peak: %.2f%% | Drawdown: %.2f%%",
 				symbol, side, currentPnLPct, peakPnLPct, drawdownPct)

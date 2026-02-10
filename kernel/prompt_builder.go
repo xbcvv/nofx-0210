@@ -83,32 +83,35 @@ func (pb *PromptBuilder) buildSystemPromptZH() string {
 [
   {
     "symbol": "BTCUSDT",
-    "action": "HOLD|PARTIAL_CLOSE|FULL_CLOSE|ADD_POSITION|OPEN_NEW|WAIT",
+    "action": "hold|PARTIAL_CLOSE|close_long|close_short|open_long|open_short|wait",
     "leverage": 3,
-    "position_size_usd": 1000,
-    "stop_loss": 42000,
-    "take_profit": 48000,
-    "confidence": 85,
-    "reasoning": "详细的推理过程，说明为什么做出这个决策"
-  }
-]
-` + "```" + `
+			"position_size_usd": 1000,
+			"stop_loss": 42000,
+			"take_profit": 48000,
+			"close_percentage": 0.5,
+			"confidence": 85,
+			"reasoning": "详细的推理过程，说明为什么做出这个决策"
+		}
+		]
+		```
 
-### 字段说明
+		### 字段说明
 
-- **symbol**: 交易对（必需）
-- **action**: 动作类型（必需）
-  - HOLD: 持有当前仓位
-  - PARTIAL_CLOSE: 部分平仓
-  - FULL_CLOSE: 全部平仓
-  - ADD_POSITION: 在现有仓位上加仓
-  - OPEN_NEW: 开设新仓位
-  - WAIT: 等待，不采取任何行动
-- **leverage**: 杠杆倍数（开新仓时必需）
-- **position_size_usd**: 仓位大小（USDT，开新仓时必需）
-- **stop_loss**: 止损价格（开新仓时建议提供）
-- **take_profit**: 止盈价格（开新仓时建议提供）
-- **confidence**: 信心度（0-100）
+		- **symbol**: 交易对（必需）
+		- **action**: 动作类型（必需）
+		  - hold: 持有当前仓位 (可更新stop_loss/take_profit)
+		  - PARTIAL_CLOSE: 部分平仓 (必需提供 close_percentage)
+		  - close_long: 平多头仓位
+		  - close_short: 平空头仓位
+		  - open_long: 开多头仓位
+		  - open_short: 开空头仓位
+		  - wait: 等待，不采取任何行动
+		- **leverage**: 杠杆倍数（开新仓时必需）
+		- **position_size_usd**: 仓位大小（USDT，开新仓时必需）
+		- **stop_loss**: 止损价格（开新仓时建议提供，HOLD时可更新）
+		- **take_profit**: 止盈价格（开新仓时建议提供，HOLD时可更新）
+		- **close_percentage**: 平仓比例 0.0-1.0 (PARTIAL_CLOSE时必需，例如0.5代表平50%)
+		- **confidence**: 信心度（0-100）
 - **reasoning**: 推理过程（必需，必须详细说明决策依据）
 
 ## 重要提醒
@@ -218,32 +221,35 @@ func (pb *PromptBuilder) buildSystemPromptEN() string {
 [
   {
     "symbol": "BTCUSDT",
-    "action": "HOLD|PARTIAL_CLOSE|FULL_CLOSE|ADD_POSITION|OPEN_NEW|WAIT",
-    "leverage": 3,
-    "position_size_usd": 1000,
-    "stop_loss": 42000,
-    "take_profit": 48000,
-    "confidence": 85,
-    "reasoning": "Detailed reasoning explaining why this decision was made"
-  }
-]
-` + "```" + `
+    "action": "hold|PARTIAL_CLOSE|close_long|close_short|open_long|open_short|wait",
+			"leverage": 3,
+			"position_size_usd": 1000,
+			"stop_loss": 42000,
+			"take_profit": 48000,
+			"close_percentage": 0.5,
+			"confidence": 85,
+			"reasoning": "Detailed reasoning explaining why this decision was made"
+		}
+		]
+		```
 
-### Field Descriptions
+		### Field Descriptions
 
-- **symbol**: Trading pair (required)
-- **action**: Action type (required)
-  - HOLD: Hold current position
-  - PARTIAL_CLOSE: Partially close position
-  - FULL_CLOSE: Fully close position
-  - ADD_POSITION: Add to existing position
-  - OPEN_NEW: Open new position
-  - WAIT: Wait, take no action
-- **leverage**: Leverage multiplier (required for new positions)
-- **position_size_usd**: Position size in USDT (required for new positions)
-- **stop_loss**: Stop-loss price (recommended for new positions)
-- **take_profit**: Take-profit price (recommended for new positions)
-- **confidence**: Confidence level (0-100)
+		- **symbol**: Trading pair (required)
+		- **action**: Action type (required)
+		  - hold: Hold current position (can update stop_loss/take_profit)
+		  - PARTIAL_CLOSE: Partially close position (close_percentage required)
+		  - close_long: Fully close long position
+		  - close_short: Fully close short position
+		  - open_long: Open long position
+		  - open_short: Open short position
+		  - wait: Wait, take no action
+		- **leverage**: Leverage multiplier (required for new positions)
+		- **position_size_usd**: Position size in USDT (required for new positions)
+		- **stop_loss**: Stop-loss price (recommended for new positions, updatable in HOLD)
+		- **take_profit**: Take-profit price (recommended for new positions, updatable in HOLD)
+		- **close_percentage**: Close percentage 0.0-1.0 (required for PARTIAL_CLOSE, e.g. 0.5 for 50%)
+		- **confidence**: Confidence level (0-100)
 - **reasoning**: Detailed reasoning (required, must explain decision basis)
 
 ## Critical Reminders
@@ -368,6 +374,18 @@ func ValidateDecisionFormat(decisions []Decision) error {
 			}
 			if d.PositionSizeUSD == 0 {
 				return fmt.Errorf("决策#%d: OPEN_NEW动作需要提供position_size_usd", i+1)
+			}
+		}
+
+		// 部分平仓的必需参数检查
+		if d.Action == "PARTIAL_CLOSE" {
+			if d.ClosePercentage <= 0 || d.ClosePercentage >= 1 {
+				// Allow 1.0 but warn it should be FULL_CLOSE? Or just treat as full.
+				// User wants partial, so 0 < pct < 1 is strict partial.
+				// But let's allow 0 < pct <= 1 just in case.
+				if d.ClosePercentage <= 0 {
+					return fmt.Errorf("决策#%d: PARTIAL_CLOSE动作需要提供有效的close_percentage (0.0-1.0)", i+1)
+				}
 			}
 		}
 	}

@@ -139,6 +139,9 @@ type Decision struct {
 	StopLoss        float64 `json:"stop_loss,omitempty"`
 	TakeProfit      float64 `json:"take_profit,omitempty"`
 
+	// Closing position parameters
+	ClosePercentage float64 `json:"close_percentage,omitempty"` // 0.0 - 1.0 (e.g. 0.5 for 50%)
+
 	// Grid trading parameters
 	Price      float64 `json:"price,omitempty"`       // Limit order price (for grid)
 	Quantity   float64 `json:"quantity,omitempty"`    // Order quantity (for grid)
@@ -1859,16 +1862,24 @@ func validateDecisions(decisions []Decision, accountEquity float64, btcEthLevera
 
 func validateDecision(d *Decision, accountEquity float64, btcEthLeverage, altcoinLeverage int, btcEthPosRatio, altcoinPosRatio float64) error {
 	validActions := map[string]bool{
-		"open_long":   true,
-		"open_short":  true,
-		"close_long":  true,
-		"close_short": true,
-		"hold":        true,
-		"wait":        true,
+		"open_long":     true,
+		"open_short":    true,
+		"close_long":    true,
+		"close_short":   true,
+		"hold":          true,
+		"wait":          true,
+		"partial_close": true,
+		"PARTIAL_CLOSE": true,
 	}
 
 	if !validActions[d.Action] {
 		return fmt.Errorf("invalid action: %s", d.Action)
+	}
+
+	if d.Action == "partial_close" || d.Action == "PARTIAL_CLOSE" {
+		if d.ClosePercentage <= 0 || d.ClosePercentage > 1 {
+			return fmt.Errorf("partial close requires close_percentage between 0 and 1, got: %.2f", d.ClosePercentage)
+		}
 	}
 
 	if d.Action == "open_long" || d.Action == "open_short" {
