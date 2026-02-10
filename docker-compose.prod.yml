@@ -10,7 +10,7 @@
 
 services:
   nofx:
-    image: xbcvv/nofx-backend:latest
+    image: qdw1010/nofx-backend:latest
     container_name: nofx-trading
     restart: unless-stopped
     stop_grace_period: 30s
