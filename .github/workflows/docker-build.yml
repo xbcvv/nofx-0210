@@ -170,11 +170,10 @@ jobs:
             echo "✅ Created stable tag (release/stable branch)"
           fi
 
-          if [[ -n "${{ secrets.DOCKERHUB_USERNAME }}" ]]; then
+          if [[ -n "${{ secrets.DOCKERHUB_USERNAME }}" && -n "${{ secrets.DOCKERHUB_TOKEN }}" ]]; then
             DOCKERHUB_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/nofx-${{ matrix.image_suffix }}"
             docker buildx imagetools create -t "${DOCKERHUB_IMAGE}:${REF_NAME}" \
-              "${DOCKERHUB_IMAGE}:${REF_NAME}-amd64" \
-              "${DOCKERHUB_IMAGE}:${REF_NAME}-arm64" || true
+              "${DOCKERHUB_IMAGE}:${REF_NAME}-amd64" || true
             echo "✅ Created Docker Hub manifest"
           fi
 
