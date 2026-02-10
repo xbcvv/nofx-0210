@@ -22,6 +22,7 @@ NC='\033[0m' # No Color
 # Default installation directory
 INSTALL_DIR="${1:-$HOME/nofx}"
 COMPOSE_FILE="docker-compose.prod.yml"
+# Configuration
 GITHUB_RAW="https://raw.githubusercontent.com/xbcvv/nofx-0210/main"
 DOCKER_IMAGE_BACKEND="qdw1010/nofx-backend:latest"
 DOCKER_IMAGE_FRONTEND="qdw1010/nofx-frontend:latest"
