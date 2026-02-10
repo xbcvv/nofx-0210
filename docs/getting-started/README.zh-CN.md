@@ -1,4 +1,4 @@
-﻿# 🚀 NOFX 快速开始
+﻿﻿# 🚀 NOFX 快速开始
 
 ## ⚠️ 本项目是基于 [xbcvv/nofx-0210](https://github.com/xbcvv/nofx-0210/tree/main) 的 main 版本（2026-02-10）进行的修改
 

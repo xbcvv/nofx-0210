@@ -518,7 +518,7 @@ Thanks to all our sponsors!
 <a href="https://github.com/leiwuhen1715"><img src="https://github.com/leiwuhen1715.png" width="60" height="60" style="border-radius:50%" alt="leiwuhen1715" /></a>
 <a href="https://github.com/SHAOXIA1991"><img src="https://github.com/SHAOXIA1991.png" width="60" height="60" style="border-radius:50%" alt="SHAOXIA1991" /></a>
 
-[Become a sponsor](https://github.com/sponsors/NoFxAiOS)
+[Become a sponsor](https://github.com/sponsors/xbcvv)
 
 ---
 

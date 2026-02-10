@@ -1,4 +1,4 @@
-﻿<h1 align="center">NOFX — Open Source AI Торговая ОС</h1>
+﻿﻿<h1 align="center">NOFX — Open Source AI Торговая ОС</h1>
 
 <p align="center">
   <strong>Инфраструктурный слой для AI-powered финансовой торговли</strong>

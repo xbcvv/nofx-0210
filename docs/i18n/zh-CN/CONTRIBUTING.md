@@ -1,4 +1,4 @@
-﻿# 🤝 为 NOFX 做贡献
+﻿﻿# 🤝 为 NOFX 做贡献
 
 **语言：** [English](../../../CONTRIBUTING.md) | [中文](CONTRIBUTING.md)
 

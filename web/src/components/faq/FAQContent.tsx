@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { t, type Language } from '../../i18n/translations'
 import type { FAQCategory } from '../../data/faqData'
 // RoadmapWidget 移除动态嵌入，按需仅展示外部链接
@@ -87,7 +87,7 @@ export function FAQContent({
                       <div className="text-base">
                         {language === 'zh' ? '链接：' : 'Links:'}{' '}
                         <a
-                          href="https://github.com/orgs/NoFxAiOS/projects/3"
+                          href="https://github.com/users/xbcvv/projects/3"
                           target="_blank"
                           rel="noreferrer"
                           style={{ color: '#F0B90B' }}
@@ -96,7 +96,7 @@ export function FAQContent({
                         </a>
                         {'  |  '}
                         <a
-                          href="https://github.com/orgs/NoFxAiOS/projects/5"
+                          href="https://github.com/users/xbcvv/projects/5"
                           target="_blank"
                           rel="noreferrer"
                           style={{ color: '#F0B90B' }}

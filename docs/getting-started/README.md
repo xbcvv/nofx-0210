@@ -1,4 +1,4 @@
-﻿# 🚀 Getting Started with NOFX
+﻿﻿# 🚀 Getting Started with NOFX
 
 ## ⚠️ This project is a modification based on the main version (2026-02-10) of [xbcvv/nofx-0210](https://github.com/xbcvv/nofx-0210/tree/main)
 

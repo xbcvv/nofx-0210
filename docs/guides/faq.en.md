@@ -1,4 +1,4 @@
-﻿# Frequently Asked Questions (FAQ)
+﻿﻿# Frequently Asked Questions (FAQ)
 
 Quick answers to common questions. For detailed troubleshooting, see [Troubleshooting Guide](TROUBLESHOOTING.md).
 

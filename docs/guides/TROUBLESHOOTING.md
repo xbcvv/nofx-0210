@@ -1,4 +1,4 @@
-﻿# 🔧 Troubleshooting Guide
+﻿﻿# 🔧 Troubleshooting Guide
 
 This guide helps you diagnose and fix common issues before submitting a bug report.
 

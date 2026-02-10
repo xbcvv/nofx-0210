@@ -1,4 +1,4 @@
-﻿# 📚 NOFX Documentation Center / 文档中心
+# 📚 NOFX Documentation Center / 文档中心
 
 Welcome to the NOFX documentation! This page helps you find the right documentation quickly.
 
@@ -186,5 +186,5 @@ Found an error or want to improve the docs?
 ---
 
 **Last Updated:** 2025-11-01
-**Maintained by:** [NOFX Community](https://github.com/NoFxAiOS)
+**Maintained by:** [NOFX Community](https://github.com/xbcvv)
 

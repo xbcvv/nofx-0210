@@ -1,6 +1,6 @@
 ﻿# 🤖 NOFX - Agentic Trading OS
 
-## ⚠️ このプロジェクトは、[xbcvv/nofx-0210](https://github.com/xbcvv/nofx-0210/tree/main) の main バージョン（2026-02-10）に基づく変更版です
+## ⚠️ このプロジェクトは、[NoFxAiOS/nofx](https://github.com/NoFxAiOS/nofx/tree/main) の main バージョン（2026-02-10）に基づく変更版です
 
 [![Go Version](https://img.shields.io/badge/Go-1.21+-00ADD8?style=flat&logo=go)](https://golang.org/)
 [![React](https://img.shields.io/badge/React-18+-61DAFB?style=flat&logo=react)](https://reactjs.org/)
@@ -391,7 +391,7 @@ sudo apt-get install libta-lib0-dev
 ### 2. プロジェクトをクローン
 
 ```bash
-git clone https://github.com/xbcvv/nofx-0210.git
+git clone https://github.com/NoFxAiOS/nofx.git
 cd nofx
 ```
 
@@ -1377,4 +1377,3 @@ IssueとPull Requestを歓迎します！
 ## ⭐ Star履歴
 
 [![Star履歴チャート](https://api.star-history.com/svg?repos=xbcvv/nofx-0210&type=Date)](https://star-history.com/#xbcvv/nofx-0210&Date)
-
