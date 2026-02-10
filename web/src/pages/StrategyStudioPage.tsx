@@ -29,6 +29,7 @@ import {
   Download,
   Upload,
   Globe,
+  BookOpen,
 } from 'lucide-react'
 import type { Strategy, StrategyConfig, AIModel } from '../types'
 import { confirmToast, notify } from '../lib/notify'
@@ -38,6 +39,7 @@ import { RiskControlEditor } from '../components/strategy/RiskControlEditor'
 import { PromptSectionsEditor } from '../components/strategy/PromptSectionsEditor'
 import { PublishSettingsEditor } from '../components/strategy/PublishSettingsEditor'
 import { GridConfigEditor, defaultGridConfig } from '../components/strategy/GridConfigEditor'
+import { RegisterConfigEditor } from '../components/strategy/RegisterConfigEditor'
 import { DeepVoidBackground } from '../components/DeepVoidBackground'
 
 const API_BASE = import.meta.env.VITE_API_BASE || ''
@@ -642,6 +644,26 @@ export function StrategyStudioPage() {
             style={{ background: '#0B0E11', border: '1px solid #2B3139', color: '#EAECEF' }}
           />
         </div>
+      ),
+    },
+    {
+      key: 'registerConfig' as const,
+      icon: BookOpen,
+      color: '#6366F1',
+      title: '寄存器配置',
+      forStrategyType: 'ai_trading' as const,
+      content: editingConfig && (
+        <RegisterConfigEditor
+          config={{
+            enabled: editingConfig.register?.enabled ?? false,
+            max_records: editingConfig.register?.max_records ?? 5,
+            include_decisions: editingConfig.register?.include_decisions ?? true,
+            include_market_data: editingConfig.register?.include_market_data ?? false,
+          }}
+          onChange={(registerConfig) => updateConfig('register', registerConfig)}
+          disabled={selectedStrategy?.is_default}
+          language={language}
+        />
       ),
     },
     {

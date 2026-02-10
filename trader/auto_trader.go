@@ -743,7 +743,46 @@ func (at *AutoTrader) runCycle() error {
 		record.Decisions = append(record.Decisions, actionRecord)
 	}
 
-	// 9. Save decision record
+	// 9. Save register record (寄存器记录)
+	if at.strategyEngine != nil {
+		config := at.strategyEngine.GetConfig()
+		if config.Register.Enabled && config.Register.MaxRecords > 0 {
+			// 创建寄存器配置
+			registerConfig := kernel.RegisterConfig{
+				Enabled:       config.Register.Enabled,
+				MaxRecords:    config.Register.MaxRecords,
+				IncludeDecisions: config.Register.IncludeDecisions,
+				IncludeMarketData: config.Register.IncludeMarketData,
+			}
+			
+			// 创建寄存器实例
+			register := kernel.NewRegister(at.name, registerConfig)
+			
+			// 创建寄存器记录
+			executionStatus := "success"
+			if !record.Success {
+				executionStatus = "failed"
+			}
+			
+			// 构建简化的决策记录
+			var registerDecisions []kernel.Decision
+			for _, d := range aiDecision.Decisions {
+				registerDecisions = append(registerDecisions, d)
+			}
+			
+			// 创建寄存器记录
+			registerRecord := kernel.CreateRecordFromContext(ctx, registerDecisions, executionStatus)
+			
+			// 保存到寄存器
+			if err := register.SaveRecord(registerRecord); err != nil {
+				logger.Infof("⚠ Failed to save register record: %v", err)
+			} else {
+				logger.Infof("✓ Register record saved successfully")
+			}
+		}
+	}
+
+	// 10. Save decision record
 	if err := at.saveDecision(record); err != nil {
 		logger.Infof("⚠ Failed to save decision record: %v", err)
 	}
@@ -1131,7 +1170,8 @@ func (at *AutoTrader) executePartialCloseWithRecord(decision *kernel.Decision, a
 	// Find position to determine side
 	positions, err := at.trader.GetPositions()
 	if err != nil {
-		return err
+		logger.Errorf("  ❌ Failed to get positions from exchange: %v", err)
+		return fmt.Errorf("failed to get positions: %w", err)
 	}
 	
 	var foundPos map[string]interface{}
@@ -1148,7 +1188,11 @@ func (at *AutoTrader) executePartialCloseWithRecord(decision *kernel.Decision, a
 		return fmt.Errorf("no position found for %s to partial close", decision.Symbol)
 	}
 	
-	side := foundPos["side"].(string) // "long" or "short"
+	// Safe type assertion for side field
+	side, ok := foundPos["side"].(string)
+	if !ok {
+		return fmt.Errorf("invalid position side type: %T", foundPos["side"])
+	}
 	
 	if side == "long" {
 		return at.executeCloseLongWithRecord(decision, actionRecord)
@@ -1455,31 +1499,46 @@ func (at *AutoTrader) executeCloseLongWithRecord(decision *kernel.Decision, acti
 			quantity = openPos.Quantity
 			entryPrice = openPos.EntryPrice
 			logger.Infof("  📊 Using local position data: qty=%.8f, entry=%.2f", quantity, entryPrice)
+		} else if err != nil {
+			logger.Warnf("  ⚠️  Failed to get position from database: %v, will fallback to exchange API", err)
 		}
 	}
 
-	// Fallback to exchange API if local data not found
+	// Fallback to exchange API if local data not found or quantity is 0
 	if quantity == 0 {
 		positions, err := at.trader.GetPositions()
-		if err == nil {
-			for _, pos := range positions {
-				if pos["symbol"] == decision.Symbol && pos["side"] == "long" {
-					if ep, ok := pos["entryPrice"].(float64); ok {
-						entryPrice = ep
-					}
-					if amt, ok := pos["positionAmt"].(float64); ok && amt > 0 {
-						quantity = amt
-					}
-					break
+		if err != nil {
+			logger.Errorf("  ❌ Failed to get positions from exchange: %v", err)
+			return fmt.Errorf("failed to get position data: %w", err)
+		}
+		
+		positionFound := false
+		for _, pos := range positions {
+			if pos["symbol"] == decision.Symbol && pos["side"] == "long" {
+				if ep, ok := pos["entryPrice"].(float64); ok {
+					entryPrice = ep
 				}
+				if amt, ok := pos["positionAmt"].(float64); ok && amt > 0 {
+					quantity = amt
+					positionFound = true
+				}
+				break
 			}
 		}
+		
+		if !positionFound {
+			return fmt.Errorf("no long position found for %s", decision.Symbol)
+		}
+		
 		logger.Infof("  📊 Using exchange position data: qty=%.8f, entry=%.2f", quantity, entryPrice)
 	}
 
 	// Calculate close quantity
 	closeQuantity := 0.0
 	if decision.ClosePercentage > 0 && decision.ClosePercentage <= 1.0 {
+		if quantity == 0 {
+			return fmt.Errorf("cannot calculate close quantity: position quantity is 0")
+		}
 		closeQuantity = quantity * decision.ClosePercentage
 		logger.Infof("  ✂️ Partial closing %.1f%%: %.6f / %.6f", decision.ClosePercentage*100, closeQuantity, quantity)
 	}
@@ -1487,12 +1546,16 @@ func (at *AutoTrader) executeCloseLongWithRecord(decision *kernel.Decision, acti
 	// Close position
 	order, err := at.trader.CloseLong(decision.Symbol, closeQuantity) // 0 = close all
 	if err != nil {
+		logger.Errorf("  ❌ Failed to close long position: %v", err)
 		return err
 	}
 
 	// Record order ID
 	if orderID, ok := order["orderId"].(int64); ok {
 		actionRecord.OrderID = orderID
+	} else if orderIDStr, ok := order["orderId"].(string); ok {
+		// Handle string order IDs from some exchanges
+		logger.Infof("  📝 Received string order ID: %s", orderIDStr)
 	}
 
 	// Record order to database and poll for confirmation
@@ -1526,31 +1589,46 @@ func (at *AutoTrader) executeCloseShortWithRecord(decision *kernel.Decision, act
 			quantity = openPos.Quantity
 			entryPrice = openPos.EntryPrice
 			logger.Infof("  📊 Using local position data: qty=%.8f, entry=%.2f", quantity, entryPrice)
+		} else if err != nil {
+			logger.Warnf("  ⚠️  Failed to get position from database: %v, will fallback to exchange API", err)
 		}
 	}
 
-	// Fallback to exchange API if local data not found
+	// Fallback to exchange API if local data not found or quantity is 0
 	if quantity == 0 {
 		positions, err := at.trader.GetPositions()
-		if err == nil {
-			for _, pos := range positions {
-				if pos["symbol"] == decision.Symbol && pos["side"] == "short" {
-					if ep, ok := pos["entryPrice"].(float64); ok {
-						entryPrice = ep
-					}
-					if amt, ok := pos["positionAmt"].(float64); ok {
-						quantity = -amt // positionAmt is negative for short
-					}
-					break
+		if err != nil {
+			logger.Errorf("  ❌ Failed to get positions from exchange: %v", err)
+			return fmt.Errorf("failed to get position data: %w", err)
+		}
+		
+		positionFound := false
+		for _, pos := range positions {
+			if pos["symbol"] == decision.Symbol && pos["side"] == "short" {
+				if ep, ok := pos["entryPrice"].(float64); ok {
+					entryPrice = ep
 				}
+				if amt, ok := pos["positionAmt"].(float64); ok {
+					quantity = -amt // positionAmt is negative for short
+					positionFound = true
+				}
+				break
 			}
 		}
+		
+		if !positionFound {
+			return fmt.Errorf("no short position found for %s", decision.Symbol)
+		}
+		
 		logger.Infof("  📊 Using exchange position data: qty=%.8f, entry=%.2f", quantity, entryPrice)
 	}
 
 	// Calculate close quantity
 	closeQuantity := 0.0
 	if decision.ClosePercentage > 0 && decision.ClosePercentage <= 1.0 {
+		if quantity == 0 {
+			return fmt.Errorf("cannot calculate close quantity: position quantity is 0")
+		}
 		closeQuantity = quantity * decision.ClosePercentage
 		logger.Infof("  ✂️ Partial closing %.1f%%: %.6f / %.6f", decision.ClosePercentage*100, closeQuantity, quantity)
 	}
@@ -1558,12 +1636,16 @@ func (at *AutoTrader) executeCloseShortWithRecord(decision *kernel.Decision, act
 	// Close position
 	order, err := at.trader.CloseShort(decision.Symbol, closeQuantity) // 0 = close all
 	if err != nil {
+		logger.Errorf("  ❌ Failed to close short position: %v", err)
 		return err
 	}
 
 	// Record order ID
 	if orderID, ok := order["orderId"].(int64); ok {
 		actionRecord.OrderID = orderID
+	} else if orderIDStr, ok := order["orderId"].(string); ok {
+		// Handle string order IDs from some exchanges
+		logger.Infof("  📝 Received string order ID: %s", orderIDStr)
 	}
 
 	// Record order to database and poll for confirmation

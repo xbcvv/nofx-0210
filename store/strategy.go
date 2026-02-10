@@ -49,6 +49,14 @@ type StrategyConfig struct {
 	// editable sections of System Prompt
 	PromptSections PromptSectionsConfig `json:"prompt_sections,omitempty"`
 
+	// Register configuration
+	Register struct {
+		Enabled         bool `json:"enabled"`         // 是否启用寄存器
+		MaxRecords      int  `json:"max_records"`     // 最大记录数
+		IncludeDecisions bool `json:"include_decisions"` // 是否包含完整决策
+		IncludeMarketData bool `json:"include_market_data"` // 是否包含市场数据
+	} `json:"register,omitempty"`
+
 	// Grid trading configuration (only used when StrategyType == "grid_trading")
 	GridConfig *GridStrategyConfig `json:"grid_config,omitempty"`
 }

@@ -1156,6 +1156,22 @@ func (e *StrategyEngine) BuildUserPrompt(ctx *Context) string {
 		ctx.Account.MarginUsedPct,
 		ctx.Account.PositionCount))
 
+	// Register records (历史决策记录)
+	registerConfig := RegisterConfig{
+		Enabled:       e.config.Register.Enabled,
+		MaxRecords:    e.config.Register.MaxRecords,
+		IncludeDecisions: e.config.Register.IncludeDecisions,
+		IncludeMarketData: e.config.Register.IncludeMarketData,
+	}
+	
+	if registerConfig.Enabled && registerConfig.MaxRecords > 0 {
+		// 创建寄存器实例（使用默认traderID，实际使用时应该从上下文中获取）
+		register := NewRegister("default", registerConfig)
+		if prompt, err := register.BuildRegisterPrompt(); err == nil && prompt != "" {
+			sb.WriteString(prompt)
+		}
+	}
+
 	// Recently completed orders (placed before positions to ensure visibility)
 	if len(ctx.RecentOrders) > 0 {
 		sb.WriteString("## Recent Completed Trades\n")
