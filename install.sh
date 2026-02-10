@@ -1,13 +1,13 @@
 #!/bin/bash
 #
 # NOFX One-Click Installation Script
-# https://github.com/NoFxAiOS/nofx
+# https://github.com/xbcvv/nofx-0210
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash
 #
 # Or with custom directory:
-#   curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash -s -- /opt/nofx
+#   curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash -s -- /opt/nofx
 #
 
 set -e
@@ -254,7 +254,7 @@ print_success() {
     echo -e "║  💡 Keep Updated: Run this command daily to stay current   ║"
     echo -e "╚════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    echo -e "  ${GREEN}curl -fsSL https://raw.githubusercontent.com/NoFxAiOS/nofx/main/install.sh | bash${NC}"
+    echo -e "  ${GREEN}curl -fsSL https://raw.githubusercontent.com/xbcvv/nofx-0210/main/install.sh | bash${NC}"
     echo ""
     echo -e "  Updates are frequent. This one-liner pulls the latest"
     echo -e "  official images and restarts services automatically."

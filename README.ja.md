@@ -1,5 +1,7 @@
 # 🤖 NOFX - Agentic Trading OS
 
+## ⚠️ このプロジェクトは、[NoFxAiOS/nofx](https://github.com/NoFxAiOS/nofx/tree/main) の main バージョン（2026-02-10）に基づく変更版です
+
 [![Go Version](https://img.shields.io/badge/Go-1.21+-00ADD8?style=flat&logo=go)](https://golang.org/)
 [![React](https://img.shields.io/badge/React-18+-61DAFB?style=flat&logo=react)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
