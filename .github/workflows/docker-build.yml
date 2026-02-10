@@ -48,24 +48,12 @@ jobs:
             platform: linux/amd64
             arch_tag: amd64
             runner: ubuntu-22.04
-          - name: backend
-            dockerfile: ./docker/Dockerfile.backend
-            image_suffix: backend
-            platform: linux/arm64
-            arch_tag: arm64
-            runner: ubuntu-22.04-arm
           - name: frontend
             dockerfile: ./docker/Dockerfile.frontend
             image_suffix: frontend
             platform: linux/amd64
             arch_tag: amd64
             runner: ubuntu-22.04
-          - name: frontend
-            dockerfile: ./docker/Dockerfile.frontend
-            image_suffix: frontend
-            platform: linux/arm64
-            arch_tag: arm64
-            runner: ubuntu-22.04-arm
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
