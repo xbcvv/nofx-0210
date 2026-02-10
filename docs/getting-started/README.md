@@ -1,5 +1,7 @@
 # 🚀 Getting Started with NOFX
 
+## ⚠️ This project is a modification based on the main version (2026-02-10) of [NoFxAiOS/nofx](https://github.com/NoFxAiOS/nofx/tree/main)
+
 **Language:** [English](README.md) | [中文](README.zh-CN.md)
 
 This section contains all the documentation you need to get NOFX up and running.

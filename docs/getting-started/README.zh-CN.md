@@ -1,5 +1,7 @@
 # 🚀 NOFX 快速开始
 
+## ⚠️ 本项目是基于 [NoFxAiOS/nofx](https://github.com/NoFxAiOS/nofx/tree/main) 的 main 版本（2026-02-10）进行的修改
+
 本节包含让 NOFX 运行起来所需的所有文档。
 
 ## 📋 部署选项
