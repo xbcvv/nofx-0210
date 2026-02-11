@@ -3124,6 +3124,58 @@ status: failed
 command: git checkout main undefined
 
 
+### 解决方案：添加全局限流器
+为了保护您的账户安全，我们需要在 provider 层添加一个全局限流器。
+
+建议方案如下：
+1. 使用 Token Bucket 算法 ：在 provider 客户端中集成 golang.org/x/time/rate 。
+2. 强制等待 ：在每次发送 HTTP 请求前，必须先从桶中获取令牌（Wait）。
+3. 配置化 ：允许为不同交易所配置不同的 RPS (Requests Per Second)。
+### 🛠️ 实施计划
+我将为您创建一个通用的限流器工具，并将其集成到 provider 的基础客户端中。
+ 1. 创建限流器工具 ( pkg/limiter/rate_limiter.go )
+ package limiter
+
+import (
+	"context"
+	"golang.org/x/time/rate"
+	"time"
+)
+
+type RateLimiter struct {
+	limiter *rate.Limiter
+}
+
+func NewRateLimiter(rps int) *RateLimiter {
+	return &RateLimiter{
+		// 允许突发流量为 RPS 的 1.5 倍
+		limiter: rate.NewLimiter(rate.Limit(rps), int(float64(rps)*1.5)),
+	}
+}
+
+func (l *RateLimiter) Wait(ctx context.Context) error {
+	return l.limiter.Wait(ctx)
+}
+
+2. 修改 Provider Client 集成限流
+以 nofxos 客户端为例：
+type Client struct {
+    // ...
+    limiter *limiter.RateLimiter
+}
+
+func NewClient(...) *Client {
+    return &Client{
+        // ...
+        limiter: limiter.NewRateLimiter(10), // 限制每秒 10 次
+    }
+}
+
+func (c *Client) doRequest(...) {
+    // 强制等待令牌
+    c.limiter.Wait(context.Background())
+    // 发送请求...
+}
 
 
 
