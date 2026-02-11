@@ -174,6 +174,25 @@ func (r *Register) BuildRegisterPrompt() (string, error) {
 				prompt += "\n"
 			}
 		}
+
+		if r.config.IncludeMarketData && len(record.MarketData) > 0 {
+			prompt += "   - Market Context:\n"
+			var keys []string
+			for k := range record.MarketData {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			
+			for _, k := range keys {
+				if dataMap, ok := record.MarketData[k].(map[string]interface{}); ok {
+					price, _ := dataMap["price"].(float64)
+					rsi, _ := dataMap["rsi"].(float64)
+					change4h, _ := dataMap["change_4h"].(float64)
+					prompt += fmt.Sprintf("     * %s: Price=%.2f, RSI=%.2f, 4h=%.2f%%\n", 
+						k, price, rsi, change4h)
+				}
+			}
+		}
 	}
 	
 	prompt += "\n"
@@ -188,6 +207,7 @@ func CreateRecordFromContext(ctx *Context, decisions []Decision, executionStatus
 		Decisions:       decisions,
 		ExecutionStatus: executionStatus,
 		MarketRegime:    "normal", // 默认市场状态
+		MarketData:      make(map[string]interface{}),
 	}
 	
 	// 简单判断市场状态
@@ -200,6 +220,27 @@ func CreateRecordFromContext(ctx *Context, decisions []Decision, executionStatus
 			record.MarketRegime = "overbought"
 		} else if btcData.CurrentRSI7 < 30 {
 			record.MarketRegime = "oversold"
+		}
+		
+		// 记录BTC市场数据作为基准
+		record.MarketData["BTCUSDT"] = map[string]interface{}{
+			"price":     btcData.CurrentPrice,
+			"rsi":       btcData.CurrentRSI7,
+			"change_4h": btcData.PriceChange4h,
+		}
+	}
+	
+	// 记录决策涉及币种的市场数据
+	for _, decision := range decisions {
+		if decision.Symbol == "BTCUSDT" {
+			continue // 已经记录过
+		}
+		if data, ok := ctx.MarketDataMap[decision.Symbol]; ok {
+			record.MarketData[decision.Symbol] = map[string]interface{}{
+				"price":     data.CurrentPrice,
+				"rsi":       data.CurrentRSI7,
+				"change_4h": data.PriceChange4h,
+			}
 		}
 	}
 	
