@@ -38,6 +38,7 @@ jobs:
       packages: write
     strategy:
       fail-fast: false
+      max-parallel: 1  # Build one architecture at a time to avoid timeout on free GitHub accounts
       matrix:
         include:
           - name: backend
