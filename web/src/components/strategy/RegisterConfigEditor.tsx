@@ -221,6 +221,6 @@ export function RegisterConfigEditor({
           </div>
         )}
       </div>
-    )}
+    </div>
   )
 }
