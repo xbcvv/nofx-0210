@@ -234,6 +234,11 @@ start() {
     print_info ""
     print_info "查看日志: ./start.sh logs"
     print_info "停止服务: ./start.sh stop"
+    
+    echo ""
+    print_error "⚠️  Risk Warning: AI trading carries significant risks."
+    print_error "   Only use funds you can afford to lose!"
+    echo ""
 }
 
 # ------------------------------------------------------------------------

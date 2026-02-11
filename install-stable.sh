@@ -92,6 +92,9 @@ print_success() {
     echo -e "  Web: http://${IP}:3000"
     echo -e "  API: http://${IP}:8080"
     echo ""
+    echo -e "${RED}⚠️  Risk Warning: AI trading carries significant risks.${NC}"
+    echo -e "${RED}   Only use funds you can afford to lose!${NC}"
+    echo ""
 }
 
 main() {
