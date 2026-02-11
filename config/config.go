@@ -40,6 +40,10 @@ type Config struct {
 	// Set EXPERIENCE_IMPROVEMENT=false to disable
 	ExperienceImprovement bool
 
+	// Telegram configuration
+	TelegramBotToken string
+	TelegramUserID   string
+
 	// Market data provider API keys
 	AlpacaAPIKey    string // Alpaca API key for US stocks
 	AlpacaSecretKey string // Alpaca secret key
@@ -98,6 +102,10 @@ func Init() {
 	if v := os.Getenv("EXPERIENCE_IMPROVEMENT"); v != "" {
 		cfg.ExperienceImprovement = strings.ToLower(v) != "false"
 	}
+
+	// Telegram configuration
+	cfg.TelegramBotToken = os.Getenv("TELEGRAM_BOT_TOKEN")
+	cfg.TelegramUserID = os.Getenv("TELEGRAM_USER_ID")
 
 	// Market data provider API keys
 	cfg.AlpacaAPIKey = os.Getenv("ALPACA_API_KEY")
