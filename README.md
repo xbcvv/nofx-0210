@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <h2>⚠️ 本项目是基于 <a href="https://github.com/xbcvv/nofx-0210/tree/main">xbcvv/nofx-0210</a> 的 main 版本（2026-02-10）进行的修改</h2>
+  <h2>⚠️ 本项目是基于 <a href="https://github.com/NoFxAiOS/nofx/tree/main">NoFxAiOS/nofx</a> 的 main 版本（2026-02-10）进行的修改</h2>
 </p>
 
 <p align="center">
