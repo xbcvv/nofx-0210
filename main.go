@@ -11,6 +11,7 @@ import (
 	"nofx/manager"
 	"nofx/mcp"
 	"nofx/store"
+	"nofx/telegram"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -106,6 +107,15 @@ func main() {
 	// Load all traders from database to memory (may auto-start traders with IsRunning=true)
 	if err := traderManager.LoadTradersFromStore(st); err != nil {
 		logger.Fatalf("❌ Failed to load traders: %v", err)
+	}
+
+	// Initialize Telegram Bot
+	tgBot, err := telegram.NewBot(traderManager, st)
+	if err != nil {
+		logger.Errorf("❌ Failed to initialize Telegram bot: %v", err)
+	} else if tgBot != nil {
+		// Start Telegram bot in a goroutine
+		go tgBot.Start()
 	}
 
 	// Display loaded trader information
