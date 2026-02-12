@@ -604,12 +604,24 @@ func (b *Bot) formatDecisionNotify(traderName string, rec *store.DecisionRecord)
 			if !action.Success {
 				flag = "❌"
 			}
+			// Don't truncate reasoning in Telegram message, show full reasoning
 			reason := action.Reasoning
-			if len(reason) > 50 {
-				reason = reason[:50] + "..."
-			}
 			lines = append(lines, fmt.Sprintf("%s %s %s\nReason: %s", flag, action.Symbol, action.Action, reason))
 		}
+	}
+
+	// Add Chain of Thought (CoT) if available
+	if rec.CoTTrace != "" {
+		lines = append(lines, "")
+		lines = append(lines, "🧠 AI思维链:")
+		// Truncate if too long (Telegram message limit is 4096 chars)
+		// We reserve some space for other parts of the message
+		const maxCoTLength = 3000
+		cot := rec.CoTTrace
+		if len(cot) > maxCoTLength {
+			cot = cot[:maxCoTLength] + "\n...(truncated)"
+		}
+		lines = append(lines, cot)
 	}
 	
 	return strings.Join(lines, "\n")
