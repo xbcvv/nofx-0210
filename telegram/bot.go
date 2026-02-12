@@ -2,6 +2,8 @@ package telegram
 
 import (
 	"fmt"
+	"net/http"
+	"net/url"
 	"nofx/config"
 	"nofx/logger"
 	"nofx/manager"
@@ -46,14 +48,42 @@ func NewBot(manager *manager.TraderManager, st *store.Store) (*Bot, error) {
 		return nil, fmt.Errorf("invalid TELEGRAM_USER_ID: %w", err)
 	}
 
-	api, err := tgbotapi.NewBotAPI(token)
+	// Create custom HTTP client to support proxy if configured
+	httpClient := &http.Client{
+		Timeout: 30 * time.Second,
+	}
+
+	// Check for proxy settings
+	httpProxy := os.Getenv("HTTP_PROXY")
+	httpsProxy := os.Getenv("HTTPS_PROXY")
+	
+	if httpProxy != "" || httpsProxy != "" {
+		logger.Infof("📡 Telegram using proxy: HTTP=%s HTTPS=%s", httpProxy, httpsProxy)
+		// Go's default transport automatically uses HTTP_PROXY/HTTPS_PROXY environment variables.
+		// We log it just to be sure.
+	} else {
+		// If user wants to configure proxy via .env specific key like TELEGRAM_PROXY
+		if proxyURLStr := os.Getenv("TELEGRAM_PROXY"); proxyURLStr != "" {
+			proxyURL, err := url.Parse(proxyURLStr)
+			if err != nil {
+				logger.Warnf("⚠️ Invalid TELEGRAM_PROXY: %v", err)
+			} else {
+				logger.Infof("📡 Telegram using custom proxy: %s", proxyURLStr)
+				httpClient.Transport = &http.Transport{
+					Proxy: http.ProxyURL(proxyURL),
+				}
+			}
+		}
+	}
+
+	api, err := tgbotapi.NewBotAPIWithClient(token, tgbotapi.APIEndpoint, httpClient)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create telegram bot: %w", err)
+		return nil, fmt.Errorf("failed to create telegram bot: %w (check your network/proxy)", err)
 	}
 	
 	// Delete any existing webhook to ensure long polling works
 	if _, err := api.Request(tgbotapi.DeleteWebhookConfig{DropPendingUpdates: true}); err != nil {
-		logger.Warnf("⚠️ Telegram deleteWebhook failed: %v", err)
+		logger.Warnf("⚠️ Telegram deleteWebhook failed: %v. This might be due to network issues.", err)
 	}
 
 	b := &Bot{
