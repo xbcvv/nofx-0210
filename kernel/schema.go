@@ -139,15 +139,6 @@ var DataDictionary = map[string]map[string]BilingualFieldDef{
 			DescZH: "从开仓到平仓的时间。<15分钟=超短线，15分钟-4小时=日内，>4小时=波段",
 			DescEN: "Time from open to close. <15min=scalping, 15min-4h=intraday, >4h=swing",
 		},
-		"ClosePercentage": {
-			NameZH:    "平仓百分比",
-			NameEN:    "Close Percentage",
-			Unit:      "%",
-			FormulaZH: "平仓数量 / 总持仓数量 × 100",
-			FormulaEN: "Close Quantity / Total Position Quantity × 100",
-			DescZH:    "部分平仓时的平仓比例，0.5表示平仓50%，1.0表示全平",
-			DescEN:    "Percentage of position to close, 0.5 means close 50%, 1.0 means close 100%",
-		},
 		"PositionSizeUSD": {
 			NameZH:    "仓位大小",
 			NameEN:    "Position Size USD",
@@ -237,8 +228,17 @@ var DataDictionary = map[string]map[string]BilingualFieldDef{
 		"Action": {
 			NameZH: "交易动作",
 			NameEN: "Action",
-			DescZH: "交易动作类型，如open_long、close_short等",
-			DescEN: "Trade action type, such as open_long, close_short, etc",
+			DescZH: "交易动作类型，如open_long, open_short, close_long, close_short, partial_close, hold, wait",
+			DescEN: "Trade action type, such as open_long, open_short, close_long, close_short, partial_close, hold, wait",
+		},
+		"ClosePercentage": {
+			NameZH:    "平仓百分比",
+			NameEN:    "Close Percentage",
+			Unit:      "%",
+			FormulaZH: "平仓数量 / 总持仓数量 × 100",
+			FormulaEN: "Close Quantity / Total Position Quantity × 100",
+			DescZH:    "部分平仓时的平仓比例，0.5表示平仓50%，1.0表示全平。仅在Action为partial_close时有效。",
+			DescEN:    "Percentage of position to close, 0.5 means close 50%, 1.0 means close 100%. Only valid when Action is partial_close.",
 		},
 		"Symbol": {
 			NameZH: "交易对",
