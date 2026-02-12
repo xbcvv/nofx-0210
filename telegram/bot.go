@@ -128,9 +128,14 @@ func (b *Bot) handleMessage(msg *tgbotapi.Message) {
 		return
 	}
 	chatID := msg.Chat.ID
+	userID := msg.From.ID
+
+	// Log every message for debugging purposes (temporary, or debug level)
+	logger.Infof("📩 Telegram msg received: ChatID=%d UserID=%d Text='%s'", chatID, userID, msg.Text)
 
 	// Strict whitelist check - only allow admin
 	if chatID != b.adminID {
+		logger.Warnf("⛔ Ignored message from unauthorized ChatID: %d (Expected AdminID: %d)", chatID, b.adminID)
 		return
 	}
 
