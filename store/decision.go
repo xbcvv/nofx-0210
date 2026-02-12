@@ -296,6 +296,25 @@ func (s *DecisionStore) GetAllStatistics() (*Statistics, error) {
 	return stats, nil
 }
 
+// GetRecordsAfterID gets records after specified ID (for incremental updates)
+func (s *DecisionStore) GetRecordsAfterID(traderID string, afterID int64, limit int) ([]*DecisionRecord, error) {
+	var dbRecords []*DecisionRecordDB
+	err := s.db.Where("trader_id = ? AND id > ?", traderID, afterID).
+		Order("id ASC").
+		Limit(limit).
+		Find(&dbRecords).Error
+	if err != nil {
+		return nil, fmt.Errorf("failed to query decision records: %w", err)
+	}
+
+	records := make([]*DecisionRecord, len(dbRecords))
+	for i, db := range dbRecords {
+		records[i] = db.toRecord()
+	}
+
+	return records, nil
+}
+
 // GetLastCycleNumber gets the last cycle number for specified trader
 func (s *DecisionStore) GetLastCycleNumber(traderID string) (int, error) {
 	var cycleNumber *int

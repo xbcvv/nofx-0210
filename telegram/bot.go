@@ -199,12 +199,12 @@ func (b *Bot) handleStatus(chatID int64, args []string) {
 		fmt.Sprintf("扫描周期：%v", status["scan_interval"]),
 	}
 
-	if ws, ok := status["user_data_ws"].(trader.UserDataStreamStatus); ok {
-		lines = append(lines, fmt.Sprintf("EXCHANGE_WS：%s", strings.ToUpper(ws.State)))
+	if ws, ok := status["user_data_ws"].(string); ok {
+		lines = append(lines, fmt.Sprintf("EXCHANGE_WS：%s", strings.ToUpper(ws)))
 	}
 	
-	if ws, ok := status["mark_price_ws"].(trader.MarkPriceStreamStatus); ok {
-		lines = append(lines, fmt.Sprintf("MARK_PRICE_WS：%s", strings.ToUpper(ws.State)))
+	if ws, ok := status["mark_price_ws"].(string); ok {
+		lines = append(lines, fmt.Sprintf("MARK_PRICE_WS：%s", strings.ToUpper(ws)))
 	}
 
 	b.reply(chatID, strings.Join(lines, "\n"))
@@ -217,16 +217,11 @@ func (b *Bot) handleBalance(chatID int64, args []string) {
 		return
 	}
 
-	// Try cached first, then fetch
 	// Logic similar to previous implementation
-	account, ok := at.GetAccountInfoCached()
-	if !ok {
-		var err error
-		account, err = at.GetAccountInfo()
-		if err != nil {
-			b.reply(chatID, fmt.Sprintf("❌ 获取账户失败：%v", err))
-			return
-		}
+	account, err := at.GetAccountInfo()
+	if err != nil {
+		b.reply(chatID, fmt.Sprintf("❌ 获取账户失败：%v", err))
+		return
 	}
 
 	lines := []string{
@@ -248,16 +243,10 @@ func (b *Bot) handlePositions(chatID int64, args []string) {
 		return
 	}
 
-	var positions []map[string]interface{}
-	if cached, ok := at.GetPositionsCached(); ok {
-		positions = cached
-	} else {
-		data, err := at.GetPositions()
-		if err != nil {
-			b.reply(chatID, fmt.Sprintf("❌ 获取持仓失败：%v", err))
-			return
-		}
-		positions = data
+	positions, err := at.GetPositions()
+	if err != nil {
+		b.reply(chatID, fmt.Sprintf("❌ 获取持仓失败：%v", err))
+		return
 	}
 
 	if len(positions) == 0 {
@@ -288,16 +277,10 @@ func (b *Bot) handleOrders(chatID int64, args []string) {
 		return
 	}
 
-	var orders []trader.OpenOrder
-	if cached, ok := at.GetOpenOrdersCached(""); ok {
-		orders = cached
-	} else {
-		data, err := at.GetOpenOrders("")
-		if err != nil {
-			b.reply(chatID, fmt.Sprintf("❌ 获取挂单失败：%v", err))
-			return
-		}
-		orders = data
+	orders, err := at.GetOpenOrders("")
+	if err != nil {
+		b.reply(chatID, fmt.Sprintf("❌ 获取挂单失败：%v", err))
+		return
 	}
 
 	if len(orders) == 0 {
@@ -318,23 +301,14 @@ func (b *Bot) handleOrders(chatID int64, args []string) {
 }
 
 func (b *Bot) handleDeferred(chatID int64, args []string) {
-	at, errMsg := b.resolveTrader(args)
+	_, errMsg := b.resolveTrader(args)
 	if errMsg != "" {
 		b.reply(chatID, errMsg)
 		return
 	}
 
-	orders := at.GetDeferredConditionalOrders("")
-	if len(orders) == 0 {
-		b.reply(chatID, "⏳ 当前没有缓存的止盈止损。")
-		return
-	}
-	lines := []string{fmt.Sprintf("⏳ 交易员：%s 缓存止盈止损", at.GetName())}
-	for _, order := range orders {
-		lines = append(lines, fmt.Sprintf("%s %s\nSL: %s | TP: %s",
-			order.Symbol, order.PositionSide, formatFloat(order.StopLoss, 4), formatFloat(order.TakeProfit, 4)))
-	}
-	b.reply(chatID, strings.Join(lines, "\n\n"))
+	b.reply(chatID, "⏳ 暂不支持查看缓存止盈止损。")
+	return
 }
 
 func (b *Bot) handleDecision(chatID int64, args []string) {
