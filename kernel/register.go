@@ -156,7 +156,7 @@ func (r *Register) BuildRegisterPrompt() (string, error) {
 	}
 	
 	var prompt string
-	prompt += "## 历史决策记录\n"
+	prompt += "## 🧠 决策寄存器 (Memory Bank)\n"
 	
 	for i, record := range records {
 		prompt += fmt.Sprintf("%d. 时间: %s | 状态: %s | 市场: %s\n", 
