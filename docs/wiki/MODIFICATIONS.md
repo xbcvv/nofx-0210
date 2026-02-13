@@ -84,5 +84,9 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 4.  **Prompt 同步**: 上述修改会自动反映在 `GetSchemaPrompt` 生成的系统 Prompt 中，确保 AI 能够理解最新的交易指令集和寄存器内容。
 5.  **Trader ID 修复**: 修复了 `kernel/engine.go` 和 `trader/auto_trader.go` 中上下文传递 Trader ID 的问题，确保每个交易员读取正确的寄存器历史。
 
+### 3.4 寄存器 Prompt 优化
+**修改文件**: `kernel/register.go`
+**描述**: 将寄存器历史记录的标题从 `## 历史决策记录` 修改为 **`## 🧠 决策寄存器 (Memory Bank)`**，并配合 System Prompt 中的数据字典，使 AI 能够更精准地识别和利用历史决策数据作为长期记忆。
+
 ---
 *文档更新时间: 2026-02-13*
