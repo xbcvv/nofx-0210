@@ -756,7 +756,7 @@ func (at *AutoTrader) runCycle() error {
 			}
 			
 			// 创建寄存器实例
-			register := kernel.NewRegister(at.name, registerConfig)
+			register := kernel.NewRegister(at.id, registerConfig)
 			
 			// 创建寄存器记录
 			executionStatus := "success"
@@ -953,6 +953,7 @@ func (at *AutoTrader) buildTradingContext() (*kernel.Context, error) {
 
 	// 6. Build context
 	ctx := &kernel.Context{
+		TraderID:        at.id,
 		CurrentTime:     time.Now().UTC().Format("2006-01-02 15:04:05 UTC"),
 		RuntimeMinutes:  int(time.Since(at.startTime).Minutes()),
 		CallCount:       at.callCount,

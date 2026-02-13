@@ -76,11 +76,13 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 **描述**: 引入了 `github.com/go-telegram-bot-api/telegram-bot-api/v5` 等新依赖以支持 Telegram 功能。
 
 ### 3.3 数据字典与交易规则更新
-**修改文件**: `kernel/schema.go`
+**修改文件**: `kernel/schema.go`, `kernel/engine.go`
 **描述**: 
 1.  **扩展 Action 字段**: 更新了数据字典中的 `Action` 描述，明确支持 `open_long`, `open_short`, `close_long`, `close_short`, `partial_close`, `hold`, `wait` 等动作。
 2.  **新增 ClosePercentage 字段**: 在 `PositionMetrics` 下新增了 `ClosePercentage` 字段定义，用于支持分批止盈策略（0.5 表示平仓 50%）。
-3.  **Prompt 同步**: 上述修改会自动反映在 `GetSchemaPrompt` 生成的系统 Prompt 中，确保 AI 能够理解最新的交易指令集。
+3.  **新增 RegisterMetrics 数据字典**: 定义了 `Cycle`, `MarketRegime`, `ExecutionStatus`, `Decisions` 等寄存器字段，使 AI 能够理解历史记录（记忆模块）的含义。
+4.  **Prompt 同步**: 上述修改会自动反映在 `GetSchemaPrompt` 生成的系统 Prompt 中，确保 AI 能够理解最新的交易指令集和寄存器内容。
+5.  **Trader ID 修复**: 修复了 `kernel/engine.go` 和 `trader/auto_trader.go` 中上下文传递 Trader ID 的问题，确保每个交易员读取正确的寄存器历史。
 
 ---
-*文档更新时间: 2026-02-12*
+*文档更新时间: 2026-02-13*

@@ -106,25 +106,26 @@ type RecentOrder struct {
 
 // Context trading context (complete information passed to AI)
 type Context struct {
-	CurrentTime     string                             `json:"current_time"`
-	RuntimeMinutes  int                                `json:"runtime_minutes"`
-	CallCount       int                                `json:"call_count"`
-	Account         AccountInfo                        `json:"account"`
-	Positions       []PositionInfo                     `json:"positions"`
-	CandidateCoins  []CandidateCoin                    `json:"candidate_coins"`
-	PromptVariant   string                             `json:"prompt_variant,omitempty"`
-	TradingStats    *TradingStats                      `json:"trading_stats,omitempty"`
-	RecentOrders    []RecentOrder                      `json:"recent_orders,omitempty"`
-	MarketDataMap   map[string]*market.Data            `json:"-"`
-	MultiTFMarket   map[string]map[string]*market.Data `json:"-"`
-	OITopDataMap    map[string]*OITopData              `json:"-"`
-	QuantDataMap    map[string]*QuantData              `json:"-"`
-	OIRankingData      *nofxos.OIRankingData      `json:"-"` // Market-wide OI ranking data
-	NetFlowRankingData *nofxos.NetFlowRankingData `json:"-"` // Market-wide fund flow ranking data
-	PriceRankingData   *nofxos.PriceRankingData   `json:"-"` // Market-wide price gainers/losers
-	BTCETHLeverage     int                          `json:"-"`
-	AltcoinLeverage int                                `json:"-"`
-	Timeframes      []string                           `json:"-"`
+	TraderID           string                             `json:"trader_id"`
+	CurrentTime        string                             `json:"current_time"`
+	RuntimeMinutes     int                                `json:"runtime_minutes"`
+	CallCount          int                                `json:"call_count"`
+	Account            AccountInfo                        `json:"account"`
+	Positions          []PositionInfo                     `json:"positions"`
+	CandidateCoins     []CandidateCoin                    `json:"candidate_coins"`
+	PromptVariant      string                             `json:"prompt_variant,omitempty"`
+	TradingStats       *TradingStats                      `json:"trading_stats,omitempty"`
+	RecentOrders       []RecentOrder                      `json:"recent_orders,omitempty"`
+	MarketDataMap      map[string]*market.Data            `json:"-"`
+	MultiTFMarket      map[string]map[string]*market.Data `json:"-"`
+	OITopDataMap       map[string]*OITopData              `json:"-"`
+	QuantDataMap       map[string]*QuantData              `json:"-"`
+	OIRankingData      *nofxos.OIRankingData              `json:"-"` // Market-wide OI ranking data
+	NetFlowRankingData *nofxos.NetFlowRankingData         `json:"-"` // Market-wide fund flow ranking data
+	PriceRankingData   *nofxos.PriceRankingData           `json:"-"` // Market-wide price gainers/losers
+	BTCETHLeverage     int                                `json:"-"`
+	AltcoinLeverage    int                                `json:"-"`
+	Timeframes         []string                           `json:"-"`
 }
 
 // Decision AI trading decision
@@ -1158,15 +1159,19 @@ func (e *StrategyEngine) BuildUserPrompt(ctx *Context) string {
 
 	// Register records (历史决策记录)
 	registerConfig := RegisterConfig{
-		Enabled:       e.config.Register.Enabled,
-		MaxRecords:    e.config.Register.MaxRecords,
-		IncludeDecisions: e.config.Register.IncludeDecisions,
+		Enabled:           e.config.Register.Enabled,
+		MaxRecords:        e.config.Register.MaxRecords,
+		IncludeDecisions:  e.config.Register.IncludeDecisions,
 		IncludeMarketData: e.config.Register.IncludeMarketData,
 	}
-	
+
 	if registerConfig.Enabled && registerConfig.MaxRecords > 0 {
-		// 创建寄存器实例（使用默认traderID，实际使用时应该从上下文中获取）
-		register := NewRegister("default", registerConfig)
+		// Create register instance using TraderID from context
+		traderID := ctx.TraderID
+		if traderID == "" {
+			traderID = "default"
+		}
+		register := NewRegister(traderID, registerConfig)
 		if prompt, err := register.BuildRegisterPrompt(); err == nil && prompt != "" {
 			sb.WriteString(prompt)
 		}

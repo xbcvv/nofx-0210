@@ -271,6 +271,33 @@ var DataDictionary = map[string]map[string]BilingualFieldDef{
 			DescEN: "OI change in 1 hour. Used to determine real capital flow direction",
 		},
 	},
+
+	"RegisterMetrics": {
+		"Cycle": {
+			NameZH: "决策周期",
+			NameEN: "Decision Cycle",
+			DescZH: "决策的序列号，用于追踪策略的连续性",
+			DescEN: "Sequence number of decision, used to track strategy continuity",
+		},
+		"MarketRegime": {
+			NameZH: "市场状态",
+			NameEN: "Market Regime",
+			DescZH: "AI对当时市场环境的判断（如：strong_uptrend, ranging, bear_market）",
+			DescEN: "AI's judgment of market environment (e.g., strong_uptrend, ranging, bear_market)",
+		},
+		"ExecutionStatus": {
+			NameZH: "执行状态",
+			NameEN: "Execution Status",
+			DescZH: "上一决策的执行结果（success 或 failed）",
+			DescEN: "Execution result of previous decision (success or failed)",
+		},
+		"Decisions": {
+			NameZH: "历史决策",
+			NameEN: "Past Decisions",
+			DescZH: "过去周期做出的具体交易决策列表",
+			DescEN: "List of specific trading decisions made in past cycles",
+		},
+	},
 }
 
 // ========== 双语规则定义 ==========
@@ -535,6 +562,12 @@ func getSchemaPromptZH() string {
 		prompt += formatFieldDefZH(key, field)
 	}
 
+	// 寄存器数据
+	prompt += "\n### 寄存器数据 (记忆模块)\n"
+	for key, field := range DataDictionary["RegisterMetrics"] {
+		prompt += formatFieldDefZH(key, field)
+	}
+
 	// OI解读
 	prompt += "\n## 💹 持仓量(OI)变化解读\n\n"
 	prompt += "- **OI增加 + 价格上涨**: " + OIInterpretation.OIUp_PriceUp.ZH + "\n"
@@ -571,6 +604,12 @@ func getSchemaPromptEN() string {
 	// Market Data
 	prompt += "\n### Market Data\n"
 	for key, field := range DataDictionary["MarketData"] {
+		prompt += formatFieldDefEN(key, field)
+	}
+
+	// Register Data
+	prompt += "\n### Register Data (Memory Module)\n"
+	for key, field := range DataDictionary["RegisterMetrics"] {
 		prompt += formatFieldDefEN(key, field)
 	}
 
