@@ -1134,26 +1134,9 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 			qty := foundPos["positionAmt"].(float64)
 			if qty < 0 { qty = -qty }
 			
-			// Convert side to "LONG" or "SHORT" for SetStopLoss/SetTakeProfit
-			positionSide := "LONG"
-			if side == "short" {
-				positionSide = "SHORT"
-			}
-			
-			if decision.StopLoss > 0 {
-				if err := at.trader.SetStopLoss(decision.Symbol, positionSide, qty, decision.StopLoss); err != nil {
-					logger.Warnf("Failed to update StopLoss: %v", err)
-				} else {
-					logger.Infof("  ✓ Updated StopLoss to %.4f", decision.StopLoss)
-				}
-			}
-			
-			if decision.TakeProfit > 0 {
-				if err := at.trader.SetTakeProfit(decision.Symbol, positionSide, qty, decision.TakeProfit); err != nil {
-					logger.Warnf("Failed to update TakeProfit: %v", err)
-				} else {
-					logger.Infof("  ✓ Updated TakeProfit to %.4f", decision.TakeProfit)
-				}
+			// Use helper to update stops (cancels old ones first)
+			if err := at.updatePositionStops(decision.Symbol, side, qty, decision.StopLoss, decision.TakeProfit); err != nil {
+				return err
 			}
 		}
 	}
@@ -1202,6 +1185,48 @@ func (at *AutoTrader) executePartialCloseWithRecord(decision *kernel.Decision, a
 	}
 	
 	return fmt.Errorf("unknown position side: %s", side)
+}
+
+// updatePositionStops updates stop-loss and take-profit for a position
+// It first cancels existing stop orders to ensure new ones can be placed
+func (at *AutoTrader) updatePositionStops(symbol string, side string, quantity float64, stopLoss, takeProfit float64) error {
+	// If no updates needed, return early
+	if stopLoss <= 0 && takeProfit <= 0 {
+		return nil
+	}
+
+	// 1. Cancel existing stop orders first to avoid conflicts
+	// Binance prevents multiple closePosition=true orders in same direction
+	if err := at.trader.CancelStopOrders(symbol); err != nil {
+		logger.Warnf("Failed to cancel existing stop orders for %s: %v", symbol, err)
+		// Continue anyway to try setting new stops
+	}
+
+	// Determine position side for API calls
+	positionSide := "LONG"
+	if side == "short" {
+		positionSide = "SHORT"
+	}
+
+	// 2. Set new Stop Loss
+	if stopLoss > 0 {
+		if err := at.trader.SetStopLoss(symbol, positionSide, quantity, stopLoss); err != nil {
+			logger.Warnf("Failed to update StopLoss to %.4f: %v", stopLoss, err)
+		} else {
+			logger.Infof("  ✓ Updated StopLoss to %.4f", stopLoss)
+		}
+	}
+
+	// 3. Set new Take Profit
+	if takeProfit > 0 {
+		if err := at.trader.SetTakeProfit(symbol, positionSide, quantity, takeProfit); err != nil {
+			logger.Warnf("Failed to update TakeProfit to %.4f: %v", takeProfit, err)
+		} else {
+			logger.Infof("  ✓ Updated TakeProfit to %.4f", takeProfit)
+		}
+	}
+
+	return nil
 }
 
 // ExecuteDecision executes a trading decision from external sources (e.g., debate consensus)
@@ -1563,6 +1588,18 @@ func (at *AutoTrader) executeCloseLongWithRecord(decision *kernel.Decision, acti
 	at.recordAndConfirmOrder(order, decision.Symbol, "close_long", quantity, marketData.CurrentPrice, 0, entryPrice)
 
 	logger.Infof("  ✓ Position closed successfully")
+
+	// Check for stop updates on remaining position (if partial close)
+	if decision.ClosePercentage > 0 && decision.ClosePercentage < 1.0 {
+		if decision.StopLoss > 0 || decision.TakeProfit > 0 {
+			// Update stops for remaining position
+			remainingQty := quantity - closeQuantity
+			if remainingQty > 0 {
+				at.updatePositionStops(decision.Symbol, "long", remainingQty, decision.StopLoss, decision.TakeProfit)
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -1653,6 +1690,18 @@ func (at *AutoTrader) executeCloseShortWithRecord(decision *kernel.Decision, act
 	at.recordAndConfirmOrder(order, decision.Symbol, "close_short", quantity, marketData.CurrentPrice, 0, entryPrice)
 
 	logger.Infof("  ✓ Position closed successfully")
+
+	// Check for stop updates on remaining position (if partial close)
+	if decision.ClosePercentage > 0 && decision.ClosePercentage < 1.0 {
+		if decision.StopLoss > 0 || decision.TakeProfit > 0 {
+			// Update stops for remaining position
+			remainingQty := quantity - closeQuantity
+			if remainingQty > 0 {
+				at.updatePositionStops(decision.Symbol, "short", remainingQty, decision.StopLoss, decision.TakeProfit)
+			}
+		}
+	}
+
 	return nil
 }
 
