@@ -43,7 +43,5 @@ func getSchemaPromptConcise() string {
 
 ## Rules
 - **OI Logic**: OI↑+Price↑=Bull Inflow; OI↑+Price↓=Bear Inflow; OI↓=Covering/Reversal
-- **Risk**: Max Margin 30%; Stop Loss -5%; Daily Loss Limit -10%
-- **Strategy**: Only add to winners; Trailing stop when PnL pulls back 30% from peak
 `
 }

@@ -69,10 +69,14 @@
 | **OI↓ + Price↓** | Longs Liquidation | **多头平仓**：多头止损离场，可能反转或回调 |
 
 ### 风险控制 (Risk Management)
-*   **Max Margin (最大仓位)**: 30% (保留 70% 资金应对风险)
-*   **Stop Loss (硬止损)**: -5% (单笔亏损不超过 5%)
-*   **Daily Loss (日亏损限额)**: -10% (触及则停止当日交易)
+*(以下规则已从 System Prompt 硬编码中移除，完全由用户在策略配置的 `prompt_sections.entry_standards` 中定义)*
+
+*   **Max Margin (最大仓位)**: 建议控制在 30%-50% 以内。
+*   **Stop Loss (硬止损)**: 建议每笔交易设置明确的止损位 (如 -5% 或 ATR 倍数)。
+*   **Daily Loss (日亏损限额)**: 建议设置日亏损熔断机制 (如 -10%)。
 
 ### 策略原则 (Strategy)
-*   **Scale In**: 只在盈利时加仓 (Only add to winners)，绝不摊平亏损。
-*   **Trailing Stop (移动止盈)**: 当浮动盈亏从 **PeakPnL** 回撤超过 **30%** 时，触发止盈平仓，锁定利润。
+*(以下规则已从 System Prompt 硬编码中移除，完全由用户在策略配置的 `prompt_sections.entry_standards` 中定义)*
+
+*   **Scale In**: 建议采用金字塔加仓法 (只在盈利时加仓)。
+*   **Trailing Stop (移动止盈)**: 建议基于 PeakPnL 进行动态回撤止盈 (如回撤 20%-30% 时止盈)。
