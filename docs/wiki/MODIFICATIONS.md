@@ -113,5 +113,12 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 2.  **强制中文回复**: 在 `engine.go` 的 Prompt 构建逻辑中，增加了针对中文环境的强制指令 `IMPORTANT: Please analyze and respond STRICTLY in Chinese language`，确保即使输入英文定义，AI 仍用中文回复。
 3.  **Wiki 文档支持**: 自动生成了 `docs/wiki/DATA_DICTIONARY.md`，提供中英文术语对照表，方便开发者查阅。
 
+### 3.8 Configurable Risk & Strategy Rules
+**修改文件**: `kernel/schema.go`, `docs/wiki/DATA_DICTIONARY.md`
+**描述**:
+1.  **移除硬编码规则**: 从 System Prompt (`kernel/schema.go`) 中彻底移除了硬编码的风险控制 (Risk Management) 和策略原则 (Strategy) 规则（如 "Max Margin 30%", "Only add to winners"）。
+2.  **配置驱动**: 将风控和策略逻辑的控制权完全交还给用户。现在，AI 的行为完全取决于策略配置文件 (`strategy_*.json`) 中的 `entry_standards` 和 `decision_process` 字段，实现了真正的策略动态配置。
+3.  **文档更新**: 在 Wiki 文档中标记了这些规则已从底层移除，并提供了配置建议。
+
 ---
 *文档更新时间: 2026-02-14*
