@@ -99,5 +99,12 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
     *   支持用户在策略 JSON 中自定义展示数量（如 50 或 300），系统会自动适配。若未设置，则启用默认的智能截断逻辑。
 3.  **去重**: 修复了 System Prompt 与 Custom Prompt 规则重复导致上下文冗余的问题。
 
+### 3.6 Prompt Data Format Optimization
+**修改文件**: `kernel/engine.go`
+**描述**:
+1.  **紧凑 CSV 格式**: 将 K 线数据的展示格式从对齐表格（固定宽度）改为紧凑的 CSV 格式（逗号分隔），大幅减少了由空格填充导致的 Token 消耗。
+2.  **智能浮点数格式化**: 实现了 `formatPriceSmart` 和 `formatVolumeSmart` 函数，根据数值大小动态调整小数精度（如小数值保留 8 位，大数值保留 2 位），避免了冗余精度（如 `0.000000` -> `0`）。
+3.  **数组压缩**: 优化了指标数组（EMA, MACD, RSI）的展示，移除了方括号和逗号，改用空格分隔，进一步节省 Token。
+
 ---
 *文档更新时间: 2026-02-14*

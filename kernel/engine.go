@@ -1419,10 +1419,10 @@ func (e *StrategyEngine) formatMarketData(data *market.Data) string {
 
 	// 明确标注币种
 	sb.WriteString(fmt.Sprintf("=== %s Market Data ===\n\n", data.Symbol))
-	sb.WriteString(fmt.Sprintf("current_price = %.4f", data.CurrentPrice))
+	sb.WriteString(fmt.Sprintf("current_price = %s", formatPriceSmart(data.CurrentPrice)))
 
 	if indicators.EnableEMA {
-		sb.WriteString(fmt.Sprintf(", current_ema20 = %.3f", data.CurrentEMA20))
+		sb.WriteString(fmt.Sprintf(", current_ema20 = %s", formatPriceSmart(data.CurrentEMA20)))
 	}
 
 	if indicators.EnableMACD {
@@ -1430,7 +1430,7 @@ func (e *StrategyEngine) formatMarketData(data *market.Data) string {
 	}
 
 	if indicators.EnableRSI {
-		sb.WriteString(fmt.Sprintf(", current_rsi7 = %.3f", data.CurrentRSI7))
+		sb.WriteString(fmt.Sprintf(", current_rsi7 = %.1f", data.CurrentRSI7))
 	}
 
 	sb.WriteString("\n\n")
@@ -1439,8 +1439,8 @@ func (e *StrategyEngine) formatMarketData(data *market.Data) string {
 		sb.WriteString(fmt.Sprintf("Additional data for %s:\n\n", data.Symbol))
 
 		if indicators.EnableOI && data.OpenInterest != nil {
-			sb.WriteString(fmt.Sprintf("Open Interest: Latest: %.2f Average: %.2f\n\n",
-				data.OpenInterest.Latest, data.OpenInterest.Average))
+			sb.WriteString(fmt.Sprintf("Open Interest: Latest: %s Average: %s\n\n",
+				formatVolumeSmart(data.OpenInterest.Latest), formatVolumeSmart(data.OpenInterest.Average)))
 		}
 
 		if indicators.EnableFundingRate {
@@ -1582,47 +1582,55 @@ func (e *StrategyEngine) formatTimeframeSeriesData(sb *strings.Builder, data *ma
 	displayKlines := sliceKlines(data.Klines, limit)
 
 	if len(displayKlines) > 0 {
-		sb.WriteString("Time(UTC)      Open      High      Low       Close     Volume\n")
+		sb.WriteString("Time,Open,High,Low,Close,Vol\n")
 		for i, k := range displayKlines {
 			t := time.Unix(k.Time/1000, 0).UTC()
 			timeStr := t.Format("01-02 15:04")
 			marker := ""
 			if i == len(displayKlines)-1 {
-				marker = "  <- current"
+				marker = " <"
 			}
-			sb.WriteString(fmt.Sprintf("%-14s %-9.4f %-9.4f %-9.4f %-9.4f %-12.2f%s\n",
-				timeStr, k.Open, k.High, k.Low, k.Close, k.Volume, marker))
+			
+			// Dynamic precision formatting
+			oStr := formatPriceSmart(k.Open)
+			hStr := formatPriceSmart(k.High)
+			lStr := formatPriceSmart(k.Low)
+			cStr := formatPriceSmart(k.Close)
+			vStr := formatVolumeSmart(k.Volume)
+			
+			sb.WriteString(fmt.Sprintf("%s,%s,%s,%s,%s,%s%s\n",
+				timeStr, oStr, hStr, lStr, cStr, vStr, marker))
 		}
 		sb.WriteString("\n")
 	} else if len(data.MidPrices) > 0 {
 		// Legacy support
 		displayMidPrices := sliceFloat(data.MidPrices, limit)
-		sb.WriteString(fmt.Sprintf("Mid prices: %s\n\n", formatFloatSlice(displayMidPrices)))
+		sb.WriteString(fmt.Sprintf("Mid prices: %s\n\n", formatFloatSliceSmart(displayMidPrices)))
 		if indicators.EnableVolume && len(data.Volume) > 0 {
 			displayVolume := sliceFloat(data.Volume, limit)
-			sb.WriteString(fmt.Sprintf("Volume: %s\n\n", formatFloatSlice(displayVolume)))
+			sb.WriteString(fmt.Sprintf("Volume: %s\n\n", formatVolumeSliceSmart(displayVolume)))
 		}
 	}
 
 	if indicators.EnableEMA {
 		if len(data.EMA20Values) > 0 {
-			sb.WriteString(fmt.Sprintf("EMA20: %s\n", formatFloatSlice(sliceFloat(data.EMA20Values, limit))))
+			sb.WriteString(fmt.Sprintf("EMA20: %s\n", formatFloatSliceSmart(sliceFloat(data.EMA20Values, limit))))
 		}
 		if len(data.EMA50Values) > 0 {
-			sb.WriteString(fmt.Sprintf("EMA50: %s\n", formatFloatSlice(sliceFloat(data.EMA50Values, limit))))
+			sb.WriteString(fmt.Sprintf("EMA50: %s\n", formatFloatSliceSmart(sliceFloat(data.EMA50Values, limit))))
 		}
 	}
 
 	if indicators.EnableMACD && len(data.MACDValues) > 0 {
-		sb.WriteString(fmt.Sprintf("MACD: %s\n", formatFloatSlice(sliceFloat(data.MACDValues, limit))))
+		sb.WriteString(fmt.Sprintf("MACD: %s\n", formatFloatSliceFixed(sliceFloat(data.MACDValues, limit), 3)))
 	}
 
 	if indicators.EnableRSI {
 		if len(data.RSI7Values) > 0 {
-			sb.WriteString(fmt.Sprintf("RSI7: %s\n", formatFloatSlice(sliceFloat(data.RSI7Values, limit))))
+			sb.WriteString(fmt.Sprintf("RSI7: %s\n", formatFloatSliceFixed(sliceFloat(data.RSI7Values, limit), 1)))
 		}
 		if len(data.RSI14Values) > 0 {
-			sb.WriteString(fmt.Sprintf("RSI14: %s\n", formatFloatSlice(sliceFloat(data.RSI14Values, limit))))
+			sb.WriteString(fmt.Sprintf("RSI14: %s\n", formatFloatSliceFixed(sliceFloat(data.RSI14Values, limit), 1)))
 		}
 	}
 
@@ -1631,9 +1639,9 @@ func (e *StrategyEngine) formatTimeframeSeriesData(sb *strings.Builder, data *ma
 	}
 
 	if indicators.EnableBOLL && len(data.BOLLUpper) > 0 {
-		sb.WriteString(fmt.Sprintf("BOLL Upper: %s\n", formatFloatSlice(sliceFloat(data.BOLLUpper, limit))))
-		sb.WriteString(fmt.Sprintf("BOLL Middle: %s\n", formatFloatSlice(sliceFloat(data.BOLLMiddle, limit))))
-		sb.WriteString(fmt.Sprintf("BOLL Lower: %s\n", formatFloatSlice(sliceFloat(data.BOLLLower, limit))))
+		sb.WriteString(fmt.Sprintf("BOLL Upper: %s\n", formatFloatSliceSmart(sliceFloat(data.BOLLUpper, limit))))
+		sb.WriteString(fmt.Sprintf("BOLL Middle: %s\n", formatFloatSliceSmart(sliceFloat(data.BOLLMiddle, limit))))
+		sb.WriteString(fmt.Sprintf("BOLL Lower: %s\n", formatFloatSliceSmart(sliceFloat(data.BOLLLower, limit))))
 	}
 
 	sb.WriteString("\n")
@@ -1741,6 +1749,61 @@ func formatFlowValue(v float64) string {
 		return fmt.Sprintf("%s%.2fK", sign, v/1e3)
 	}
 	return fmt.Sprintf("%s%.2f", sign, v)
+}
+
+func formatPriceSmart(price float64) string {
+	switch {
+	case price < 0.0001:
+		return fmt.Sprintf("%.8f", price)
+	case price < 0.001:
+		return fmt.Sprintf("%.6f", price)
+	case price < 0.01:
+		return fmt.Sprintf("%.6f", price)
+	case price < 1.0:
+		return fmt.Sprintf("%.4f", price)
+	case price < 100:
+		return fmt.Sprintf("%.4f", price)
+	default:
+		// High price coins: BTC, ETH (save tokens)
+		// 45678.9123 -> "45678.91" (2 decimal places)
+		return fmt.Sprintf("%.2f", price)
+	}
+}
+
+func formatVolumeSmart(vol float64) string {
+	if vol >= 1_000_000_000 {
+		return fmt.Sprintf("%.2fB", vol/1_000_000_000)
+	} else if vol >= 1_000_000 {
+		return fmt.Sprintf("%.2fM", vol/1_000_000)
+	} else if vol >= 1_000 {
+		return fmt.Sprintf("%.1fK", vol/1_000)
+	}
+	return fmt.Sprintf("%.0f", vol)
+}
+
+func formatFloatSliceSmart(values []float64) string {
+	strValues := make([]string, len(values))
+	for i, v := range values {
+		strValues[i] = formatPriceSmart(v)
+	}
+	return strings.Join(strValues, " ")
+}
+
+func formatVolumeSliceSmart(values []float64) string {
+	strValues := make([]string, len(values))
+	for i, v := range values {
+		strValues[i] = formatVolumeSmart(v)
+	}
+	return strings.Join(strValues, " ")
+}
+
+func formatFloatSliceFixed(values []float64, precision int) string {
+	strValues := make([]string, len(values))
+	format := fmt.Sprintf("%%.%df", precision)
+	for i, v := range values {
+		strValues[i] = fmt.Sprintf(format, v)
+	}
+	return strings.Join(strValues, " ")
 }
 
 func formatFloatSlice(values []float64) string {
