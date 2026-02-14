@@ -359,13 +359,13 @@ func formatKlineDataZH(symbol string, tfData map[string]*market.TimeframeSeriesD
 // getOIInterpretationZH 获取OI变化解读（中文）
 func getOIInterpretationZH(oiChange, priceChange string) string {
 	if oiChange == "增加" && priceChange == "上涨" {
-		return OIInterpretation.OIUp_PriceUp.ZH
+		return "强多头趋势（新多单开仓，资金流入做多）"
 	} else if oiChange == "增加" && priceChange == "下跌" {
-		return OIInterpretation.OIUp_PriceDown.ZH
+		return "强空头趋势（新空单开仓，资金流入做空）"
 	} else if oiChange == "减少" && priceChange == "上涨" {
-		return OIInterpretation.OIDown_PriceUp.ZH
+		return "空头平仓（空头止损离场，可能出现反转）"
 	} else {
-		return OIInterpretation.OIDown_PriceDown.ZH
+		return "多头平仓（多头止损离场，可能出现反转）"
 	}
 }
 
@@ -624,12 +624,12 @@ func formatKlineDataEN(symbol string, tfData map[string]*market.TimeframeSeriesD
 // getOIInterpretationEN 获取OI变化解读（英文）
 func getOIInterpretationEN(oiChange, priceChange string) string {
 	if oiChange == "increase" && priceChange == "up" {
-		return OIInterpretation.OIUp_PriceUp.EN
+		return "Strong bullish trend (new longs opening, capital flowing into long positions)"
 	} else if oiChange == "increase" && priceChange == "down" {
-		return OIInterpretation.OIUp_PriceDown.EN
+		return "Strong bearish trend (new shorts opening, capital flowing into short positions)"
 	} else if oiChange == "decrease" && priceChange == "up" {
-		return OIInterpretation.OIDown_PriceUp.EN
+		return "Shorts covering (shorts stopped out, potential reversal)"
 	} else {
-		return OIInterpretation.OIDown_PriceDown.EN
+		return "Longs closing (longs stopped out, potential reversal)"
 	}
 }

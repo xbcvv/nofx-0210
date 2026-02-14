@@ -106,5 +106,12 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 2.  **智能浮点数格式化**: 实现了 `formatPriceSmart` 和 `formatVolumeSmart` 函数，根据数值大小动态调整小数精度（如小数值保留 8 位，大数值保留 2 位），避免了冗余精度（如 `0.000000` -> `0`）。
 3.  **数组压缩**: 优化了指标数组（EMA, MACD, RSI）的展示，移除了方括号和逗号，改用空格分隔，进一步节省 Token。
 
+### 3.7 System Prompt Schema Optimization
+**修改文件**: `kernel/schema.go`, `kernel/engine.go`
+**描述**:
+1.  **英文数据字典**: 将 System Prompt 中的数据字典（Schema）从详细的双语对照改为精简的英文定义（如 `UnrealizedPnL(Floating)`），减少了约 60% 的 Schema Token 消耗。
+2.  **强制中文回复**: 在 `engine.go` 的 Prompt 构建逻辑中，增加了针对中文环境的强制指令 `IMPORTANT: Please analyze and respond STRICTLY in Chinese language`，确保即使输入英文定义，AI 仍用中文回复。
+3.  **Wiki 文档支持**: 自动生成了 `docs/wiki/DATA_DICTIONARY.md`，提供中英文术语对照表，方便开发者查阅。
+
 ---
 *文档更新时间: 2026-02-14*

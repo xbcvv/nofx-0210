@@ -938,10 +938,19 @@ func (e *StrategyEngine) BuildSystemPrompt(accountEquity float64, variant string
 	// 1. Role definition (editable)
 	if promptSections.RoleDefinition != "" {
 		sb.WriteString(promptSections.RoleDefinition)
+		// Enforce language constraint if using Chinese
+		if lang == LangChinese {
+			sb.WriteString("\n\nIMPORTANT: Please analyze and respond STRICTLY in Chinese language (中文).")
+		}
 		sb.WriteString("\n\n")
 	} else {
 		sb.WriteString("# You are a professional cryptocurrency trading AI\n\n")
-		sb.WriteString("Your task is to make trading decisions based on provided market data.\n\n")
+		sb.WriteString("Your task is to make trading decisions based on provided market data.\n")
+		// Enforce language constraint if using Chinese
+		if lang == LangChinese {
+			sb.WriteString("IMPORTANT: Please analyze and respond STRICTLY in Chinese language (中文).")
+		}
+		sb.WriteString("\n\n")
 	}
 
 	// 2. Trading mode variant
