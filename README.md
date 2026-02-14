@@ -7,6 +7,7 @@
 <p align="center">
   <h2>⚠️ 本项目是基于 <a href="https://github.com/NoFxAiOS/nofx/tree/main">NoFxAiOS/nofx</a> 的 main 版本（2026-02-10）进行的修改</h2>
   <p>👉 <strong><a href="docs/wiki/MODIFICATIONS.md">点击查看详细修改记录 (Wiki)</a></strong> - 包含 Telegram 集成、分批止盈、决策寄存器等新增功能说明</p>
+  <p>👉 <strong><a href="docs/wiki/DATA_DICTIONARY.md">点击查看数据字典与规则 (Data Dictionary)</a></strong> - System Prompt 中使用的核心字段定义与中英文对照</p>
 
 </p>
 
