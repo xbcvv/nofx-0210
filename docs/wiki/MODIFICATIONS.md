@@ -120,5 +120,35 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 2.  **配置驱动**: 将风控和策略逻辑的控制权完全交还给用户。现在，AI 的行为完全取决于策略配置文件 (`strategy_*.json`) 中的 `entry_standards` 和 `decision_process` 字段，实现了真正的策略动态配置。
 3.  **文档更新**: 在 Wiki 文档中标记了这些规则已从底层移除，并提供了配置建议。
 
+## 4. 系统稳定性与功能增强 [2026-02-14]
+
+### 4.1 Telegram Bot 重构与配置集成
+**修改文件**: `telegram/bot.go`, `config/config.go`, `main.go`, `.env`
+**描述**: 
+1.  **代码重构**: 优化了 Bot 的初始化逻辑，使其更符合项目整体架构。
+2.  **配置集成**: 将 Bot Token 和 User ID 从代码中剥离，统一通过 `config` 包读取环境变量 (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_USER_ID`)。
+3.  **启动集成**: 在 `main.go` 中正式集成 Bot 启动流程，确保随主程序一同运行。
+
+### 4.2 修复 Hold 状态下的订单更新逻辑
+**修改文件**: `trader/auto_trader.go`
+**描述**: 
+修复了在 `Hold` 状态下尝试更新止损/止盈时，因未先撤销旧订单而导致 Binance 报错 `-4130` (Existing Order) 的问题。
+**新逻辑**: 引入“先撤后设”机制，确保新订单能正确覆盖旧订单。
+
+### 4.3 修复 Partial Close 订单更新与安全隐患
+**修改文件**: `trader/auto_trader.go`, `trader/binance/futures.go`
+**描述**: 
+1.  **逻辑补全**: 完善了分批平仓 (`Partial Close`) 逻辑。现在执行分批平仓后，会自动更新剩余仓位的止损/止盈设置（如有）。
+2.  **重大 Bug 修复**: 修正了 Binance 接口驱动中 `CloseLong/CloseShort` 无条件撤销所有挂单的缺陷。
+    - **修复前**: 无论平多少仓位，都会撤销该币种所有挂单，导致剩余仓位“裸奔”。
+    - **修复后**: 仅在全仓平仓 (`Full Close`) 时撤销挂单；分批平仓时保留现有止损/止盈单，确保安全。
+
+### 4.4 构建系统优化
+**修改文件**: `.github/workflows/docker-build.yml`, `Dockerfile`
+**描述**: 
+1.  **构建修复**: 解决了 `go mod tidy` 在 Docker 构建中的兼容性问题。
+2.  **资源优化**: 在 GitHub Actions 中启用了 `max-parallel: 1` 策略，避免了因并行构建导致的资源耗尽和超时失败。
+3.  **环境对齐**: 同步了 `main` 与 `test` 分支的构建环境，确保生产环境稳定性。
+
 ---
 *文档更新时间: 2026-02-14*
