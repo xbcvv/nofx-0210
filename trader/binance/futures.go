@@ -467,9 +467,39 @@ func (t *FuturesTrader) CloseLong(symbol string, quantity float64) (map[string]i
 
 	logger.Infof("✓ Closed long position successfully: %s quantity: %s", symbol, quantityStr)
 
-	// After closing position, cancel all pending orders for this symbol (stop-loss and take-profit orders)
-	if err := t.CancelAllOrders(symbol); err != nil {
-		logger.Infof("  ⚠ Failed to cancel pending orders: %v", err)
+	// Check if this was a full close
+	// If quantity passed was 0, it was definitely a full close (logic above sets quantity to full pos)
+	// If quantity passed was > 0, we need to check if it matches the full position size
+	isFullClose := false
+	if quantity == 0 {
+		isFullClose = true // Should not be possible here as quantity is updated above, but for safety
+	} else {
+		// Optimization: Check if quantity matches current position
+		// This adds an API call but ensures safety for partial closes
+		positions, err := t.GetPositions()
+		if err == nil {
+			for _, pos := range positions {
+				if pos["symbol"] == symbol && pos["side"] == "long" {
+					currentQty := pos["positionAmt"].(float64)
+					// Verify if closed quantity is close to current position size (within small epsilon for float precision)
+					if quantity >= currentQty*0.999 {
+						isFullClose = true
+					}
+					break
+				}
+			}
+		}
+	}
+
+	// Only cancel pending orders if it's a full close
+	if isFullClose {
+		if err := t.CancelAllOrders(symbol); err != nil {
+			logger.Infof("  ⚠ Failed to cancel pending orders: %v", err)
+		} else {
+			logger.Infof("  ✓ Canceled all pending orders for %s (Full Close)", symbol)
+		}
+	} else {
+		logger.Infof("  ℹ Partial close detected, keeping existing stop orders for %s", symbol)
 	}
 
 	result := make(map[string]interface{})
@@ -522,9 +552,35 @@ func (t *FuturesTrader) CloseShort(symbol string, quantity float64) (map[string]
 
 	logger.Infof("✓ Closed short position successfully: %s quantity: %s", symbol, quantityStr)
 
-	// After closing position, cancel all pending orders for this symbol (stop-loss and take-profit orders)
-	if err := t.CancelAllOrders(symbol); err != nil {
-		logger.Infof("  ⚠ Failed to cancel pending orders: %v", err)
+	// Check if this was a full close
+	isFullClose := false
+	if quantity == 0 {
+		isFullClose = true
+	} else {
+		positions, err := t.GetPositions()
+		if err == nil {
+			for _, pos := range positions {
+				if pos["symbol"] == symbol && pos["side"] == "short" {
+					currentQty := -pos["positionAmt"].(float64) // Short is negative
+					// Verify if closed quantity is close to current position size
+					if quantity >= currentQty*0.999 {
+						isFullClose = true
+					}
+					break
+				}
+			}
+		}
+	}
+
+	// Only cancel pending orders if it's a full close
+	if isFullClose {
+		if err := t.CancelAllOrders(symbol); err != nil {
+			logger.Infof("  ⚠ Failed to cancel pending orders: %v", err)
+		} else {
+			logger.Infof("  ✓ Canceled all pending orders for %s (Full Close)", symbol)
+		}
+	} else {
+		logger.Infof("  ℹ Partial close detected, keeping existing stop orders for %s", symbol)
 	}
 
 	result := make(map[string]interface{})
