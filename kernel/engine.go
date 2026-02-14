@@ -1452,8 +1452,46 @@ func (e *StrategyEngine) formatMarketData(data *market.Data) string {
 		timeframeOrder := []string{"1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w"}
 		for _, tf := range timeframeOrder {
 			if tfData, ok := data.TimeframeData[tf]; ok {
-				sb.WriteString(fmt.Sprintf("=== %s Timeframe (oldest → latest) ===\n\n", strings.ToUpper(tf)))
-				e.formatTimeframeSeriesData(&sb, tfData, indicators)
+				// Only display selected timeframes from config to save tokens
+				isSelected := false
+				for _, selectedTf := range e.config.Indicators.Klines.SelectedTimeframes {
+					if selectedTf == tf {
+						isSelected = true
+						break
+					}
+				}
+				
+				// Also include primary and longer timeframe if they are not in selected list
+				if !isSelected {
+					if tf == e.config.Indicators.Klines.PrimaryTimeframe || 
+					   (e.config.Indicators.Klines.EnableMultiTimeframe && tf == e.config.Indicators.Klines.LongerTimeframe) {
+						isSelected = true
+					}
+				}
+
+				if isSelected {
+					sb.WriteString(fmt.Sprintf("=== %s Timeframe (oldest → latest) ===\n\n", strings.ToUpper(tf)))
+					
+					// Determine display limit based on config (Adaptive Logic)
+					// Default to optimized values (24 for primary, 12 for others) if not set
+					baseLimit := e.config.Indicators.Klines.DisplayCount
+					if baseLimit <= 0 {
+						baseLimit = 24
+					}
+					
+					displayLimit := baseLimit
+					
+					// If this is NOT the primary timeframe, reduce context to save tokens (50% of base)
+					// But ensure at least 12 bars for context
+					if tf != e.config.Indicators.Klines.PrimaryTimeframe {
+						displayLimit = baseLimit / 2
+						if displayLimit < 12 {
+							displayLimit = 12 
+						}
+					}
+					
+					e.formatTimeframeSeriesData(&sb, tfData, indicators, displayLimit)
+				}
 			}
 		}
 	} else {
@@ -1523,14 +1561,33 @@ func (e *StrategyEngine) formatMarketData(data *market.Data) string {
 	return sb.String()
 }
 
-func (e *StrategyEngine) formatTimeframeSeriesData(sb *strings.Builder, data *market.TimeframeSeriesData, indicators store.IndicatorConfig) {
-	if len(data.Klines) > 0 {
+func (e *StrategyEngine) formatTimeframeSeriesData(sb *strings.Builder, data *market.TimeframeSeriesData, indicators store.IndicatorConfig, limit int) {
+	// Helper to slice data from the end
+	sliceFloat := func(arr []float64, n int) []float64 {
+		if len(arr) <= n {
+			return arr
+		}
+		return arr[len(arr)-n:]
+	}
+	
+	// Helper to slice klines from the end
+	sliceKlines := func(arr []market.KlineBar, n int) []market.KlineBar {
+		if len(arr) <= n {
+			return arr
+		}
+		return arr[len(arr)-n:]
+	}
+
+	// Use limit to truncate data
+	displayKlines := sliceKlines(data.Klines, limit)
+
+	if len(displayKlines) > 0 {
 		sb.WriteString("Time(UTC)      Open      High      Low       Close     Volume\n")
-		for i, k := range data.Klines {
+		for i, k := range displayKlines {
 			t := time.Unix(k.Time/1000, 0).UTC()
 			timeStr := t.Format("01-02 15:04")
 			marker := ""
-			if i == len(data.Klines)-1 {
+			if i == len(displayKlines)-1 {
 				marker = "  <- current"
 			}
 			sb.WriteString(fmt.Sprintf("%-14s %-9.4f %-9.4f %-9.4f %-9.4f %-12.2f%s\n",
@@ -1538,31 +1595,34 @@ func (e *StrategyEngine) formatTimeframeSeriesData(sb *strings.Builder, data *ma
 		}
 		sb.WriteString("\n")
 	} else if len(data.MidPrices) > 0 {
-		sb.WriteString(fmt.Sprintf("Mid prices: %s\n\n", formatFloatSlice(data.MidPrices)))
+		// Legacy support
+		displayMidPrices := sliceFloat(data.MidPrices, limit)
+		sb.WriteString(fmt.Sprintf("Mid prices: %s\n\n", formatFloatSlice(displayMidPrices)))
 		if indicators.EnableVolume && len(data.Volume) > 0 {
-			sb.WriteString(fmt.Sprintf("Volume: %s\n\n", formatFloatSlice(data.Volume)))
+			displayVolume := sliceFloat(data.Volume, limit)
+			sb.WriteString(fmt.Sprintf("Volume: %s\n\n", formatFloatSlice(displayVolume)))
 		}
 	}
 
 	if indicators.EnableEMA {
 		if len(data.EMA20Values) > 0 {
-			sb.WriteString(fmt.Sprintf("EMA20: %s\n", formatFloatSlice(data.EMA20Values)))
+			sb.WriteString(fmt.Sprintf("EMA20: %s\n", formatFloatSlice(sliceFloat(data.EMA20Values, limit))))
 		}
 		if len(data.EMA50Values) > 0 {
-			sb.WriteString(fmt.Sprintf("EMA50: %s\n", formatFloatSlice(data.EMA50Values)))
+			sb.WriteString(fmt.Sprintf("EMA50: %s\n", formatFloatSlice(sliceFloat(data.EMA50Values, limit))))
 		}
 	}
 
 	if indicators.EnableMACD && len(data.MACDValues) > 0 {
-		sb.WriteString(fmt.Sprintf("MACD: %s\n", formatFloatSlice(data.MACDValues)))
+		sb.WriteString(fmt.Sprintf("MACD: %s\n", formatFloatSlice(sliceFloat(data.MACDValues, limit))))
 	}
 
 	if indicators.EnableRSI {
 		if len(data.RSI7Values) > 0 {
-			sb.WriteString(fmt.Sprintf("RSI7: %s\n", formatFloatSlice(data.RSI7Values)))
+			sb.WriteString(fmt.Sprintf("RSI7: %s\n", formatFloatSlice(sliceFloat(data.RSI7Values, limit))))
 		}
 		if len(data.RSI14Values) > 0 {
-			sb.WriteString(fmt.Sprintf("RSI14: %s\n", formatFloatSlice(data.RSI14Values)))
+			sb.WriteString(fmt.Sprintf("RSI14: %s\n", formatFloatSlice(sliceFloat(data.RSI14Values, limit))))
 		}
 	}
 
@@ -1571,9 +1631,9 @@ func (e *StrategyEngine) formatTimeframeSeriesData(sb *strings.Builder, data *ma
 	}
 
 	if indicators.EnableBOLL && len(data.BOLLUpper) > 0 {
-		sb.WriteString(fmt.Sprintf("BOLL Upper: %s\n", formatFloatSlice(data.BOLLUpper)))
-		sb.WriteString(fmt.Sprintf("BOLL Middle: %s\n", formatFloatSlice(data.BOLLMiddle)))
-		sb.WriteString(fmt.Sprintf("BOLL Lower: %s\n", formatFloatSlice(data.BOLLLower)))
+		sb.WriteString(fmt.Sprintf("BOLL Upper: %s\n", formatFloatSlice(sliceFloat(data.BOLLUpper, limit))))
+		sb.WriteString(fmt.Sprintf("BOLL Middle: %s\n", formatFloatSlice(sliceFloat(data.BOLLMiddle, limit))))
+		sb.WriteString(fmt.Sprintf("BOLL Lower: %s\n", formatFloatSlice(sliceFloat(data.BOLLLower, limit))))
 	}
 
 	sb.WriteString("\n")

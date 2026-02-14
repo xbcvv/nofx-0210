@@ -88,5 +88,16 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 **修改文件**: `kernel/register.go`
 **描述**: 将寄存器历史记录的标题从 `## 历史决策记录` 修改为 **`## 🧠 决策寄存器 (Memory Bank)`**，并配合 System Prompt 中的数据字典，使 AI 能够更精准地识别和利用历史决策数据作为长期记忆。
 
+### 3.5 AI Prompt 性能优化与自适应显示
+**修改文件**: `kernel/engine.go`, `store/strategy.go`
+**描述**:
+1.  **Token 消耗优化**: 重构了市场数据格式化逻辑 (`formatTimeframeSeriesData`)，将 Prompt 中展示的 K 线数量与后端指标计算所需的 K 线数量解耦。
+    *   后端计算：始终使用配置的完整数量（如 100 根）以确保 EMA/MACD 指标精准。
+    *   前端展示：默认截断为主周期 24 根、辅周期 12 根，大幅降低 Token 消耗（~60-70%）。
+2.  **自适应参数 (`DisplayCount`)**:
+    *   在 `StrategyConfig` 中新增 `display_count` 字段。
+    *   支持用户在策略 JSON 中自定义展示数量（如 50 或 300），系统会自动适配。若未设置，则启用默认的智能截断逻辑。
+3.  **去重**: 修复了 System Prompt 与 Custom Prompt 规则重复导致上下文冗余的问题。
+
 ---
-*文档更新时间: 2026-02-13*
+*文档更新时间: 2026-02-14*
