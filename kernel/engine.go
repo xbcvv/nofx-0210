@@ -139,6 +139,7 @@ type Decision struct {
 	PositionSizeUSD float64 `json:"position_size_usd,omitempty"`
 	StopLoss        float64 `json:"stop_loss,omitempty"`
 	TakeProfit      float64 `json:"take_profit,omitempty"`
+	EntryPrice      float64 `json:"entry_price,omitempty"` // Average entry price for position auditing
 
 	// Closing position parameters
 	ClosePercentage float64 `json:"close_percentage,omitempty"` // 0.0 - 1.0 (e.g. 0.5 for 50%)

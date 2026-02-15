@@ -767,6 +767,13 @@ func (at *AutoTrader) runCycle() error {
 			// 构建简化的决策记录
 			var registerDecisions []kernel.Decision
 			for _, d := range aiDecision.Decisions {
+				// Populate EntryPrice from current position context if available
+				for _, posInfo := range ctx.Positions {
+					if posInfo.Symbol == d.Symbol {
+						d.EntryPrice = posInfo.EntryPrice
+						break
+					}
+				}
 				registerDecisions = append(registerDecisions, d)
 			}
 			

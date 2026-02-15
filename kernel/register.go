@@ -171,6 +171,9 @@ func (r *Register) BuildRegisterPrompt() (string, error) {
 				if decision.TakeProfit > 0 {
 					prompt += fmt.Sprintf(" TP:%.2f", decision.TakeProfit)
 				}
+				if decision.EntryPrice > 0 {
+					prompt += fmt.Sprintf(" Entry:%.4f", decision.EntryPrice)
+				}
 				prompt += "\n"
 			}
 		}

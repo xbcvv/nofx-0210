@@ -150,5 +150,12 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 2.  **资源优化**: 在 GitHub Actions 中启用了 `max-parallel: 1` 策略，避免了因并行构建导致的资源耗尽和超时失败。
 3.  **环境对齐**: 同步了 `main` 与 `test` 分支的构建环境，确保生产环境稳定性。
 
+### 4.5 记忆解析升级 (Memory Audit Upgrade)
+**修改文件**: `kernel/engine.go`, `trader/auto_trader.go`, `kernel/register.go`
+**描述**: 
+1.  **数据层**: 在 `Decision` 结构体中新增 `EntryPrice` 字段，用于记录决策当时的持仓均价。
+2.  **执行层**: 在 `auto_trader` 生成决策记录时，若当前持有相应仓位，则自动抓取 `Position.EntryPrice` 并填充到决策记录中。
+3.  **认知层**: 优化了 Prompt 中“决策寄存器”的展示格式，在 Hold/Open 记录中显式展示 `Entry: xxx`，使 AI 能够进行准确的盈亏审计和反思。
+
 ---
-*文档更新时间: 2026-02-14*
+*文档更新时间: 2026-02-15*
