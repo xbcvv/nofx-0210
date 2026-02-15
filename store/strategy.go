@@ -140,6 +140,7 @@ type IndicatorConfig struct {
 	EnableEMA         bool `json:"enable_ema"`
 	EnableMACD        bool `json:"enable_macd"`
 	EnableRSI         bool `json:"enable_rsi"`
+	EnableADX         bool `json:"enable_adx"`          // Average Directional Index
 	EnableATR         bool `json:"enable_atr"`
 	EnableBOLL        bool `json:"enable_boll"`         // Bollinger Bands
 	EnableVolume      bool `json:"enable_volume"`
@@ -149,6 +150,8 @@ type IndicatorConfig struct {
 	EMAPeriods []int `json:"ema_periods,omitempty"` // default [20, 50]
 	// RSI period configuration
 	RSIPeriods []int `json:"rsi_periods,omitempty"` // default [7, 14]
+	// ADX period configuration
+	ADXPeriods []int `json:"adx_periods,omitempty"` // default [14]
 	// ATR period configuration
 	ATRPeriods []int `json:"atr_periods,omitempty"` // default [14]
 	// BOLL period configuration (period, standard deviation multiplier is fixed at 2)
@@ -283,6 +286,7 @@ func GetDefaultStrategyConfig(lang string) StrategyConfig {
 			EnableEMA:         false,
 			EnableMACD:        false,
 			EnableRSI:         false,
+			EnableADX:         false,
 			EnableATR:         false,
 			EnableBOLL:        false,
 			EnableVolume:      true,
@@ -290,6 +294,7 @@ func GetDefaultStrategyConfig(lang string) StrategyConfig {
 			EnableFundingRate: true,
 			EMAPeriods:        []int{20, 50},
 			RSIPeriods:        []int{7, 14},
+			ADXPeriods:        []int{14},
 			ATRPeriods:        []int{14},
 			BOLLPeriods:       []int{20},
 			// NofxOS unified API key

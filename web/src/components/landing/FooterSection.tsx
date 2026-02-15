@@ -26,6 +26,10 @@ export default function FooterSection({ language }: FooterSectionProps) {
         name: language === 'zh' ? '文档' : 'Documentation',
         href: 'https://github.com/xbcvv/nofx-0210/blob/main/README.md',
       },
+      {
+        name: language === 'zh' ? 'Wiki / 指标说明' : 'Wiki / Usage',
+        href: 'https://github.com/xbcvv/nofx-0210/tree/main/docs/wiki',
+      },
       { name: 'Issues', href: 'https://github.com/xbcvv/nofx-0210/issues' },
       { name: 'Pull Requests', href: 'https://github.com/xbcvv/nofx-0210/pulls' },
     ],

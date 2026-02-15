@@ -11,6 +11,7 @@ type Data struct {
 	CurrentEMA20      float64
 	CurrentMACD       float64
 	CurrentRSI7       float64
+	CurrentADX        float64 // Average Directional Index
 	OpenInterest      *OIData
 	FundingRate       float64
 	IntradaySeries    *IntradayData
@@ -39,6 +40,10 @@ type TimeframeSeriesData struct {
 	MACDValues  []float64  `json:"macd_values"`  // MACD series
 	RSI7Values  []float64  `json:"rsi7_values"`  // RSI7 series
 	RSI14Values []float64  `json:"rsi14_values"` // RSI14 series
+	// ADX (period 14)
+	ADXValues     []float64 `json:"adx_values"`      // ADX series
+	DIPlusValues  []float64 `json:"di_plus_values"`  // DI+ series
+	DIMinusValues []float64 `json:"di_minus_values"` // DI- series
 	Volume      []float64  `json:"volume"`       // Volume series (deprecated, use Klines)
 	ATR14       float64    `json:"atr14"`        // ATR14
 	// Bollinger Bands (period 20, std dev multiplier 2)
@@ -60,6 +65,9 @@ type IntradayData struct {
 	MACDValues  []float64
 	RSI7Values  []float64
 	RSI14Values []float64
+	ADXValues     []float64
+	DIPlusValues  []float64
+	DIMinusValues []float64
 	Volume      []float64
 	ATR14       float64
 }
@@ -74,6 +82,9 @@ type LongerTermData struct {
 	AverageVolume float64
 	MACDValues    []float64
 	RSI14Values   []float64
+	ADXValues     []float64
+	DIPlusValues  []float64
+	DIMinusValues []float64
 }
 
 // Binance API response structure

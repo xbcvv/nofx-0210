@@ -1644,6 +1644,12 @@ func (e *StrategyEngine) formatTimeframeSeriesData(sb *strings.Builder, data *ma
 		}
 	}
 
+	if indicators.EnableADX && len(data.ADXValues) > 0 {
+		displayADX := sliceFloat(data.ADXValues, limit)
+		// We can also show DI+ and DI- if needed, but for now just ADX is enough for trend strength
+		sb.WriteString(fmt.Sprintf("ADX(14): %s\n", formatFloatSliceFixed(displayADX, 1)))
+	}
+
 	if indicators.EnableATR && data.ATR14 > 0 {
 		sb.WriteString(fmt.Sprintf("ATR14: %.4f\n", data.ATR14))
 	}

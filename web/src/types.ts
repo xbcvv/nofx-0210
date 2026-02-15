@@ -533,6 +533,7 @@ export interface IndicatorConfig {
   enable_ema: boolean;
   enable_macd: boolean;
   enable_rsi: boolean;
+  enable_adx: boolean;
   enable_atr: boolean;
   enable_boll: boolean;
   enable_volume: boolean;
@@ -540,6 +541,7 @@ export interface IndicatorConfig {
   enable_funding_rate: boolean;
   ema_periods?: number[];
   rsi_periods?: number[];
+  adx_periods?: number[];
   atr_periods?: number[];
   boll_periods?: number[];
   external_data_sources?: ExternalDataSource[];

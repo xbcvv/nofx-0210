@@ -230,6 +230,7 @@ func GetWithExchange(symbol, exchange string) (*Data, error) {
 	currentEMA20 := calculateEMA(klines3m, 20)
 	currentMACD := calculateMACD(klines3m)
 	currentRSI7 := calculateRSI(klines3m, 7)
+	currentADX, _, _ := calculateADX(klines3m, 14)
 
 	// Calculate price change percentage
 	// 1-hour price change = price from 20 3-minute K-lines ago
@@ -274,6 +275,7 @@ func GetWithExchange(symbol, exchange string) (*Data, error) {
 		CurrentEMA20:      currentEMA20,
 		CurrentMACD:       currentMACD,
 		CurrentRSI7:       currentRSI7,
+		CurrentADX:        currentADX,
 		OpenInterest:      oiData,
 		FundingRate:       fundingRate,
 		IntradaySeries:    intradayData,
@@ -368,6 +370,7 @@ func GetWithTimeframes(symbol string, timeframes []string, primaryTimeframe stri
 	currentEMA20 := calculateEMA(primaryKlines, 20)
 	currentMACD := calculateMACD(primaryKlines)
 	currentRSI7 := calculateRSI(primaryKlines, 7)
+	currentADX, _, _ := calculateADX(primaryKlines, 14)
 
 	// Calculate price changes
 	priceChange1h := calculatePriceChangeByBars(primaryKlines, primaryTimeframe, 60) // 1 hour
@@ -390,6 +393,7 @@ func GetWithTimeframes(symbol string, timeframes []string, primaryTimeframe stri
 		CurrentEMA20:  currentEMA20,
 		CurrentMACD:   currentMACD,
 		CurrentRSI7:   currentRSI7,
+		CurrentADX:    currentADX,
 		OpenInterest:  oiData,
 		FundingRate:   fundingRate,
 		TimeframeData: timeframeData,
@@ -411,6 +415,9 @@ func calculateTimeframeSeries(klines []Kline, timeframe string, count int) *Time
 		MACDValues:  make([]float64, 0, count),
 		RSI7Values:  make([]float64, 0, count),
 		RSI14Values: make([]float64, 0, count),
+		ADXValues:     make([]float64, 0, count),
+		DIPlusValues:  make([]float64, 0, count),
+		DIMinusValues: make([]float64, 0, count),
 		Volume:      make([]float64, 0, count),
 		BOLLUpper:   make([]float64, 0, count),
 		BOLLMiddle:  make([]float64, 0, count),
@@ -472,6 +479,39 @@ func calculateTimeframeSeries(klines []Kline, timeframe string, count int) *Time
 			data.BOLLUpper = append(data.BOLLUpper, upper)
 			data.BOLLMiddle = append(data.BOLLMiddle, middle)
 			data.BOLLLower = append(data.BOLLLower, lower)
+		}
+	}
+
+	// Calculate ADX Series (Period 14)
+	// We calculate it once for the whole series because ADX needs history
+	adxSeries, diPlusSeries, diMinusSeries := calculateADXSeries(klines, 14)
+	if adxSeries != nil {
+		// Extract the last 'count' values
+		startIdx := len(klines) - count
+		if startIdx < 0 {
+			startIdx = 0
+		}
+		
+		// Ensure we don't go out of bounds if series is shorter than count (e.g. not enough data for ADX)
+		// ADX needs 2*period (28) bars to start
+		for i := startIdx; i < len(klines); i++ {
+			if i < len(adxSeries) {
+				data.ADXValues = append(data.ADXValues, adxSeries[i])
+				data.DIPlusValues = append(data.DIPlusValues, diPlusSeries[i])
+				data.DIMinusValues = append(data.DIMinusValues, diMinusSeries[i])
+			} else {
+				// Should not happen if logic is correct
+				data.ADXValues = append(data.ADXValues, 0)
+				data.DIPlusValues = append(data.DIPlusValues, 0)
+				data.DIMinusValues = append(data.DIMinusValues, 0)
+			}
+		}
+	} else {
+		// Fill with zeros if calculation failed
+		for i := 0; i < len(data.Klines); i++ {
+			data.ADXValues = append(data.ADXValues, 0)
+			data.DIPlusValues = append(data.DIPlusValues, 0)
+			data.DIMinusValues = append(data.DIMinusValues, 0)
 		}
 	}
 
@@ -736,6 +776,32 @@ func calculateIntradaySeries(klines []Kline) *IntradayData {
 		}
 	}
 
+	// Calculate ADX Series
+	adxSeries, diPlusSeries, diMinusSeries := calculateADXSeries(klines, 14)
+	if adxSeries != nil {
+		startIdx := len(klines) - 10
+		if startIdx < 0 {
+			startIdx = 0
+		}
+		for i := startIdx; i < len(klines); i++ {
+			if i < len(adxSeries) {
+				data.ADXValues = append(data.ADXValues, adxSeries[i])
+				data.DIPlusValues = append(data.DIPlusValues, diPlusSeries[i])
+				data.DIMinusValues = append(data.DIMinusValues, diMinusSeries[i])
+			} else {
+				data.ADXValues = append(data.ADXValues, 0)
+				data.DIPlusValues = append(data.DIPlusValues, 0)
+				data.DIMinusValues = append(data.DIMinusValues, 0)
+			}
+		}
+	} else {
+		for i := 0; i < 10 && i < len(klines); i++ {
+			data.ADXValues = append(data.ADXValues, 0)
+			data.DIPlusValues = append(data.DIPlusValues, 0)
+			data.DIMinusValues = append(data.DIMinusValues, 0)
+		}
+	}
+
 	// Calculate 3m ATR14
 	data.ATR14 = calculateATR(klines, 14)
 
@@ -747,6 +813,9 @@ func calculateLongerTermData(klines []Kline) *LongerTermData {
 	data := &LongerTermData{
 		MACDValues:  make([]float64, 0, 10),
 		RSI14Values: make([]float64, 0, 10),
+		ADXValues:     make([]float64, 0, 10),
+		DIPlusValues:  make([]float64, 0, 10),
+		DIMinusValues: make([]float64, 0, 10),
 	}
 
 	// Calculate EMA
