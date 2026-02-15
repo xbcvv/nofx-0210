@@ -276,7 +276,8 @@ func formatCandidateCoinsZH(ctx *Context) string {
 		// 当前价格
 		if ctx.MarketDataMap != nil {
 			if mdata, ok := ctx.MarketDataMap[coin.Symbol]; ok {
-				sb.WriteString(fmt.Sprintf("当前价格: %.4f\n\n", mdata.CurrentPrice))
+				sb.WriteString(fmt.Sprintf("当前价格: %.4f | 15m涨跌: %+.2f%% | 1h涨跌: %+.2f%% | 4h涨跌: %+.2f%%\n\n",
+					mdata.CurrentPrice, mdata.PriceChange15m, mdata.PriceChange1h, mdata.PriceChange4h))
 
 				// K线数据（多时间框架）
 				if mdata.TimeframeData != nil {
@@ -541,7 +542,8 @@ func formatCandidateCoinsEN(ctx *Context) string {
 
 		if ctx.MarketDataMap != nil {
 			if mdata, ok := ctx.MarketDataMap[coin.Symbol]; ok {
-				sb.WriteString(fmt.Sprintf("Current Price: %.4f\n\n", mdata.CurrentPrice))
+				sb.WriteString(fmt.Sprintf("Current Price: %.4f | 15m Change: %+.2f%% | 1h Change: %+.2f%% | 4h Change: %+.2f%%\n\n",
+					mdata.CurrentPrice, mdata.PriceChange15m, mdata.PriceChange1h, mdata.PriceChange4h))
 
 				if mdata.TimeframeData != nil {
 					sb.WriteString(formatKlineDataEN(coin.Symbol, mdata.TimeframeData, ctx.Timeframes))

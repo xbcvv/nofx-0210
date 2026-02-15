@@ -1,4 +1,11 @@
-# 全局指挥配置化 (Global Command Configurability)
+> [!CAUTION]
+> **DEPRECATED / 废弃说明**
+> 此文档描述的“全局指挥 (Global Command)”功能已被废弃，且在当前代码库中**不存在**。
+> This feature is deprecated and does NOT exist in the current codebase.
+> 请勿根据此文档进行开发或调试。
+> Do NOT use this document for development or debugging.
+
+# 实施计划 - 全局指挥配置化 (Global Command Configurability)
 
 ## 目标
 允许用户通过 Web 前端修改“全局指挥”策略的判定阈值，并支持添加新的市场气候类型。

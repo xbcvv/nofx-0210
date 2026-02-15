@@ -6,6 +6,7 @@ import "time"
 type Data struct {
 	Symbol            string
 	CurrentPrice      float64
+	PriceChange15m    float64 // 15-minute price change percentage
 	PriceChange1h     float64 // 1-hour price change percentage
 	PriceChange4h     float64 // 4-hour price change percentage
 	CurrentEMA20      float64

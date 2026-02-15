@@ -233,6 +233,15 @@ func GetWithExchange(symbol, exchange string) (*Data, error) {
 	currentADX, _, _ := calculateADX(klines3m, 14)
 
 	// Calculate price change percentage
+	// 15-minute price change = price from 15 minutes ago
+	priceChange15m := 0.0
+	if len(klines3m) >= 6 { // Need at least 6 K-lines (current + 5 previous) for 3m timeframe
+		price15mAgo := klines3m[len(klines3m)-6].Close
+		if price15mAgo > 0 {
+			priceChange15m = ((currentPrice - price15mAgo) / price15mAgo) * 100
+		}
+	}
+
 	// 1-hour price change = price from 20 3-minute K-lines ago
 	priceChange1h := 0.0
 	if len(klines3m) >= 21 { // Need at least 21 K-lines (current + 20 previous)
@@ -270,6 +279,7 @@ func GetWithExchange(symbol, exchange string) (*Data, error) {
 	return &Data{
 		Symbol:            symbol,
 		CurrentPrice:      currentPrice,
+		PriceChange15m:    priceChange15m,
 		PriceChange1h:     priceChange1h,
 		PriceChange4h:     priceChange4h,
 		CurrentEMA20:      currentEMA20,
@@ -373,6 +383,7 @@ func GetWithTimeframes(symbol string, timeframes []string, primaryTimeframe stri
 	currentADX, _, _ := calculateADX(primaryKlines, 14)
 
 	// Calculate price changes
+	priceChange15m := calculatePriceChangeByBars(primaryKlines, primaryTimeframe, 15) // 15 minutes
 	priceChange1h := calculatePriceChangeByBars(primaryKlines, primaryTimeframe, 60) // 1 hour
 	priceChange4h := calculatePriceChangeByBars(primaryKlines, primaryTimeframe, 240) // 4 hours
 
@@ -388,6 +399,7 @@ func GetWithTimeframes(symbol string, timeframes []string, primaryTimeframe stri
 	return &Data{
 		Symbol:        symbol,
 		CurrentPrice:  currentPrice,
+		PriceChange15m: priceChange15m,
 		PriceChange1h: priceChange1h,
 		PriceChange4h: priceChange4h,
 		CurrentEMA20:  currentEMA20,
@@ -1220,6 +1232,7 @@ func BuildDataFromKlines(symbol string, primary []Kline, longer []Kline) (*Data,
 		CurrentEMA20:      calculateEMA(primary, 20),
 		CurrentMACD:       calculateMACD(primary),
 		CurrentRSI7:       calculateRSI(primary, 7),
+		PriceChange15m:    priceChangeFromSeries(primary, 15*time.Minute),
 		PriceChange1h:     priceChangeFromSeries(primary, time.Hour),
 		PriceChange4h:     priceChangeFromSeries(primary, 4*time.Hour),
 		OpenInterest:      &OIData{Latest: 0, Average: 0},

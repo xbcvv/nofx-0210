@@ -1,3 +1,10 @@
+> [!CAUTION]
+> **DEPRECATED / 废弃说明**
+> 此文档描述的“全局指挥 (Global Command)”功能已被废弃，且在当前代码库中**不存在**。
+> This feature is deprecated and does NOT exist in the current codebase.
+> 请勿根据此文档进行开发或调试。
+> Do NOT use this document for development or debugging.
+
 # 演练 - 量化策略与全局指挥
 
 ## 1. 全局指挥 (Global Command) 重构

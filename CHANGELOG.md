@@ -9,7 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+
 ## [Unreleased]
+
+### Added
+- **Market Data**: Added `PriceChange15m` field to provide explicit 15-minute price change percentage, eliminating AI calculation hallucinations.
+
+### Fixed
+- **Hold Time**: Fixed an issue where position hold time would reset to zero due to case mismatch ("Long" vs "long") in database lookups.
+- **Timezone**: Verified that AI analysis uses UTC time internally, ensuring consistency despite local time display differences.
+
+### Deprecated
+- **Global Command**: Marked "Global Command" related documentation as deprecated as the feature is not implemented in the current codebase.
 
 ### Added
 - Documentation system with multi-language support (EN/CN/RU/UK)
