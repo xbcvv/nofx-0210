@@ -158,4 +158,23 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 3.  **认知层**: 优化了 Prompt 中“决策寄存器”的展示格式，在 Hold/Open 记录中显式展示 `Entry: xxx`，使 AI 能够进行准确的盈亏审计和反思。
 
 ---
-*文档更新时间: 2026-02-15*
+
+## 5. 新增功能模块 [2026-02-15]
+
+### 5.1 ADX (平均方向指数) 指标集成
+**修改文件**: `market/adx.go`, `market/data.go`, `market/types.go`, `kernel/engine.go`, `store/strategy.go`, `web/src/components/strategy/IndicatorEditor.tsx`
+**描述**: 
+1.  **核心计算**: 实现了 Wilder's Smoothing 算法计算 ADX, DI+, DI- (`market/adx.go`)。
+2.  **数据流**: 将 ADX 集成到 Market Data 流程中，支持从 1m 到 1d 所有周期的计算。
+3.  **AI 感知**: 更新了 `kernel/engine.go`，当策略开启 `EnableADX` 时，自动将 ADX 值注入 System Prompt。
+4.  **前端支持**: 在策略编辑器中增加了 ADX 开关和周期配置（默认 14）。
+5.  **配置支持**: 策略配置文件 (`store/strategy.go`) 新增 `EnableADX` 和 `ADXPeriods` 字段。
+
+### 5.2 Wiki 文档系统升级
+**新增文件**: `docs/wiki/INDICATORS.md`, `docs/wiki/README.md`
+**修改文件**: `web/src/components/landing/FooterSection.tsx`
+**描述**: 
+1.  **指标库文档**: 创建了 `INDICATORS.md`，详细记录了所有支持的指标（ADX, EMA, MACD, RSI, ATR, BOLL 等）的配置参数、默认值及 Prompt 呈现格式（中文版）。
+2.  **Wiki 索引**: 创建了首页索引 `README.md`。
+3.  **入口集成**: 在网站页脚 (Footer) 新增了 "Wiki / 指标说明" 链接，方便用户查阅。
+
