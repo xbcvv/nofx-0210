@@ -49,7 +49,7 @@
 | ✅ | **Cycle** | 决策周期 | 决策序列号，用于追踪连续性 | - |
 | ✅ | **MarketRegime** | 市场状态 | AI 对当前市场环境的定性 | 如 Bull, Bear, Ranging |
 | ✅ | **ExecutionStatus**| 执行状态 | 上一周期的决策是否执行成功 | Success / Failed |
-| ℹ️ | **Decisions** | 历史决策 | 过去周期做出的具体交易决策列表 | 包含 Action, Reason 等 |
+| ℹ️ | **Decisions** | 历史决策 | 过去周期做出的具体交易决策列表 | 包含 Action, Reason, EntryPrice 等 |
 
 ### 市场数据 (Market Data)
 | 状态 | 英文 Key | 中文含义 | 详细说明 | 公式/备注 |
