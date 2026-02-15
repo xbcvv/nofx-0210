@@ -1,67 +1,67 @@
-# Technical Indicators Guide
+# 技术指标指南 (Technical Indicators Guide)
 
-This document lists all technical indicators available in the trading system and their usage.
+本文档列出了交易系统中所有可用的技术指标及其用法。
 
-## Trend Indicators
+## 趋势指标 (Trend Indicators)
 
-### ADX (Average Directional Index)
-- **Description**: Measures the strength of a trend, regardless of direction.
-- **Components**:
-    - **ADX**: The main line. Values > 25 indicate a strong trend.
-    - **DI+ / DI-**: Directional indicators. DI+ > DI- suggests bullish trend, DI- > DI+ suggests bearish trend.
-- **Usage**: Used to filter out ranging markets. The system uses ADX > 25 as a confirmation for trend-following strategies.
+### ADX (平均方向指数)
+- **描述**: 衡量趋势的强度，无论方向如何。
+- **组成**:
+    - **ADX**: 主线。值 > 25 表示趋势强劲。
+    - **DI+ / DI-**: 方向指标。DI+ > DI- 暗示看涨趋势，DI- > DI+ 暗示看跌趋势。
+- **用法**: 用于过滤震荡市场。系统使用 ADX > 25 作为趋势跟踪策略的确认信号。
 
-### EMA (Exponential Moving Average)
-- **Description**: Weighted moving average that gives more importance to recent price data.
-- **Usage**:
-    - **EMA20**: Short-term trend baseline.
-    - **EMA50**: Medium-term trend baseline.
-    - **Crossover**: EMA20 crossing above EMA50 is a bullish signal (Golden Cross).
+### EMA (指数移动平均线)
+- **描述**: 对近期价格数据赋予更高权重的加权移动平均线。
+- **用法**:
+    - **EMA20**: 短期趋势基准。
+    - **EMA50**: 中期趋势基准。
+    - **交叉**: EMA20 上穿 EMA50 为看涨信号（金叉）。
 
-### MACD (Moving Average Convergence Divergence)
-- **Description**: Trend-following momentum indicator.
-- **Usage**:
-    - **Zero Line**: MACD > 0 suggests bullish momentum.
-    - **Signal Line**: MACD line crossing signal line indicates momentum shifts.
+### MACD (异同移动平均线)
+- **描述**: 趋势跟踪动量指标。
+- **用法**:
+    - **零轴**: MACD > 0 暗示看涨动能。
+    - **信号线**: MACD 线穿越信号线指示动能转换。
 
-## Momentum / Volatility Indicators
+## 动量 / 波动率指标 (Momentum / Volatility Indicators)
 
-### RSI (Relative Strength Index)
-- **Description**: Measures the speed and change of price movements.
-- **Usage**:
-    - **Overbought**: RSI > 70.
-    - **Oversold**: RSI < 30.
-    - **Divergence**: Price making new high but RSI failing to do so suggests reversal.
+### RSI (相对强弱指数)
+- **描述**: 衡量价格变动的速度和变化。
+- **用法**:
+    - **超买**: RSI > 70。
+    - **超卖**: RSI < 30。
+    - **背离**:价格创新高但 RSI 未创新高，暗示反转。
 
-### ATR (Average True Range)
-- **Description**: Measures market volatility.
-- **Usage**:
-    - **Stop Loss**: Used to calculate dynamic stop loss distances (e.g., 2 * ATR).
-    - **Position Sizing**: Higher volatility (ATR) leads to smaller position sizes.
+### ATR (平均真实波幅)
+- **描述**: 衡量市场波动率。
+- **用法**:
+    - **止损**: 用于计算动态止损距离（例如 2 * ATR）。
+    - **仓位管理**: 高波动率 (ATR) 导致较小的仓位规模。
 
-### Bollinger Bands (BOLL)
-- **Description**: Volatility bands placed above and below a moving average.
-- **Usage**:
-    - **Squeeze**: Bands contracting indicates low volatility and potential breakout.
-    - **Mean Reversion**: Price touching outer bands often reverts to the mean (middle band).
+### Bollinger Bands (布林带)
+- **描述**: 置于移动平均线上方和下方的波动率带。
+- **用法**:
+    - **挤压**: 带宽收缩指示波动率低，潜在突破。
+    - **均值回归**: 价格触及外轨通常会回归均值（中轨）。
 
-## Market Data / Volume
+## 市场数据 / 成交量 (Market Data / Volume)
 
-### Volume
-- **Description**: Trading volume.
-- **Usage**: Confirms trend strength. Rising volume on uptrend validates the move.
+### Volume (成交量)
+- **描述**: 交易量。
+- **用法**: 确认趋势强度。上涨趋势中成交量放大验证了走势。
 
-### Open Interest (OI)
-- **Description**: Total number of outstanding derivative contracts.
-- **Usage**: Rising OI during a trend indicates new money entering the market (strong trend). Declining OI suggests liquidation or exiting (trend weakening).
+### Open Interest (持仓量)
+- **描述**: 未平仓衍生品合约的总数。
+- **用法**: 趋势中 OI 上升表明新资金进入市场（趋势强）。OI 下降暗示清算或离场（趋势减弱）。
 
-### Funding Rate
-- **Description**: Periodic payments to traders that are long or short based on the difference between perpetual and spot prices.
-- **Usage**: High positive funding rate suggests over-leveraged longs (potential contrarian short signal).
+### Funding Rate (资金费率)
+- **描述**: 基于永续合约和现货价格差异，多空双方定期支付的费用。
+- **用法**: 高正向资金费率暗示多头过度杠杆（潜在的逆向做空信号）。
 
-## Quantitative Data (NofxOS)
+## 量化数据 (NofxOS)
 
-### Quant Data
-- **Price Change**: Performance across multiple timeframes (5m to 24h).
-- **Netflow**: Visualization of institutional vs. retail fund flow.
-- **OI Ranking**: Ranking of coins by Open Interest change.
+### Quant Data (量化数据)
+- **价格变化**: 多个时间周期 (5m 到 24h) 的表现。
+- **净流向**: 机构 vs 散户资金流向的可视化。
+- **OI 排名**: 按持仓量变化对币种进行排名。
