@@ -276,8 +276,43 @@ func formatGlobalContextZH(ctx *Context) string {
 		sb.WriteString("## 全局市场背景 (仅供参考，非交易目标)\n\n")
 		sb.WriteString(fmt.Sprintf("**%s**:\n", btcSymbol))
 		sb.WriteString(fmt.Sprintf("- 价格: %.2f\n", mdata.CurrentPrice))
-		sb.WriteString(fmt.Sprintf("- 涨跌幅: 15m %+.2f%% | 1h %+.2f%% | 4h %+.2f%%\n", 
-			mdata.PriceChange15m, mdata.PriceChange1h, mdata.PriceChange4h))
+		
+		// [Dynamic] Price Changes
+		var changeKeys []string
+		for k := range mdata.PriceChanges {
+			changeKeys = append(changeKeys, k)
+		}
+		sort.Strings(changeKeys)
+		sb.WriteString("- 涨跌幅:")
+		for _, k := range changeKeys {
+			sb.WriteString(fmt.Sprintf(" %s %+.2f%% |", k, mdata.PriceChanges[k]))
+		}
+		sb.WriteString("\n")
+
+		// [Dynamic] EMAs
+		var emaKeys []string
+		for k := range mdata.DynamicEMAs {
+			emaKeys = append(emaKeys, k)
+		}
+		sort.Strings(emaKeys)
+		for _, k := range emaKeys {
+			d := mdata.DynamicEMAs[k]
+			sb.WriteString(fmt.Sprintf("- %s: %.2f (Slope: %.1f, Spread: %.2f%%)\n", strings.ToUpper(k), d.Value, d.Slope, d.Spread*100))
+		}
+
+		// [Dynamic] ATRs
+		var atrKeys []string
+		for k := range mdata.DynamicATRs {
+			atrKeys = append(atrKeys, k)
+		}
+		sort.Strings(atrKeys)
+		if len(atrKeys) > 0 {
+			sb.WriteString("- ATR: ")
+			for _, k := range atrKeys {
+				sb.WriteString(fmt.Sprintf("%s %.2f | ", strings.ToUpper(k), mdata.DynamicATRs[k]))
+			}
+			sb.WriteString("\n")
+		}
 		
 		if mdata.CurrentADX > 0 {
 			sb.WriteString(fmt.Sprintf("- ADX: %.2f\n", mdata.CurrentADX))
@@ -298,8 +333,32 @@ func formatCandidateCoinsZH(ctx *Context) string {
 		// 当前价格
 		if ctx.MarketDataMap != nil {
 			if mdata, ok := ctx.MarketDataMap[coin.Symbol]; ok {
-				sb.WriteString(fmt.Sprintf("当前价格: %.4f | 15m涨跌: %+.2f%% | 1h涨跌: %+.2f%% | 4h涨跌: %+.2f%%\n\n",
-					mdata.CurrentPrice, mdata.PriceChange15m, mdata.PriceChange1h, mdata.PriceChange4h))
+				sb.WriteString(fmt.Sprintf("当前价格: %.4f | ", mdata.CurrentPrice))
+				
+				// [Dynamic] Price Changes
+				var changeKeys []string
+				for k := range mdata.PriceChanges {
+					changeKeys = append(changeKeys, k)
+				}
+				sort.Strings(changeKeys)
+				for _, k := range changeKeys {
+					sb.WriteString(fmt.Sprintf("%s涨跌: %+.2f%% | ", k, mdata.PriceChanges[k]))
+				}
+				sb.WriteString("\n")
+
+				// [Dynamic] Indicators Summary
+				var emaKeys []string
+				for k := range mdata.DynamicEMAs { emaKeys = append(emaKeys, k) }
+				sort.Strings(emaKeys)
+				if len(emaKeys) > 0 {
+					sb.WriteString("指标: ")
+					for _, k := range emaKeys {
+						d := mdata.DynamicEMAs[k]
+						sb.WriteString(fmt.Sprintf("%s(S:%.1f) | ", strings.ToUpper(k), d.Slope))
+					}
+					sb.WriteString("\n")
+				}
+				sb.WriteString("\n")
 
 				// K线数据（多时间框架）
 				if mdata.TimeframeData != nil {
@@ -563,8 +622,43 @@ func formatGlobalContextEN(ctx *Context) string {
 		sb.WriteString("## Global Market Context (Reference Only, NOT for Trading)\n\n")
 		sb.WriteString(fmt.Sprintf("**%s**:\n", btcSymbol))
 		sb.WriteString(fmt.Sprintf("- Price: %.2f\n", mdata.CurrentPrice))
-		sb.WriteString(fmt.Sprintf("- Change: 15m %+.2f%% | 1h %+.2f%% | 4h %+.2f%%\n", 
-			mdata.PriceChange15m, mdata.PriceChange1h, mdata.PriceChange4h))
+
+		// [Dynamic] Price Changes
+		var changeKeys []string
+		for k := range mdata.PriceChanges {
+			changeKeys = append(changeKeys, k)
+		}
+		sort.Strings(changeKeys)
+		sb.WriteString("- Change:")
+		for _, k := range changeKeys {
+			sb.WriteString(fmt.Sprintf(" %s %+.2f%% |", k, mdata.PriceChanges[k]))
+		}
+		sb.WriteString("\n")
+
+		// [Dynamic] EMAs
+		var emaKeys []string
+		for k := range mdata.DynamicEMAs {
+			emaKeys = append(emaKeys, k)
+		}
+		sort.Strings(emaKeys)
+		for _, k := range emaKeys {
+			d := mdata.DynamicEMAs[k]
+			sb.WriteString(fmt.Sprintf("- %s: %.2f (Slope: %.1f, Spread: %.2f%%)\n", strings.ToUpper(k), d.Value, d.Slope, d.Spread*100))
+		}
+
+		// [Dynamic] ATRs
+		var atrKeys []string
+		for k := range mdata.DynamicATRs {
+			atrKeys = append(atrKeys, k)
+		}
+		sort.Strings(atrKeys)
+		if len(atrKeys) > 0 {
+			sb.WriteString("- ATR: ")
+			for _, k := range atrKeys {
+				sb.WriteString(fmt.Sprintf("%s %.2f | ", strings.ToUpper(k), mdata.DynamicATRs[k]))
+			}
+			sb.WriteString("\n")
+		}
 		
 		if mdata.CurrentADX > 0 {
 			sb.WriteString(fmt.Sprintf("- ADX: %.2f\n", mdata.CurrentADX))
@@ -584,8 +678,32 @@ func formatCandidateCoinsEN(ctx *Context) string {
 
 		if ctx.MarketDataMap != nil {
 			if mdata, ok := ctx.MarketDataMap[coin.Symbol]; ok {
-				sb.WriteString(fmt.Sprintf("Current Price: %.4f | 15m Change: %+.2f%% | 1h Change: %+.2f%% | 4h Change: %+.2f%%\n\n",
-					mdata.CurrentPrice, mdata.PriceChange15m, mdata.PriceChange1h, mdata.PriceChange4h))
+				sb.WriteString(fmt.Sprintf("Price: %.4f | ", mdata.CurrentPrice))
+				
+				// [Dynamic] Price Changes
+				var changeKeys []string
+				for k := range mdata.PriceChanges {
+					changeKeys = append(changeKeys, k)
+				}
+				sort.Strings(changeKeys)
+				for _, k := range changeKeys {
+					sb.WriteString(fmt.Sprintf("%s Change: %+.2f%% | ", k, mdata.PriceChanges[k]))
+				}
+				sb.WriteString("\n")
+
+				// [Dynamic] Indicators Summary
+				var emaKeys []string
+				for k := range mdata.DynamicEMAs { emaKeys = append(emaKeys, k) }
+				sort.Strings(emaKeys)
+				if len(emaKeys) > 0 {
+					sb.WriteString("Indicators: ")
+					for _, k := range emaKeys {
+						d := mdata.DynamicEMAs[k]
+						sb.WriteString(fmt.Sprintf("%s(S:%.1f) | ", strings.ToUpper(k), d.Slope))
+					}
+					sb.WriteString("\n")
+				}
+				sb.WriteString("\n")
 
 				if mdata.TimeframeData != nil {
 					sb.WriteString(formatKlineDataEN(coin.Symbol, mdata.TimeframeData, ctx.Timeframes))

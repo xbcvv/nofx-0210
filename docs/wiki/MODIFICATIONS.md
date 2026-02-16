@@ -194,4 +194,14 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 2.  **计算逻辑**: 在 `market/data.go` 中实现了基于最近 5 根 3m K 线的涨跌幅计算逻辑。
 3.  **Prompt 呈现**: 在 Prompt 中明确展示 `15m Change`，为 AI 判断“恶性暴跌”提供精确数值，消除了 AI 需要从 K 线列表自行计算而产生的幻觉风险。
 
+## 7. Configuration-Driven Architecture (V1.1.0)
+- **Goal**: Enable zero-code strategy iteration by driving data generation via `strategy.json`.
+- **Files**: `market/types.go`, `market/data.go`, `kernel/engine.go`, `kernel/formatter.go`, `kernel/schema.go`
+- **Details**:
+  1. **Dynamic Data**: `market.Data` now supports `PriceChanges` (Map), `DynamicEMAs` (Map), `DynamicATRs` (Map).
+  2. **Config Driven**: `GetWithTimeframes` accepts `emaPeriods` and `selected_timeframes` from config.
+  3. **Formatter**: Automatically iterates maps to generate Prompt (e.g. `EMA60: ...`).
+  4. **Schema**: Updated System Prompt to define `Change_{tf}`, `EMA{period}`, `ATR{period}` with Chinese support.
+- **Reference**: See complete documentation in [CONFIGURATION_DRIVEN.md](CONFIGURATION_DRIVEN.md)
+
 

@@ -19,6 +19,18 @@ type Data struct {
 	LongerTermContext *LongerTermData
 	// Multi-timeframe data (new)
 	TimeframeData map[string]*TimeframeSeriesData `json:"timeframe_data,omitempty"`
+
+	// Dynamic Indicators (Configuration Driven)
+	PriceChanges map[string]float64  `json:"changes,omitempty"`
+	DynamicEMAs  map[string]*EMAData `json:"ema,omitempty"`
+	DynamicATRs  map[string]float64  `json:"atr,omitempty"`
+}
+
+// EMAData detailed EMA data
+type EMAData struct {
+	Value  float64 `json:"value"`
+	Slope  float64 `json:"slope"`
+	Spread float64 `json:"spread"`
 }
 
 // KlineBar single kline bar with OHLCV data

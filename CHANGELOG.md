@@ -24,6 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 - **Global Command**: Marked "Global Command" related documentation as deprecated as the feature is not implemented in the current codebase.
 
+### Added (Configuration-Driven Architecture V1.1.0)
+- **Dynamic Indicators**: Enabled configuration of arbitrary EMA/ATR periods and Timeframes via `strategy.json` without code changes.
+- **Bilingual Schema**: System Prompt now supports Chinese terms (e.g., "日涨跌幅", "EMA60斜率") mapping to dynamic data.
+- **Docs**: Added `docs/wiki/CONFIGURATION_DRIVEN.md` detailing usage.
+
 ### Added
 - Documentation system with multi-language support (EN/CN/RU/UK)
 - Complete getting-started guides (Docker, Custom API)

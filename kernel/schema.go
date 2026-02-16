@@ -40,6 +40,11 @@ func getSchemaPromptConcise() string {
   - Action: open_long/short, close_long/short, partial_close(use ClosePercentage 0.0-1.0), hold, wait
   - ClosePercentage: 0.5=50%, 1.0=100% (Only for partial_close)
 - **Register**: Cycle(Seq Num), MarketRegime(AI View), ExecutionStatus(Last Result)
+- **Market Data**:
+- **Market Data**:
+  - Change_{tf}: 周期涨跌幅/Price Change % (e.g. Change_1d=日涨跌幅/24h change)
+  - EMA{period}: 指数均线/Exp Moving Avg (Value=点位, Slope=斜率, Spread=乖离/Spread)
+  - ATR{period}: 平均真实波幅/Average True Range
 
 ## Rules
 - **OI Logic**: OI↑+Price↑=Bull Inflow; OI↑+Price↓=Bear Inflow; OI↓=Covering/Reversal

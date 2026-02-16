@@ -297,7 +297,9 @@ func GetWithExchange(symbol, exchange string) (*Data, error) {
 // timeframes: list of timeframes, e.g. ["5m", "15m", "1h", "4h"]
 // primaryTimeframe: primary timeframe (used for calculating current indicators), defaults to timeframes[0]
 // count: number of K-lines for each timeframe
-func GetWithTimeframes(symbol string, timeframes []string, primaryTimeframe string, count int) (*Data, error) {
+// emaPeriods: list of EMA periods to calculate (e.g. [20, 60])
+// atrPeriods: list of ATR periods to calculate (e.g. [7, 14])
+func GetWithTimeframes(symbol string, timeframes []string, primaryTimeframe string, count int, emaPeriods []int, atrPeriods []int) (*Data, error) {
 	symbol = Normalize(symbol)
 
 	if len(timeframes) == 0 {
@@ -323,6 +325,7 @@ func GetWithTimeframes(symbol string, timeframes []string, primaryTimeframe stri
 
 	// Store data for all timeframes
 	timeframeData := make(map[string]*TimeframeSeriesData)
+	priceChanges := make(map[string]float64) // MAP: Dynamic Price Changes
 	var primaryKlines []Kline
 
 	// Check if this is an xyz dex asset (use Hyperliquid API)
@@ -362,6 +365,14 @@ func GetWithTimeframes(symbol string, timeframes []string, primaryTimeframe stri
 		// Calculate series data for this timeframe (use count from config)
 		seriesData := calculateTimeframeSeries(klines, tf, count)
 		timeframeData[tf] = seriesData
+
+		// [Dynamic] Calculate Price Change for this timeframe (1-candle change)
+		// e.g. for "1d", calculates change from yesterday close to today close
+		tfMinutes := parseTimeframeToMinutes(tf)
+		if tfMinutes > 0 {
+			// use standard helper
+			priceChanges[tf] = calculatePriceChangeByBars(klines, tf, tfMinutes)
+		}
 	}
 
 	// If primary timeframe data is empty, return error
@@ -382,10 +393,34 @@ func GetWithTimeframes(symbol string, timeframes []string, primaryTimeframe stri
 	currentRSI7 := calculateRSI(primaryKlines, 7)
 	currentADX, _, _ := calculateADX(primaryKlines, 14)
 
-	// Calculate price changes
+	// Calculate legacy fixed price changes (keep for backward compatibility)
 	priceChange15m := calculatePriceChangeByBars(primaryKlines, primaryTimeframe, 15) // 15 minutes
 	priceChange1h := calculatePriceChangeByBars(primaryKlines, primaryTimeframe, 60) // 1 hour
 	priceChange4h := calculatePriceChangeByBars(primaryKlines, primaryTimeframe, 240) // 4 hours
+
+	// [Dynamic] Calculate EMAs
+	dynamicEMAs := make(map[string]*EMAData)
+	for _, period := range emaPeriods {
+		if period <= 0 { continue }
+		val := calculateEMA(primaryKlines, period)
+		slope := calculateEMASlope(primaryKlines, period)
+		spread := 0.0
+		if currentPrice > 0 {
+			spread = (currentPrice - val) / currentPrice
+		}
+		dynamicEMAs[fmt.Sprintf("ema%d", period)] = &EMAData{
+			Value:  val,
+			Slope:  slope,
+			Spread: spread,
+		}
+	}
+
+	// [Dynamic] Calculate ATRs
+	dynamicATRs := make(map[string]float64)
+	for _, period := range atrPeriods {
+		if period <= 0 { continue }
+		dynamicATRs[fmt.Sprintf("atr%d", period)] = calculateATR(primaryKlines, period)
+	}
 
 	// Get OI data
 	oiData, err := getOpenInterestData(symbol)
@@ -397,18 +432,24 @@ func GetWithTimeframes(symbol string, timeframes []string, primaryTimeframe stri
 	fundingRate, _ := getFundingRate(symbol)
 
 	return &Data{
-		Symbol:        symbol,
-		CurrentPrice:  currentPrice,
+		Symbol:         symbol,
+		CurrentPrice:   currentPrice,
+		// Legacy fields
 		PriceChange15m: priceChange15m,
-		PriceChange1h: priceChange1h,
-		PriceChange4h: priceChange4h,
-		CurrentEMA20:  currentEMA20,
-		CurrentMACD:   currentMACD,
-		CurrentRSI7:   currentRSI7,
-		CurrentADX:    currentADX,
-		OpenInterest:  oiData,
-		FundingRate:   fundingRate,
-		TimeframeData: timeframeData,
+		PriceChange1h:  priceChange1h,
+		PriceChange4h:  priceChange4h,
+		CurrentEMA20:   currentEMA20,
+		CurrentMACD:    currentMACD,
+		CurrentRSI7:    currentRSI7,
+		CurrentADX:     currentADX,
+		// End Legacy
+		OpenInterest:   oiData,
+		FundingRate:    fundingRate,
+		TimeframeData:  timeframeData,
+		// Dynamic Fields
+		PriceChanges:   priceChanges,
+		DynamicEMAs:    dynamicEMAs,
+		DynamicATRs:    dynamicATRs,
 	}, nil
 }
 
@@ -1423,4 +1464,53 @@ func GetBoxData(symbol string) (*BoxData, error) {
 	currentPrice := klines[len(klines)-1].Close
 
 	return calculateBoxData(klines, currentPrice), nil
+}
+
+// calculateEMASeries calculates the entire EMA series
+func calculateEMASeries(klines []Kline, period int) []float64 {
+	result := make([]float64, len(klines))
+	if len(klines) < period {
+		return result
+	}
+
+	// Calculate SMA as initial EMA
+	sum := 0.0
+	for i := 0; i < period; i++ {
+		sum += klines[i].Close
+	}
+	ema := sum / float64(period)
+	result[period-1] = ema
+
+	// Calculate EMA
+	multiplier := 2.0 / float64(period+1)
+	for i := period; i < len(klines); i++ {
+		ema = (klines[i].Close-ema)*multiplier + ema
+		result[i] = ema
+	}
+
+	return result
+}
+
+// calculateEMASlope calculates the normalized slope of EMA
+// Formula: (EMA_t - EMA_t-n) / EMA_t-n * 100 * 100
+// n = 3 (default)
+// Returns slope value (e.g. 15.5 means 0.155% change over 3 bars)
+func calculateEMASlope(klines []Kline, period int) float64 {
+	length := len(klines)
+	if length < period+3 {
+		return 0
+	}
+
+	series := calculateEMASeries(klines, period)
+	
+	currentEMA := series[length-1]
+	prevEMA := series[length-4] // 3 bars ago
+	
+	if prevEMA == 0 {
+		return 0
+	}
+
+	// Normalized Slope: Percentage change of EMA over 3 bars, scaled by 100.
+	val := ((currentEMA - prevEMA) / prevEMA) * 100 * 100
+	return val
 }

@@ -386,7 +386,7 @@ func fetchMarketDataWithStrategy(ctx *Context, engine *StrategyEngine) error {
 			continue
 		}
 
-		data, err := market.GetWithTimeframes(coin.Symbol, timeframes, primaryTimeframe, klineCount)
+		data, err := market.GetWithTimeframes(coin.Symbol, timeframes, primaryTimeframe, klineCount, e.config.Indicators.EMAPeriods, e.config.Indicators.ATRPeriods)
 		if err != nil {
 			logger.Infof("⚠️  Failed to fetch market data for %s: %v", coin.Symbol, err)
 			continue
@@ -412,7 +412,7 @@ func fetchMarketDataWithStrategy(ctx *Context, engine *StrategyEngine) error {
 	// Even if not a candidate or position, we need it for context
 	btcSymbol := "BTCUSDT"
 	if _, exists := ctx.MarketDataMap[btcSymbol]; !exists {
-		data, err := market.GetWithTimeframes(btcSymbol, timeframes, primaryTimeframe, klineCount)
+		data, err := market.GetWithTimeframes(btcSymbol, timeframes, primaryTimeframe, klineCount, e.config.Indicators.EMAPeriods, e.config.Indicators.ATRPeriods)
 		if err != nil {
 			logger.Infof("⚠️  Failed to fetch BTCUSDT market data: %v", err)
 		} else {
