@@ -25,6 +25,13 @@
     - [x] 在 `market/types.go` 和 `market/data.go` 中增加 `PriceChange15m` 字段
     - [x] 更新 `kernel/formatter.go` 提示词，明确展示 15m 涨跌幅，防止 AI 幻觉
 
+## Prompt 验证 [Verification]
+- [x] **prompt23.yaml 分析**:
+    - [x] 确认 "全局指挥" 逻辑依赖 BTC 数据
+    - [x] 修复 `kernel/engine.go` 强制获取 BTC 数据用于上下文
+    - [x] 更新 `kernel/formatter.go` 增加 "Global Market Context" 版块
+    - [x] 确认 BTC 在 AI500 列表时可正常交易 (非硬编码排除)
+
 ## 功能废弃 [Deprecation]
 - [x] **Global Command**:
     - [x] 确认代码库中不存在 Global Command 相关实现

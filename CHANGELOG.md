@@ -10,9 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+
 ## [Unreleased]
 
 ### Added
+- **Global Context**: Implemented "Global Market Context" in AI prompt, forcing BTCUSDT data inclusion (Price/15m Change/ADX) even when not in candidate list, ensuring accurate "Global Command" analysis.
 - **Market Data**: Added `PriceChange15m` field to provide explicit 15-minute price change percentage, eliminating AI calculation hallucinations.
 
 ### Fixed

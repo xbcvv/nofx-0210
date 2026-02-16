@@ -41,8 +41,10 @@ func formatContextData(ctx *Context, lang Language) string {
 	// 1. 当前状态概览
 	if lang == LangChinese {
 		sb.WriteString(formatHeaderZH(ctx))
+		sb.WriteString(formatGlobalContextZH(ctx)) // Add Global Context
 	} else {
 		sb.WriteString(formatHeaderEN(ctx))
+		sb.WriteString(formatGlobalContextEN(ctx)) // Add Global Context
 	}
 
 	// 3. 账户信息
@@ -262,6 +264,26 @@ func formatCurrentPositionsZH(ctx *Context) string {
 		sb.WriteString("\n")
 	}
 
+	return sb.String()
+}
+
+// formatGlobalContextZH 格式化全局市场背景（中文）
+func formatGlobalContextZH(ctx *Context) string {
+	var sb strings.Builder
+	// Check for BTCUSDT data
+	btcSymbol := "BTCUSDT"
+	if mdata, ok := ctx.MarketDataMap[btcSymbol]; ok {
+		sb.WriteString("## 全局市场背景 (仅供参考，非交易目标)\n\n")
+		sb.WriteString(fmt.Sprintf("**%s**:\n", btcSymbol))
+		sb.WriteString(fmt.Sprintf("- 价格: %.2f\n", mdata.CurrentPrice))
+		sb.WriteString(fmt.Sprintf("- 涨跌幅: 15m %+.2f%% | 1h %+.2f%% | 4h %+.2f%%\n", 
+			mdata.PriceChange15m, mdata.PriceChange1h, mdata.PriceChange4h))
+		
+		if mdata.CurrentADX > 0 {
+			sb.WriteString(fmt.Sprintf("- ADX: %.2f\n", mdata.CurrentADX))
+		}
+		sb.WriteString("\n")
+	}
 	return sb.String()
 }
 
@@ -529,6 +551,26 @@ func formatCurrentPositionsEN(ctx *Context) string {
 		sb.WriteString("\n")
 	}
 
+	return sb.String()
+}
+
+// formatGlobalContextEN Format global market context (English)
+func formatGlobalContextEN(ctx *Context) string {
+	var sb strings.Builder
+	// Check for BTCUSDT data
+	btcSymbol := "BTCUSDT"
+	if mdata, ok := ctx.MarketDataMap[btcSymbol]; ok {
+		sb.WriteString("## Global Market Context (Reference Only, NOT for Trading)\n\n")
+		sb.WriteString(fmt.Sprintf("**%s**:\n", btcSymbol))
+		sb.WriteString(fmt.Sprintf("- Price: %.2f\n", mdata.CurrentPrice))
+		sb.WriteString(fmt.Sprintf("- Change: 15m %+.2f%% | 1h %+.2f%% | 4h %+.2f%%\n", 
+			mdata.PriceChange15m, mdata.PriceChange1h, mdata.PriceChange4h))
+		
+		if mdata.CurrentADX > 0 {
+			sb.WriteString(fmt.Sprintf("- ADX: %.2f\n", mdata.CurrentADX))
+		}
+		sb.WriteString("\n")
+	}
 	return sb.String()
 }
 

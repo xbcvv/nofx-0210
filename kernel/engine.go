@@ -408,6 +408,19 @@ func fetchMarketDataWithStrategy(ctx *Context, engine *StrategyEngine) error {
 		ctx.MarketDataMap[coin.Symbol] = data
 	}
 
+	// 3. Always fetch BTCUSDT data (for Global Command / Market Climate analysis)
+	// Even if not a candidate or position, we need it for context
+	btcSymbol := "BTCUSDT"
+	if _, exists := ctx.MarketDataMap[btcSymbol]; !exists {
+		data, err := market.GetWithTimeframes(btcSymbol, timeframes, primaryTimeframe, klineCount)
+		if err != nil {
+			logger.Infof("⚠️  Failed to fetch BTCUSDT market data: %v", err)
+		} else {
+			ctx.MarketDataMap[btcSymbol] = data
+			logger.Infof("📊 Fetched BTCUSDT data for global context")
+		}
+	}
+
 	logger.Infof("📊 Successfully fetched multi-timeframe market data for %d coins", len(ctx.MarketDataMap))
 	return nil
 }
