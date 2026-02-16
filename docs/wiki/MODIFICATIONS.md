@@ -178,3 +178,20 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 2.  **Wiki 索引**: 创建了首页索引 `README.md`。
 3.  **入口集成**: 在网站页脚 (Footer) 新增了 "Wiki / 指标说明" 链接，方便用户查阅。
 
+## 6. 新增功能模块 [2026-02-16]
+
+### 6.1 Global Market Context (全局市场背景)
+**修改文件**: `kernel/engine.go`, `kernel/formatter.go`
+**描述**: 
+1.  **强制 BTC 数据获取**: 修改 `kernel/engine.go`，在获取市场数据时，无论当前策略如何配置，**始终强制获取 BTCUSDT 的 K 线数据**并加入 `MarketDataMap`。
+2.  **Prompt 头部展示**: 修改 `kernel/formatter.go`，在 System Prompt 的最顶部（Header 之后）插入 "Global Market Context" 版块，展示 BTCUSDT 的价格、15m/1h/4h 涨跌幅和 ADX。
+3.  **目的**: 确保 AI 在分析任何币种（如 ETH, SOL）时，都能获得 BTC 的实时数据作为“全局指挥”判断的依据，彻底解决了 `prompt23.yaml` 中全局指挥逻辑的数据依赖问题。
+
+### 6.2 15m Price Change (15分钟涨跌幅)
+**修改文件**: `market/types.go`, `market/data.go`, `kernel/formatter.go`
+**描述**: 
+1.  **字段扩展**: 在 `market.Data` 结构体中新增 `PriceChange15m` 字段。
+2.  **计算逻辑**: 在 `market/data.go` 中实现了基于最近 5 根 3m K 线的涨跌幅计算逻辑。
+3.  **Prompt 呈现**: 在 Prompt 中明确展示 `15m Change`，为 AI 判断“恶性暴跌”提供精确数值，消除了 AI 需要从 K 线列表自行计算而产生的幻觉风险。
+
+

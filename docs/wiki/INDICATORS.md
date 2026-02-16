@@ -2,12 +2,38 @@
 
 本文档列出了交易系统中所有可用的技术指标，包括其配置参数、默认值以及在 AI Prompt 中的呈现格式。
 
+## 全局市场背景 (Global Market Context)
+- **描述**: 在 Prompt 顶部强制展示 BTCUSDT 的关键数据，用于判断整体市场气候（"全局指挥"）。即使 BTC 不在候选交易列表中，该数据也会被包含。
+- **包含数据**:
+    - **价格**: 最新成交价
+    - **涨跌幅 (Change)**: 15m, 1h, 4h
+    - **ADX**: 趋势强度
+- **Prompt 呈现格式**:
+    ```text
+    ## Global Market Context (Reference Only, NOT for Trading)
+    
+    **BTCUSDT**:
+    - Price: 68000.00
+    - Change: 15m -0.50% | 1h +1.20% | 4h +3.50%
+    - ADX: 45.2
+    ```
+
 ## 趋势指标 (Trend Indicators)
 
 ### ADX (平均方向指数)
 - **描述**: 衡量趋势的强度，无论方向如何。
 - **配置参数**:
     - **开关**: `"enable_adx": true`
+# ... (rest of the file) ...
+
+### Quant Data
+- **配置参数**:
+    - **开关**: `"enable_quant_data": true` (默认关闭)
+- **Prompt 呈现格式**:
+    ```text
+    Price Change: 15m: +0.5% | 1h: +1.2% | 4h: +3.5%
+    ```
+    *注: 15m 涨跌幅 (`PriceChange15m`) 为系统核心字段，用于判断短期剧烈波动（如"恶性暴跌"）。*
     - **周期**: `"adx_periods": [14]` (默认值)
 - **Prompt 呈现格式**:
     ```text
@@ -126,8 +152,9 @@
     - **开关**: `"enable_quant_data": true` (默认关闭)
 - **Prompt 呈现格式**:
     ```text
-    Price Change: 5m: +0.1% | 15m: +0.5% | 1h: +1.2% ...
+    Price Change: 15m: +0.5% | 1h: +1.2% | 4h: +3.5%
     ```
+    *注: 15m 涨跌幅 (`PriceChange15m`) 为系统核心字段，用于判断短期剧烈波动（如"恶性暴跌"）。*
 
 ### Quant Netflow (资金净流向)
 - **配置参数**:
