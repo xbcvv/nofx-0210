@@ -1,4 +1,4 @@
-# Bybit API Setup Guide
+﻿# Bybit API Setup Guide
 
 This guide explains how to create and configure Bybit API keys for use with NOFX.
 

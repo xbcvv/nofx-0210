@@ -1,6 +1,6 @@
 ﻿﻿# 常见问题（FAQ）
 
-快速解答常见问题。详细故障排查请参考[故障排查指南](TROUBLESHOOTING.zh-CN.md)。
+快速解答常见问题。详细故障排查请参考[故障排查指南](TROUBLESHOOTING.md)。
 
 ---
 
@@ -49,7 +49,7 @@ AI 交易是**实验性**的，**不保证盈利**。请始终用小额资金测
 - AI 根据市场情况决定"等待"
 - 余额或保证金不足
 - 达到持仓上限（默认最多 3 个仓位）
-- 详细诊断请查看[故障排查指南](TROUBLESHOOTING.zh-CN.md#-ai-总是说等待持有)
+- 详细诊断请查看[故障排查指南](TROUBLESHOOTING.md#-ai-总是说等待持有)
 
 ### AI 多久做一次决策？
 可配置！默认是每 **3-5 分钟**。太频繁 = 过度交易，太慢 = 错过机会。
@@ -80,7 +80,7 @@ AI 交易是**实验性**的，**不保证盈利**。请始终用小额资金测
 
 **原因**：NOFX 使用 `PositionSide(LONG/SHORT)`，需要双向持仓模式。
 
-参见83→参见 [Issue #202](https://github.com/xbcvv/nofx-0210/issues/202) 和[故障排查指南](TROUBLESHOOTING.zh-CN.md#-只开空单-issue-202)。
+参见83→参见 [Issue #202](https://github.com/xbcvv/nofx-0210/issues/202) 和[故障排查指南](TROUBLESHOOTING.md#-只开空单-issue-202)。
 
 ---
 
@@ -107,7 +107,7 @@ curl http://localhost:8080/api/health
 # 应该返回：{"status":"ok"}
 ```
 
-如果不是，查看[故障排查指南](TROUBLESHOOTING.zh-CN.md#-前端无法连接后端)。
+如果不是，查看[故障排查指南](TROUBLESHOOTING.md#-前端无法连接后端)。
 
 ---
 
@@ -170,14 +170,14 @@ docker compose exec postgres \
 ## 故障排查
 
 ### 在哪里可以找到详细的故障排查？
-查看全面的[故障排查指南](TROUBLESHOOTING.zh-CN.md)，包含：
+查看全面的[故障排查指南](TROUBLESHOOTING.md)，包含：
 - 分步诊断方法
 - 日志收集方法
 - 常见错误解决方案
 - 紧急重置步骤
 
 ### 如何报告 Bug？
-1. 先查看[故障排查指南](TROUBLESHOOTING.zh-CN.md)
+1. 先查看[故障排查指南](TROUBLESHOOTING.md)
 2. 搜索[现有 Issues](https://github.com/xbcvv/nofx-0210/issues)
 3. 如果没找到，使用我们的 [Bug 报告模板](../../.github/ISSUE_TEMPLATE/bug_report.md)
 

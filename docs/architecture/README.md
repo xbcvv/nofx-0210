@@ -1,47 +1,46 @@
-﻿# NOFX Architecture Documentation
+﻿# NOFX 架构文档
 
-**Language:** [English](README.md) | [中文](README.zh-CN.md)
 
-Technical documentation for developers who want to understand NOFX internals.
-
----
-
-## Overview
-
-NOFX is a full-stack AI trading platform for cryptocurrency and US stock markets:
-
-- **Backend:** Go (Gin framework, SQLite)
-- **Frontend:** React/TypeScript (Vite, TailwindCSS)
-- **AI Models:** DeepSeek, Qwen, OpenAI (GPT-5.2), Claude, Gemini, Grok, Kimi
-- **Exchanges:** Binance, Bybit, OKX, Hyperliquid, Aster, Lighter
+为希望了解 NOFX 内部实现的开发者提供的技术文档。
 
 ---
 
-## System Architecture
+## 概述
+
+NOFX 是一个支持加密货币和美股市场的全栈 AI 交易平台：
+
+- **后端:** Go (Gin 框架, SQLite)
+- **前端:** React/TypeScript (Vite, TailwindCSS)
+- **AI 模型:** DeepSeek, Qwen, OpenAI (GPT-5.2), Claude, Gemini, Grok, Kimi
+- **交易所:** Binance, Bybit, OKX, Hyperliquid, Aster, Lighter
+
+---
+
+## 系统架构
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                              NOFX Platform                                  │
+│                              NOFX 平台                                      │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐│
-│  │  Strategy   │  │  Backtest   │  │   Debate    │  │   Live Trading      ││
-│  │   Studio    │  │   Engine    │  │    Arena    │  │   (Auto Trader)     ││
+│  │   策略      │  │   回测      │  │   辩论      │  │     实盘交易        ││
+│  │   工作室    │  │   引擎      │  │   竞技场    │  │   (自动交易员)      ││
 │  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘  └──────────┬──────────┘│
 │         │                │                │                    │           │
 │         └────────────────┴────────────────┴────────────────────┘           │
 │                                    │                                        │
 │                          ┌─────────▼─────────┐                              │
-│                          │   Core Services   │                              │
-│                          │  - Market Data    │                              │
-│                          │  - AI Providers   │                              │
-│                          │  - Risk Control   │                              │
+│                          │     核心服务      │                              │
+│                          │  - 行情数据       │                              │
+│                          │  - AI 模型       │                              │
+│                          │  - 风险控制       │                              │
 │                          └─────────┬─────────┘                              │
 │                                    │                                        │
 │         ┌──────────────────────────┼──────────────────────────┐            │
 │         │                          │                          │            │
 │  ┌──────▼──────┐         ┌─────────▼─────────┐      ┌────────▼────────┐   │
-│  │  Exchanges  │         │     Database      │      │   Frontend UI   │   │
+│  │   交易所    │         │      数据库       │      │    前端 UI      │   │
 │  │  (CEX/DEX)  │         │    (SQLite)       │      │   (React SPA)   │   │
 │  └─────────────┘         └───────────────────┘      └─────────────────┘   │
 │                                                                             │
@@ -50,116 +49,116 @@ NOFX is a full-stack AI trading platform for cryptocurrency and US stock markets
 
 ---
 
-## Module Documentation
+## 模块文档
 
-### Core Modules
+### 核心模块
 
-| Module | Description | Documentation |
-|--------|-------------|---------------|
-| **Strategy Studio** | Strategy configuration, coin selection, data assembly, AI prompts | [STRATEGY_MODULE.md](STRATEGY_MODULE.md) |
-| **Backtest Engine** | Historical simulation, performance metrics, AI decision replay | [BACKTEST_MODULE.md](BACKTEST_MODULE.md) |
-| **Debate Arena** | Multi-AI collaborative decision making with voting consensus | [DEBATE_MODULE.md](DEBATE_MODULE.md) |
+| 模块 | 描述 | 文档 |
+|------|------|------|
+| **策略工作室** | 策略配置、币种选择、数据组装、AI 提示词 | [STRATEGY_MODULE.md](STRATEGY_MODULE.md) |
+| **回测引擎** | 历史模拟、性能指标、AI 决策回放 | [BACKTEST_MODULE.md](BACKTEST_MODULE.md) |
+| **辩论竞技场** | 多 AI 协作决策，投票共识机制 | [DEBATE_MODULE.md](DEBATE_MODULE.md) |
 
-### Module Overview
+### 模块概览
 
-#### Strategy Module
-Complete strategy configuration system including:
-- Coin source selection (static list, AI500 pool, OI ranking)
-- Market data indicators (K-lines, EMA, MACD, RSI, ATR)
-- Prompt construction (system prompt, user prompt, sections)
-- AI response parsing and decision execution
-- Risk control enforcement
+#### 策略模块
+完整的策略配置系统，包括：
+- 币种来源选择（静态列表、AI500 币池、OI 排行）
+- 市场数据指标（K线、EMA、MACD、RSI、ATR）
+- 提示词构建（系统提示词、用户提示词、分段配置）
+- AI 响应解析和决策执行
+- 风险控制强制执行
 
-**[Read Full Documentation →](STRATEGY_MODULE.md)**
+**[阅读完整文档 →](STRATEGY_MODULE.md)**
 
-#### Backtest Module
-Historical trading simulation engine:
-- Multi-symbol, multi-timeframe backtesting
-- AI decision replay with caching
-- Performance metrics (Sharpe, drawdown, win rate)
-- Real-time progress streaming via SSE
-- Checkpoint and resume support
+#### 回测模块
+历史交易模拟引擎：
+- 多币种、多时间周期回测
+- AI 决策回放与缓存
+- 性能指标（夏普比率、最大回撤、胜率）
+- SSE 实时进度推送
+- 断点续测支持
 
-**[Read Full Documentation →](BACKTEST_MODULE.md)**
+**[阅读完整文档 →](BACKTEST_MODULE.md)**
 
-#### Debate Module
-Multi-AI collaborative decision system:
-- 5 AI personalities (Bull, Bear, Analyst, Contrarian, Risk Manager)
-- Multi-round debate with market context
-- Weighted voting and consensus algorithm
-- Auto-execution to live trading
-- Real-time SSE streaming
+#### 辩论模块
+多 AI 协作决策系统：
+- 5 种 AI 性格（多头、空头、分析师、逆势者、风控）
+- 多轮辩论与市场数据上下文
+- 加权投票与共识算法
+- 自动执行到实盘交易
+- SSE 实时流推送
 
-**[Read Full Documentation →](DEBATE_MODULE.md)**
+**[阅读完整文档 →](DEBATE_MODULE.md)**
 
 ---
 
-## Project Structure
+## 项目结构
 
 ```
 nofx/
-├── main.go                    # Entry point
-├── api/                       # HTTP API (Gin framework)
-├── trader/                    # Trading execution layer
-├── strategy/                  # Strategy engine
-├── backtest/                  # Backtest simulation engine
-├── debate/                    # Debate arena engine
-├── market/                    # Market data service
-├── mcp/                       # AI model clients
-├── store/                     # Database operations
-├── auth/                      # JWT authentication
-├── manager/                   # Multi-trader management
-└── web/                       # React frontend
-    ├── src/pages/             # Page components
-    ├── src/components/        # Shared components
-    └── src/lib/api.ts         # API client
+├── main.go                    # 程序入口
+├── api/                       # HTTP API (Gin 框架)
+├── trader/                    # 交易执行层
+├── strategy/                  # 策略引擎
+├── backtest/                  # 回测模拟引擎
+├── debate/                    # 辩论竞技场引擎
+├── market/                    # 行情数据服务
+├── mcp/                       # AI 模型客户端
+├── store/                     # 数据库操作
+├── auth/                      # JWT 认证
+├── manager/                   # 多交易员管理
+└── web/                       # React 前端
+    ├── src/pages/             # 页面组件
+    ├── src/components/        # 共享组件
+    └── src/lib/api.ts         # API 客户端
 ```
 
 ---
 
-## Core Dependencies
+## 核心依赖
 
-### Backend (Go)
+### 后端 (Go)
 
-| Package | Purpose |
+| 包 | 用途 |
 |---------|---------|
-| `gin-gonic/gin` | HTTP API framework |
-| `adshao/go-binance` | Binance API client |
-| `markcheno/go-talib` | Technical indicators |
-| `golang-jwt/jwt` | JWT authentication |
+| `gin-gonic/gin` | HTTP API 框架 |
+| `adshao/go-binance` | Binance API 客户端 |
+| `markcheno/go-talib` | 技术指标计算 |
+| `golang-jwt/jwt` | JWT 认证 |
 
-### Frontend (React)
+### 前端 (React)
 
-| Package | Purpose |
+| 包 | 用途 |
 |---------|---------|
-| `react` | UI framework |
-| `recharts` | Charts and visualizations |
-| `swr` | Data fetching |
-| `zustand` | State management |
-| `tailwindcss` | CSS framework |
+| `react` | UI 框架 |
+| `recharts` | 图表可视化 |
+| `swr` | 数据获取 |
+| `zustand` | 状态管理 |
+| `tailwindcss` | CSS 框架 |
 
 ---
 
-## Quick Links
+## 快速链接
 
-- [Strategy Module](STRATEGY_MODULE.md) - How strategies work
-- [Backtest Module](BACKTEST_MODULE.md) - How backtesting works
-- [Debate Module](DEBATE_MODULE.md) - How AI debates work
-- [Getting Started](../getting-started/README.md) - Setup guide
-- [FAQ](../faq/README.md) - Frequently asked questions
-
----
-
-## For Developers
-
-**Want to contribute?**
-- Read the module documentation above
-- Check [Open Issues](https://github.com/xbcvv/nofx-0210/issues)
-- Join our community
-
-**Repository:** https://github.com/xbcvv/nofx-0210
+- [策略模块](STRATEGY_MODULE.md) - 策略如何运作
+- [回测模块](BACKTEST_MODULE.md) - 回测如何运作
+- [辩论模块](DEBATE_MODULE.md) - AI 辩论如何运作
+- [快速开始](../getting-started/README.md) - 部署指南
+- [常见问题](../faq/README.md) - FAQ
 
 ---
 
-[← Back to Documentation](../README.md)
+## 开发者资源
+
+**想要贡献？**
+- 阅读上方的模块文档
+- 查看 [Open Issues](https://github.com/xbcvv/nofx-0210/issues)
+- 加入我们的社区
+
+**代码仓库:** https://github.com/xbcvv/nofx-0210
+
+---
+
+[← 返回文档首页](../README.md)
 

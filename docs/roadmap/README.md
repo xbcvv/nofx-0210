@@ -1,292 +1,291 @@
-# 🗺️ NOFX Roadmap
+﻿# 🗺️ NOFX 路线图
 
-**Language:** [English](README.md) | [中文](README.zh-CN.md)
 
-Strategic plan for NOFX development and universal market expansion.
-
----
-
-## 📋 Overview
-
-NOFX is on a mission to become the **Universal AI Trading Operating System** for all financial markets. Our proven infrastructure on crypto markets is being extended to stocks, futures, options, forex, and beyond.
-
-**Vision:** Same architecture. Same agent framework. All markets.
+NOFX 发展和通用市场扩展的战略规划。
 
 ---
 
-## 🎯 Short-Term Roadmap
+## 📋 概述
 
-### Phase 1: Core Infrastructure Enhancement
+NOFX 的使命是成为所有金融市场的**通用 AI 交易操作系统**。我们在加密货币市场上经过验证的基础设施正在扩展到股票、期货、期权、外汇等领域。
 
-#### 1.1 Security Enhancements
-**Goal:** Protect sensitive data and reduce security vulnerabilities
-
-- **Credential Management**
-  - [ ] Implement AES-256 encryption for API keys in database
-  - [ ] Add encryption for private keys (Hyperliquid, Aster)
-  - [ ] Use hardware security module (HSM) support for production
-  - [ ] Implement key rotation mechanism
-  - [ ] Add audit logging for all credential access
-
-- **Application Security**
-  - [ ] Input validation and sanitization (prevent SQL injection, XSS)
-  - [ ] Rate limiting for API endpoints
-  - [ ] CORS policy configuration
-  - [ ] JWT token expiration and refresh mechanism
-  - [ ] Implement RBAC (Role-Based Access Control) for multi-user support
-  - [ ] Add IP whitelisting for API access
-  - [ ] Security headers (CSP, HSTS, X-Frame-Options)
-
-- **Operational Security**
-  - [ ] Secure password hashing (bcrypt with salt)
-  - [ ] 2FA enhancement (backup codes, multiple TOTP devices)
-  - [ ] Session management (auto-logout, concurrent session limits)
-  - [ ] Secrets management (environment variables, vault integration)
-  - [ ] Regular dependency vulnerability scanning
-
-#### 1.2 Enhanced AI Capabilities
-**Goal:** Richer prompts, flexible configuration, support for more AI models
-
-- **Prompt System Overhaul**
-  - [ ] Template engine for dynamic prompt generation
-  - [ ] Multi-language prompt support (chain-of-thought, few-shot, zero-shot)
-  - [ ] Market condition-based prompt switching (bull, bear, sideways)
-  - [ ] Historical performance feedback integration in prompts
-  - [ ] Prompt versioning and A/B testing framework
-  - [ ] User-customizable prompt templates via web interface
-
-- **AI Model Integration**
-  - [ ] OpenAI GPT-4/GPT-4 Turbo support
-  - [ ] Anthropic Claude 3 (Opus, Sonnet, Haiku) integration
-  - [ ] Google Gemini Pro support
-  - [ ] Local LLM support (Llama, Mistral via Ollama)
-  - [ ] Multi-model ensemble (voting, weighted average)
-  - [ ] Model performance tracking and auto-selection
-  - [ ] Fallback mechanism when primary model fails
-
-- **AI Decision Engine**
-  - [ ] Confidence scoring for each decision
-  - [ ] Explanation generation (why this trade?)
-  - [ ] Risk assessment integration in AI reasoning
-  - [ ] Market regime detection (trend, mean-reversion, high volatility)
-  - [ ] Cross-validation with technical indicators
-
-#### 1.3 Exchange Integration Expansion
-**Goal:** Support more CEX and popular perp-DEX, both spot and futures
-
-- **Centralized Exchanges (CEX)**
-  - [ ] **OKX** - Futures + Spot trading
-  - [ ] **Bybit** - Futures + Spot trading
-  - [ ] **Bitget** - Futures + Spot trading
-  - [ ] **Gate.io** - Futures + Spot trading
-  - [ ] **KuCoin** - Futures + Spot trading
-  - [ ] Unified CEX interface for easy addition of new exchanges
-
-- **Decentralized Perpetual Exchanges (Perp-DEX)**
-  - [x] **Hyperliquid** (Ethereum L1) - High-performance orderbook DEX (✅ Supported)
-  - [x] **Aster** (Multi-chain) - Binance-compatible API DEX (✅ Supported)
-  - [ ] **Lighter** (Arbitrum) - Gasless orderbook DEX with off-chain matching
-  - [ ] **EdgeX** (Multi-chain) - Professional derivatives DEX
-  - [ ] Unified DEX interface for consistent integration
-  - [ ] Enhanced Hyperliquid integration (testnet support, advanced order types)
-  - [ ] Enhanced Aster integration (cross-chain support, wallet management)
-
-- **Spot + Futures Support**
-  - [ ] Dual-mode trading (spot arbitrage, futures hedging)
-  - [ ] Cross-exchange arbitrage detection
-  - [ ] Unified position tracking across spot and futures
-  - [ ] Auto-conversion between spot and perpetual strategies
-
-- **Exchange Infrastructure**
-  - [ ] **Trading Data Analysis API Integration** (In-house developed)
-    - [ ] AI500 integration - In-house AI-powered coin selection model
-    - [ ] OI (Open Interest) Analysis - Real-time open interest tracking and anomaly detection
-    - [ ] NetFlow Analysis - On-chain fund flow analysis for market sentiment
-    - [ ] Market sentiment aggregator - Combine multiple data sources for enhanced AI decision making
-    - [ ] Custom indicator API - Support for proprietary technical indicators
-  - [ ] Automatic precision handling (quantity, price decimals)
-  - [ ] Order type abstraction (market, limit, stop-loss, take-profit)
-  - [ ] Unified error handling and retry logic
-  - [ ] WebSocket support for real-time data
-  - [ ] Rate limit management per exchange
-
-#### 1.4 Project Structure Refactoring
-**Goal:** Clear hierarchy, high cohesion, low coupling, easy to extend and maintain
-
-- **Architecture Redesign**
-  - [ ] Implement layered architecture (Presentation → Business Logic → Data Access)
-  - [ ] Apply SOLID principles (especially Liskov Substitution Principle for exchange adapters)
-  - [ ] Extract common interfaces for all exchange implementations
-  - [ ] Separate concerns: trading logic, data fetching, decision making, execution
-  - [ ] Implement dependency injection for better testability
-
-- **Code Organization**
-  - [ ] Refactor monolithic modules into smaller, focused packages
-  - [ ] Create abstract base classes for traders, exchanges, AI models
-  - [ ] Implement factory pattern for exchange/AI model creation
-  - [ ] Standardize error handling and logging across all modules
-  - [ ] Remove circular dependencies and improve import structure
-
-- **Configuration Management**
-  - [ ] Centralize all configuration in structured config files
-  - [ ] Implement hot-reload for non-critical configuration changes
-  - [ ] Validate configurations at startup with clear error messages
-  - [ ] Support environment-specific configs (dev/staging/production)
-
-#### 1.5 User Experience Improvements
-**Goal:** Enhanced web interface, better monitoring, and alerting system
-
-- **Web Interface Enhancements**
-  - [ ] Mobile-responsive design (tablet and phone support)
-  - [ ] Dark/Light theme toggle with user preference saving
-  - [ ] Advanced charting with TradingView widget integration
-  - [ ] Real-time WebSocket updates (replace polling for positions/orders)
-  - [ ] Drag-and-drop dashboard customization
-  - [ ] Multi-language support (EN, CN, RU, UK)
-
-- **Configuration Interface**
-  - [ ] Visual strategy builder (no-code flow diagram)
-  - [ ] Live configuration preview before saving
-  - [ ] Configuration templates for common strategies
-  - [ ] Bulk trader management (start/stop multiple traders)
-  - [ ] Exchange credential testing (verify before saving)
-  - [ ] AI model testing interface (test prompts before deployment)
-
-- **Monitoring & Analytics**
-  - [ ] Real-time performance dashboard with key metrics
-  - [ ] Equity curve visualization (per trader, per exchange, overall)
-  - [ ] Drawdown analysis and risk metrics
-  - [ ] Trade history with filtering and search
-  - [ ] P&L breakdown by symbol, time period, strategy
-  - [ ] Comparison view (multiple traders side-by-side)
-  - [ ] Export functionality (CSV, JSON, PDF reports)
-
-- **Alert & Notification System**
-  - [ ] Multi-channel alerts (Email, Telegram, Discord, Webhook)
-  - [ ] Configurable alert rules (profit threshold, loss limit, error detection)
-  - [ ] Alert priority levels (critical, warning, info)
-  - [ ] Alert history and acknowledgment tracking
-  - [ ] Daily/Weekly performance summary emails
-  - [ ] System health monitoring (API connectivity, database status)
-
-### Phase 2: Testing & Stability
-
-#### 2.1 Quality Assurance
-- [ ] Comprehensive unit test coverage (>80%)
-- [ ] Integration tests for all exchange adapters
-- [ ] Load testing (100+ concurrent traders)
-- [ ] Security audit (API key encryption, SQL injection prevention)
-
-#### 2.2 Documentation
-- [ ] Complete API reference documentation
-- [ ] Video tutorials for beginners
-- [ ] Strategy development guide
-- [ ] Troubleshooting playbook
-
-#### 2.3 Community Features
-- [ ] Public strategy marketplace (share/sell strategies)
-- [ ] Leaderboard with verified performance
-- [ ] Community forum integration
-- [ ] Bug bounty program
+**愿景：** 相同架构。相同智能体框架。所有市场。
 
 ---
 
-## 🚀 Long-Term Roadmap
+## 🎯 短期路线图
 
-### Phase 3: Universal Market Expansion
+### 阶段1: 核心基础设施增强
 
-**Goal:** Extend the proven crypto trading infrastructure to all major financial markets.
+#### 1.1 安全性增强
+**目标：** 保护敏感数据，减少安全漏洞
 
-#### 3.1 Stock Markets
-- [ ] US Equities (Interactive Brokers, Alpaca Markets)
-- [ ] Asian Markets (A-shares, Hong Kong, Japan)
-- [ ] Fundamental analysis integration (earnings, P/E, dividends)
-- [ ] AI-powered stock screening
+- **凭证管理**
+  - [ ] 为数据库中的API密钥实现AES-256加密
+  - [ ] 为私钥（Hyperliquid、Aster）添加加密
+  - [ ] 为生产环境支持硬件安全模块（HSM）
+  - [ ] 实现密钥轮换机制
+  - [ ] 为所有凭证访问添加审计日志
 
-#### 3.2 Futures Markets
-- [ ] Commodity Futures (Energy, Metals, Agriculture)
-- [ ] Index Futures (S&P 500, NASDAQ, Dow Jones, VIX)
-- [ ] Rollover management and spread trading
+- **应用安全**
+  - [ ] 输入验证和清理（防止SQL注入、XSS攻击）
+  - [ ] API端点的速率限制
+  - [ ] CORS策略配置
+  - [ ] JWT令牌过期和刷新机制
+  - [ ] 实现RBAC（基于角色的访问控制）支持多用户
+  - [ ] 添加API访问的IP白名单
+  - [ ] 安全头部（CSP、HSTS、X-Frame-Options）
 
-#### 3.3 Options Trading
-- [ ] Options chain data and Greeks calculation
-- [ ] Equity, Index, and Crypto options
-- [ ] Options strategy builder
+- **运营安全**
+  - [ ] 安全密码哈希（bcrypt加盐）
+  - [ ] 2FA增强（备份码、多个TOTP设备）
+  - [ ] 会话管理（自动登出、并发会话限制）
+  - [ ] 密钥管理（环境变量、vault集成）
+  - [ ] 定期依赖项漏洞扫描
 
-#### 3.4 Forex Markets
-- [ ] Major currency pairs and exotic pairs
-- [ ] Interest rate analysis and carry trade support
+#### 1.2 增强AI能力
+**目标：** 更丰富的prompts、灵活配置、支持更多AI模型
+
+- **Prompt系统全面改造**
+  - [ ] 动态prompt生成的模板引擎
+  - [ ] 多语言prompt支持（思维链、few-shot、zero-shot）
+  - [ ] 基于市场状况的prompt切换（牛市、熊市、震荡）
+  - [ ] 在prompts中集成历史绩效反馈
+  - [ ] Prompt版本控制和A/B测试框架
+  - [ ] 通过Web界面自定义prompt模板
+
+- **AI模型集成**
+  - [ ] OpenAI GPT-4/GPT-4 Turbo支持
+  - [ ] Anthropic Claude 3（Opus、Sonnet、Haiku）集成
+  - [ ] Google Gemini Pro支持
+  - [ ] 本地LLM支持（通过Ollama的Llama、Mistral）
+  - [ ] 多模型集成（投票、加权平均）
+  - [ ] 模型性能跟踪和自动选择
+  - [ ] 主模型失败时的降级机制
+
+- **AI决策引擎**
+  - [ ] 每个决策的置信度评分
+  - [ ] 解释生成（为什么做这笔交易？）
+  - [ ] AI推理中的风险评估集成
+  - [ ] 市场状态检测（趋势、均值回归、高波动）
+  - [ ] 与技术指标的交叉验证
+
+#### 1.3 交易所集成扩展
+**目标：** 支持更多CEX和流行的perp-DEX，现货和合约
+
+- **中心化交易所（CEX）**
+  - [ ] **OKX** - 合约 + 现货交易
+  - [ ] **Bybit** - 合约 + 现货交易
+  - [ ] **Bitget** - 合约 + 现货交易
+  - [ ] **Gate.io** - 合约 + 现货交易
+  - [ ] **KuCoin** - 合约 + 现货交易
+  - [ ] 统一的CEX接口，便于添加新交易所
+
+- **去中心化永续交易所（Perp-DEX）**
+  - [x] **Hyperliquid**（Ethereum L1）- 高性能订单簿DEX（✅ 已支持）
+  - [x] **Aster**（多链）- Binance兼容API的DEX（✅ 已支持）
+  - [ ] **Lighter**（Arbitrum）- 无Gas订单簿DEX，链下撮合
+  - [ ] **EdgeX**（多链）- 专业衍生品DEX
+  - [ ] 统一的DEX接口，保证集成一致性
+  - [ ] 增强Hyperliquid集成（测试网支持、高级订单类型）
+  - [ ] 增强Aster集成（跨链支持、钱包管理）
+
+- **现货 + 合约支持**
+  - [ ] 双模式交易（现货套利、合约对冲）
+  - [ ] 跨交易所套利检测
+  - [ ] 现货和合约的统一持仓跟踪
+  - [ ] 现货和永续策略之间的自动转换
+
+- **交易所基础设施**
+  - [ ] **交易数据分析API集成**（自研）
+    - [ ] AI500集成 - 自研AI选币模型
+    - [ ] OI（持仓量）分析 - 实时持仓量跟踪和异常检测
+    - [ ] NetFlow分析 - 链上资金流向分析，用于市场情绪判断
+    - [ ] 市场情绪聚合器 - 整合多个数据源，增强AI决策能力
+    - [ ] 自定义指标API - 支持专有技术指标
+  - [ ] 自动精度处理（数量、价格小数位）
+  - [ ] 订单类型抽象（市价、限价、止损、止盈）
+  - [ ] 统一的错误处理和重试逻辑
+  - [ ] 实时数据的WebSocket支持
+  - [ ] 每个交易所的速率限制管理
+
+#### 1.4 项目结构重构
+**目标：** 清晰层次、高内聚低耦合、易于扩展和维护
+
+- **架构重新设计**
+  - [ ] 实现分层架构（表现层 → 业务逻辑层 → 数据访问层）
+  - [ ] 应用SOLID原则（特别是里氏替换原则用于交易所适配器）
+  - [ ] 为所有交易所实现提取通用接口
+  - [ ] 分离关注点：交易逻辑、数据获取、决策制定、执行
+  - [ ] 实现依赖注入以提高可测试性
+
+- **代码组织**
+  - [ ] 将单体模块重构为更小、更专注的包
+  - [ ] 为traders、exchanges、AI模型创建抽象基类
+  - [ ] 实现工厂模式用于交易所/AI模型的创建
+  - [ ] 标准化所有模块的错误处理和日志记录
+  - [ ] 消除循环依赖并改进导入结构
+
+- **配置管理**
+  - [ ] 将所有配置集中到结构化配置文件中
+  - [ ] 实现非关键配置的热重载
+  - [ ] 启动时验证配置并提供清晰的错误消息
+  - [ ] 支持环境特定配置（dev/staging/production）
+
+#### 1.5 用户体验改进
+**目标：** 增强Web界面、更好的监控和告警系统
+
+- **Web界面增强**
+  - [ ] 移动端响应式设计（平板和手机支持）
+  - [ ] 深色/浅色主题切换并保存用户偏好
+  - [ ] TradingView小部件集成的高级图表
+  - [ ] 实时WebSocket更新（替代持仓/订单的轮询）
+  - [ ] 拖拽式仪表板自定义
+  - [ ] 多语言支持（EN、CN、RU、UK）
+
+- **配置界面**
+  - [ ] 可视化策略构建器（无代码流程图）
+  - [ ] 保存前的实时配置预览
+  - [ ] 常用策略的配置模板
+  - [ ] 批量trader管理（启动/停止多个traders）
+  - [ ] 交易所凭证测试（保存前验证）
+  - [ ] AI模型测试界面（部署前测试prompts）
+
+- **监控与分析**
+  - [ ] 实时性能仪表板和关键指标
+  - [ ] 权益曲线可视化（每个trader、每个交易所、总体）
+  - [ ] 回撤分析和风险指标
+  - [ ] 带过滤和搜索的交易历史
+  - [ ] 按币种、时间段、策略的盈亏分解
+  - [ ] 比较视图（多个traders并排）
+  - [ ] 导出功能（CSV、JSON、PDF报告）
+
+- **告警与通知系统**
+  - [ ] 多渠道告警（Email、Telegram、Discord、Webhook）
+  - [ ] 可配置的告警规则（利润阈值、亏损限制、错误检测）
+  - [ ] 告警优先级（严重、警告、信息）
+  - [ ] 告警历史和确认跟踪
+  - [ ] 每日/每周性能摘要邮件
+  - [ ] 系统健康监控（API连接、数据库状态）
+
+### 阶段2: 测试与稳定性
+
+#### 2.1 质量保证
+- [ ] 全面的单元测试覆盖率（>80%）
+- [ ] 所有交易所适配器的集成测试
+- [ ] 负载测试（100+并发交易者）
+- [ ] 安全审计（API密钥加密、SQL注入防护）
+
+#### 2.2 文档
+- [ ] 完整的API参考文档
+- [ ] 新手视频教程
+- [ ] 策略开发指南
+- [ ] 故障排查手册
+
+#### 2.3 社区功能
+- [ ] 公开策略市场（分享/出售策略）
+- [ ] 经过验证的绩效排行榜
+- [ ] 社区论坛集成
+- [ ] 漏洞赏金计划
 
 ---
 
-### Phase 4: Advanced AI & Automation
+## 🚀 长期路线图
 
-**Goal:** Implement cutting-edge AI technologies for autonomous trading.
+### 阶段3: 通用市场扩展
 
-- [ ] Multi-Agent orchestration (specialized agents with dynamic coordination)
-- [ ] Reinforcement Learning (DQN, PPO, transfer learning)
-- [ ] Alternative data integration (social sentiment, news, on-chain analytics)
+**目标：** 将经过验证的加密货币交易基础设施扩展到所有主要金融市场。
 
----
+#### 3.1 股票市场
+- [ ] 美股（Interactive Brokers、Alpaca Markets）
+- [ ] 亚洲市场（A股、香港、日本）
+- [ ] 基本面分析集成（财报、市盈率、股息）
+- [ ] AI驱动的股票筛选
 
-### Phase 5: Enterprise & Scaling
+#### 3.2 期货市场
+- [ ] 商品期货（能源、金属、农产品）
+- [ ] 指数期货（标普500、纳斯达克、道琼斯、VIX）
+- [ ] 展期管理和价差交易
 
-**Goal:** Scale infrastructure for institutional use and high-volume trading.
+#### 3.3 期权交易
+- [ ] 期权链数据和Greeks计算
+- [ ] 股票、指数和加密期权
+- [ ] 期权策略构建器
 
-- [ ] Database migration (PostgreSQL/MySQL, Redis, TimescaleDB)
-- [ ] Microservices architecture with Kubernetes deployment
-- [ ] Multi-user RBAC and white-label solutions
-- [ ] Advanced analytics and compliance reporting
-
----
-
-## 📊 Key Metrics & Milestones
-
-### Short-Term Targets
-- [ ] **100+** supported trading pairs across all exchanges
-- [ ] **10,000+** active trader instances
-- [ ] **5+** new exchange integrations
-- [ ] **80%+** test coverage
-- [ ] **99.9%** uptime
-
-### Long-Term Targets
-- [ ] **All major asset classes** supported (crypto, stocks, futures, options, forex)
-- [ ] **50,000+** active users
-- [ ] **Enterprise tier** launched
-- [ ] **Institutional partnerships** established
+#### 3.4 外汇市场
+- [ ] 主要货币对和稀有货币对
+- [ ] 利率分析和套息交易支持
 
 ---
 
-## 🤝 Community Involvement
+### 阶段4: 高级AI与自动化
 
-We welcome community contributions to accelerate our roadmap:
+**目标：** 实现前沿AI技术用于自主交易。
 
-- **Vote on Features**: Join our [Telegram community](https://t.me/nofx_dev_community) to vote on priority features
-- **Contribute Code**: Check our [Contributing Guide](../../CONTRIBUTING.md)
-- **Bug Bounties**: Report issues and earn rewards
-- **Strategy Sharing**: Share your successful strategies
-
----
-
-## 📝 Roadmap Updates
-
-This roadmap is reviewed and updated quarterly based on:
-- Community feedback
-- Market demands
-- Technical feasibility
-- Resource availability
-
-**Last Updated:** 2025-11-01
+- [ ] 多智能体编排（专业化智能体与动态协调）
+- [ ] 强化学习（DQN、PPO、迁移学习）
+- [ ] 替代数据集成（社交情绪、新闻、链上分析）
 
 ---
 
-## 📚 Related Documentation
+### 阶段5: 企业级与扩展
 
-- [Architecture Documentation](../architecture/README.md) - Technical architecture details
-- [Getting Started](../getting-started/README.md) - Setup and deployment
-- [Contributing Guide](../../CONTRIBUTING.md) - How to contribute
-- [Changelog](../../CHANGELOG.md) - Version history
+**目标：** 扩展基础设施以支持机构使用和高频交易。
+
+- [ ] 数据库迁移（PostgreSQL/MySQL、Redis、TimescaleDB）
+- [ ] 微服务架构与Kubernetes部署
+- [ ] 多用户RBAC和白标解决方案
+- [ ] 高级分析和合规报告
 
 ---
 
-[← Back to Documentation Home](../README.md)
+## 📊 关键指标与里程碑
+
+### 短期目标
+- [ ] 所有交易所支持**100+**交易对
+- [ ] **10,000+**活跃交易者实例
+- [ ] **5+**新交易所集成
+- [ ] **80%+**测试覆盖率
+- [ ] **99.9%**正常运行时间
+
+### 长期目标
+- [ ] 支持**所有主要资产类别**（加密、股票、期货、期权、外汇）
+- [ ] **50,000+**活跃用户
+- [ ] **企业级**版本发布
+- [ ] 建立**机构合作伙伴关系**
+
+---
+
+## 🤝 社区参与
+
+我们欢迎社区贡献来加速我们的路线图：
+
+- **功能投票**: 加入我们的[Telegram社区](https://t.me/nofx_dev_community)投票优先功能
+- **贡献代码**: 查看我们的[贡献指南](../../CONTRIBUTING.md)
+- **漏洞赏金**: 报告问题并获得奖励
+- **策略分享**: 分享你的成功策略
+
+---
+
+## 📝 路线图更新
+
+本路线图根据以下因素每季度审查和更新：
+- 社区反馈
+- 市场需求
+- 技术可行性
+- 资源可用性
+
+**最后更新:** 2025-11-01
+
+---
+
+## 📚 相关文档
+
+- [架构文档](../architecture/README.md) - 技术架构详情
+- [快速开始](../getting-started/README.md) - 设置和部署
+- [贡献指南](../../CONTRIBUTING.md) - 如何贡献
+- [更新日志](../../CHANGELOG.md) - 版本历史
+
+---
+
+[← 返回文档主页](../README.md)

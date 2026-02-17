@@ -1,222 +1,222 @@
-﻿# Changelog
+﻿# 更新日志
 
-All notable changes to the NOFX project will be documented in this file.
+NOFX 项目的所有重要更改都将记录在此文件中。
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+本文件格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
+本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-**Languages:** [English](CHANGELOG.md) | [中文](CHANGELOG.zh-CN.md)
+
 
 ---
 
 
 
-## [Unreleased]
+## [未发布]
 
-### Added
-- **Global Context**: Implemented "Global Market Context" in AI prompt, forcing BTCUSDT data inclusion (Price/15m Change/ADX) even when not in candidate list, ensuring accurate "Global Command" analysis.
-- **Market Data**: Added `PriceChange15m` field to provide explicit 15-minute price change percentage, eliminating AI calculation hallucinations.
+### 新增
+- **全局视野**: 在 AI 提示词中实现了“全局市场背景 (Global Market Context)”，强制包含 BTCUSDT 数据（价格/15m涨跌/ADX），即使 BTC 不在候选列表中，也能确保“全局指挥”逻辑的准确执行。
+- **市场数据**: 新增 `PriceChange15m` 字段，提供明确的 15 分钟涨跌幅数据，消除 AI 计算幻觉。
 
-### Fixed
-- **Hold Time**: Fixed an issue where position hold time would reset to zero due to case mismatch ("Long" vs "long") in database lookups.
-- **Timezone**: Verified that AI analysis uses UTC time internally, ensuring consistency despite local time display differences.
+### 修复
+- **持仓时间**: 修复了由于数据库查询时大小写不匹配 ("Long" vs "long") 导致持仓时间重置为零的问题。
+- **时区**: 验证了 AI 分析内部使用 UTC 时间，确保了尽管显示为本地时间但分析逻辑的一致性。
 
-### Deprecated
-- **Global Command**: Marked "Global Command" related documentation as deprecated as the feature is not implemented in the current codebase.
+### 弃用
+- **全局指挥**: 将 "全局指挥 (Global Command)" 相关文档标记为弃用，因当前代码库中未实施该功能。
 
-### Added (Configuration-Driven Architecture V1.1.0)
-- **Dynamic Indicators**: Enabled configuration of arbitrary EMA/ATR periods and Timeframes via `strategy.json` without code changes.
-- **Bilingual Schema**: System Prompt now supports Chinese terms (e.g., "日涨跌幅", "EMA60斜率") mapping to dynamic data.
-- **Docs**: Added `docs/wiki/CONFIGURATION_DRIVEN.md` detailing usage.
+### 新增 (配置驱动架构 V1.1.0)
+- **动态指标**: 支持通过 `strategy.json` 配置任意 EMA/ATR 周期和 K 线时间窗口，无需修改代码。
+- **双语 Schema**: 系统 Prompt 支持中文术语（如 "日涨跌幅", "EMA60斜率"）直接映射到动态数据。
+- **文档**: 新增 `docs/wiki/CONFIGURATION_DRIVEN.md` 详细说明用法。
 
-### Added
-- Documentation system with multi-language support (EN/CN/RU/UK)
-- Complete getting-started guides (Docker, Custom API)
-- Architecture documentation with system design details
-- User guides with FAQ and troubleshooting
-- Community documentation with bounty programs
+### 新增
+- 多语言文档系统（英文/中文/俄语/乌克兰语）
+- 完整的快速开始指南（Docker、自定义 API）
+- 架构文档，包含系统设计细节
+- 用户指南，包含 FAQ 和故障排除
+- 社区文档，包含悬赏计划
 
-### Changed
-- Reorganized documentation structure into logical categories
-- Updated all README files with proper navigation links
+### 变更
+- 重组文档结构为逻辑分类
+- 更新所有 README 文件，添加适当的导航链接
 
 ---
 
 ## [3.0.0] - 2025-10-30
 
-### Added - Major Architecture Transformation 🚀
+### 新增 - 重大架构变革 🚀
 
-**Complete System Redesign - Web-Based Configuration Platform**
+**系统完全重新设计 - 基于 Web 的配置平台**
 
-This is a **major breaking update** that completely transforms NOFX from a static config-based system to a modern web-based trading platform.
+这是一个**重大破坏性更新**，将 NOFX 从基于静态配置的系统完全转变为现代化的 Web 交易平台。
 
-#### Database-Driven Architecture
-- SQLite integration replacing static JSON config
-- Persistent storage with automatic timestamps
-- Foreign key relationships and triggers for data consistency
-- Separate tables for AI models, exchanges, traders, and system config
+#### 数据库驱动架构
+- SQLite 集成，取代静态 JSON 配置
+- 持久化存储，自动时间戳
+- 外键关系和触发器确保数据一致性
+- 为 AI 模型、交易所、交易员和系统配置分离表结构
 
-#### Web-Based Configuration Interface
-- Complete web-based configuration management (no more JSON editing)
-- AI Model setup through web interface (DeepSeek/Qwen API keys)
-- Exchange management (Binance/Hyperliquid credentials)
-- Dynamic trader creation (combine any AI model with any exchange)
-- Real-time control (start/stop traders without system restart)
+#### 基于 Web 的配置界面
+- 完整的 Web 配置管理（无需编辑 JSON）
+- 通过 Web 界面设置 AI 模型（DeepSeek/Qwen API 密钥）
+- 交易所管理（Binance/Hyperliquid 凭证）
+- 动态创建交易员（结合任意 AI 模型和交易所）
+- 实时控制（无需重启即可启动/停止交易员）
 
-#### Flexible Architecture
-- Separation of concerns (AI models and exchanges independent)
-- Mix & match capability (unlimited combinations)
-- Scalable design (support for unlimited traders)
-- Clean slate approach (no default traders)
+#### 灵活架构
+- 关注点分离（AI 模型和交易所独立）
+- 混合搭配能力（无限组合）
+- 可扩展设计（支持无限交易员）
+- 清洁起点（无默认交易员）
 
-#### Enhanced API Layer
-- RESTful design with complete CRUD operations
-- New endpoints:
-  - `GET/PUT /api/models` - AI model configuration
-  - `GET/PUT /api/exchanges` - Exchange configuration
-  - `POST/DELETE /api/traders` - Trader management
-  - `POST /api/traders/:id/start|stop` - Trader control
-- Updated documentation for all API endpoints
+#### 增强的 API 层
+- RESTful 设计，完整的 CRUD 操作
+- 新端点：
+  - `GET/PUT /api/models` - AI 模型配置
+  - `GET/PUT /api/exchanges` - 交易所配置
+  - `POST/DELETE /api/traders` - 交易员管理
+  - `POST /api/traders/:id/start|stop` - 交易员控制
+- 更新所有 API 端点文档
 
-#### Modernized Codebase
-- Type safety with proper separation of configuration types
-- Database abstraction with prepared statements
-- Comprehensive error handling and validation
-- Better code organization (database, API, business logic)
+#### 现代化代码库
+- 类型安全，适当分离配置类型
+- 数据库抽象，使用预处理语句
+- 全面的错误处理和验证
+- 更好的代码组织（数据库、API、业务逻辑）
 
-### Changed
-- **BREAKING**: Old `config.json` files no longer used
-- Configuration must be done through web interface
-- Much easier setup and better UX
-- No more server restarts for configuration changes
+### 变更
+- **破坏性变更**：不再使用旧的 `config.json` 文件
+- 必须通过 Web 界面进行配置
+- 设置更简单，用户体验更好
+- 配置更改无需重启服务器
 
-### Why This Matters
-- 🎯 **User Experience**: Much easier to configure and manage
-- 🔧 **Flexibility**: Create any combination of AI models and exchanges
-- 📊 **Scalability**: Support for complex multi-trader setups
-- 🔒 **Reliability**: Database ensures data persistence and consistency
-- 🚀 **Future-Proof**: Foundation for advanced features
-
----
-
-## [2.0.2] - 2025-10-29
-
-### Fixed - Critical Bug Fixes: Trade History & Performance Analysis
-
-#### PnL Calculation - Major Error Fixed
-- **Fixed**: PnL now calculated as actual USDT amount instead of percentage only
-- Previously ignored position size and leverage (e.g., 100 USDT @ 5% = 1000 USDT @ 5%)
-- Now: `PnL (USDT) = Position Value × Price Change % × Leverage`
-- Impact: Win rate, profit factor, and Sharpe ratio now accurate
-
-#### Position Tracking - Missing Critical Data
-- **Fixed**: Open position records now store quantity and leverage
-- Previously only stored price and time
-- Essential for accurate PnL calculations
-
-#### Position Key Logic - Long/Short Conflict
-- **Fixed**: Changed from `symbol` to `symbol_side` format
-- Now properly distinguishes between long and short positions
-- Example: `BTCUSDT_long` vs `BTCUSDT_short`
-
-#### Sharpe Ratio Calculation - Code Optimization
-- **Changed**: Replaced custom Newton's method with `math.Sqrt`
-- More reliable, maintainable, and efficient
-
-### Why This Matters
-- Historical trade statistics now show real USDT profit/loss
-- Performance comparison between different leverage trades is accurate
-- AI self-learning mechanism receives correct feedback
-- Multi-position tracking (long + short simultaneously) works correctly
+### 为什么重要
+- 🎯 **用户体验**：配置和管理更容易
+- 🔧 **灵活性**：创建 AI 模型和交易所的任意组合
+- 📊 **可扩展性**：支持复杂的多交易员设置
+- 🔒 **可靠性**：数据库确保数据持久性和一致性
+- 🚀 **面向未来**：为高级功能奠定基础
 
 ---
 
 ## [2.0.2] - 2025-10-29
 
-### Fixed - Aster Exchange Precision Error
+### 修复 - 关键错误修复：交易历史和性能分析
 
-- Fixed Aster exchange precision error (code -1111)
-- Improved price and quantity formatting to match exchange requirements
-- Added detailed precision processing logs for debugging
-- Enhanced all order functions with proper precision handling
+#### 盈亏计算 - 重大错误修复
+- **修复**：盈亏现在计算为实际 USDT 金额，而不是仅百分比
+- 之前忽略了仓位大小和杠杆（例如，100 USDT @ 5% = 1000 USDT @ 5%）
+- 现在：`盈亏 (USDT) = 仓位价值 × 价格变化 % × 杠杆`
+- 影响：胜率、盈利因子和夏普比率现在准确
 
-#### Technical Details
-- Added `formatFloatWithPrecision` function
-- Price and quantity formatted according to exchange specifications
-- Trailing zeros removed to optimize API requests
+#### 仓位跟踪 - 缺失关键数据
+- **修复**：持仓记录现在存储数量和杠杆
+- 之前只存储价格和时间
+- 这对准确的盈亏计算至关重要
+
+#### 仓位键逻辑 - 多空冲突
+- **修复**：从 `symbol` 改为 `symbol_side` 格式
+- 现在正确区分多头和空头仓位
+- 示例：`BTCUSDT_long` vs `BTCUSDT_short`
+
+#### 夏普比率计算 - 代码优化
+- **变更**：用 `math.Sqrt` 替换自定义牛顿法
+- 更可靠、可维护和高效
+
+### 为什么重要
+- 历史交易统计现在显示真实的 USDT 盈亏
+- 不同杠杆交易之间的性能比较准确
+- AI 自学习机制接收正确的反馈
+- 多仓位跟踪（同时多空）正常工作
+
+---
+
+## [2.0.2] - 2025-10-29
+
+### 修复 - Aster 交易所精度错误
+
+- 修复 Aster 交易所精度错误（代码 -1111）
+- 改进价格和数量格式化以匹配交易所要求
+- 添加详细的精度处理日志用于调试
+- 增强所有订单函数的精度处理
+
+#### 技术细节
+- 添加 `formatFloatWithPrecision` 函数
+- 根据交易所规范格式化价格和数量
+- 删除尾随零以优化 API 请求
 
 ---
 
 ## [2.0.1] - 2025-10-29
 
-### Fixed - ComparisonChart Data Processing
+### 修复 - ComparisonChart 数据处理
 
-- Fixed ComparisonChart data processing logic
-- Switched from cycle_number to timestamp grouping
-- Resolved chart freezing issue when backend restarts
-- Improved chart data display (shows all historical data chronologically)
-- Enhanced debugging logs
+- 修复 ComparisonChart 数据处理逻辑
+- 从 cycle_number 切换到时间戳分组
+- 解决后端重启时图表冻结问题
+- 改进图表数据显示（按时间顺序显示所有历史数据）
+- 增强调试日志
 
 ---
 
 ## [2.0.0] - 2025-10-28
 
-### Added - Major Updates
+### 新增 - 重大更新
 
-- AI self-learning mechanism (historical feedback, performance analysis)
-- Multi-trader competition mode (Qwen vs DeepSeek)
-- Binance-style UI (complete interface imitation)
-- Performance comparison charts (real-time ROI comparison)
-- Risk control optimization (per-coin position limit adjustment)
+- AI 自学习机制（历史反馈、性能分析）
+- 多交易员竞赛模式（Qwen vs DeepSeek）
+- 币安风格 UI（完整界面仿制）
+- 性能比较图表（实时 ROI 比较）
+- 风险控制优化（每币种仓位限制调整）
 
-### Fixed
+### 修复
 
-- Fixed hardcoded initial balance issue
-- Fixed multi-trader data sync issue
-- Optimized chart data alignment (using cycle_number)
+- 修复硬编码初始余额问题
+- 修复多交易员数据同步问题
+- 优化图表数据对齐（使用 cycle_number）
 
 ---
 
 ## [1.0.0] - 2025-10-27
 
-### Added - Initial Release
+### 新增 - 初始版本
 
-- Basic AI trading functionality
-- Decision logging system
-- Simple Web interface
-- Support for Binance Futures
-- DeepSeek and Qwen AI model integration
-
----
-
-## How to Use This Changelog
-
-### For Users
-- Check the [Unreleased] section for upcoming features
-- Review version sections to understand what changed
-- Follow migration guides for breaking changes
-
-### For Contributors
-When making changes, add them to the [Unreleased] section under appropriate categories:
-- **Added** - New features
-- **Changed** - Changes to existing functionality
-- **Deprecated** - Features that will be removed
-- **Removed** - Features that were removed
-- **Fixed** - Bug fixes
-- **Security** - Security fixes
-
-When releasing a new version, move [Unreleased] items to a new version section with date.
+- 基础 AI 交易功能
+- 决策日志系统
+- 简单的 Web 界面
+- 支持币安合约
+- DeepSeek 和 Qwen AI 模型集成
 
 ---
 
-## Links
+## 如何使用本更新日志
 
-- [Documentation](docs/README.md)
-- [Contributing Guidelines](CONTRIBUTING.md)
-- [Security Policy](SECURITY.md)
-- [GitHub Repository](https://github.com/xbcvv/nofx-0210)
+### 用户
+- 查看 [未发布] 部分了解即将推出的功能
+- 查看版本部分了解变更内容
+- 遵循破坏性变更的迁移指南
+
+### 贡献者
+进行更改时，将它们添加到 [未发布] 部分的相应类别下：
+- **新增** - 新功能
+- **变更** - 现有功能的变更
+- **弃用** - 即将删除的功能
+- **移除** - 已删除的功能
+- **修复** - 错误修复
+- **安全** - 安全修复
+
+发布新版本时，将 [未发布] 项目移动到带日期的新版本部分。
 
 ---
 
-**Last Updated:** 2025-11-01
+## 链接
+
+- [文档](docs/README.md)
+- [贡献指南](CONTRIBUTING.md)
+- [安全策略](SECURITY.md)
+- [GitHub 仓库](https://github.com/xbcvv/nofx-0210)
+
+---
+
+**最后更新:** 2025-11-01
 

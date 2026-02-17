@@ -1,250 +1,92 @@
-# Debate Arena Module - Technical Documentation
+﻿# NOFX 辩论竞技场模块 - 技术文档
 
-**Language:** [English](DEBATE_MODULE.md) | [中文](DEBATE_MODULE.zh-CN.md)
 
-## Overview
+## 概述
 
-The Debate Arena is a collaborative AI decision-making system where multiple AI models with different personalities debate market conditions and reach consensus on trading decisions. The system supports multi-round debates, real-time streaming, voting mechanisms, and automatic trade execution.
-
-## Table of Contents
-
-1. [Architecture Overview](#1-architecture-overview)
-2. [Backend Components](#2-backend-components)
-3. [Debate Execution Flow](#3-debate-execution-flow)
-4. [Personality System](#4-personality-system)
-5. [Consensus Algorithm](#5-consensus-algorithm)
-6. [Auto-Execution](#6-auto-execution)
-7. [API Reference](#7-api-reference)
-8. [Real-Time Updates (SSE)](#8-real-time-updates-sse)
-9. [Database Schema](#9-database-schema)
-10. [Frontend Components](#10-frontend-components)
-11. [Integration Points](#11-integration-points)
-12. [Error Handling](#12-error-handling)
+辩论竞技场是一个多 AI 协作决策系统，多个具有不同性格的 AI 模型对市场状况进行辩论并达成交易决策共识。系统支持多轮辩论、实时流推送、投票机制和自动交易执行。
 
 ---
 
-## 1. Architecture Overview
+## 1. 架构概览
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                            Debate Arena System                              │
+│                            辩论竞技场系统                                    │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐  │
-│  │   Bull AI   │    │   Bear AI   │    │ Analyst AI  │    │ Risk Mgr AI │  │
+│  │  多头 AI    │    │  空头 AI    │    │  分析 AI   │    │  风控 AI    │  │
 │  │     🐂      │    │     🐻      │    │     📊      │    │     🛡️      │  │
 │  └──────┬──────┘    └──────┬──────┘    └──────┬──────┘    └──────┬──────┘  │
 │         │                  │                  │                  │          │
 │         └──────────────────┴──────────────────┴──────────────────┘          │
 │                                    │                                        │
 │                          ┌─────────▼─────────┐                              │
-│                          │   Debate Engine   │                              │
+│                          │    辩论引擎       │                              │
 │                          │  (debate/engine)  │                              │
 │                          └─────────┬─────────┘                              │
 │                                    │                                        │
 │         ┌──────────────────────────┼──────────────────────────┐            │
 │         │                          │                          │            │
 │  ┌──────▼──────┐         ┌─────────▼─────────┐      ┌────────▼────────┐   │
-│  │ Market Data │         │  Voting System    │      │  Auto-Executor  │   │
-│  │  Assembly   │         │  & Consensus      │      │   (optional)    │   │
+│  │  市场数据   │         │   投票系统        │      │   自动执行器    │   │
+│  │    组装     │         │   与共识机制      │      │   (可选)        │   │
 │  └─────────────┘         └───────────────────┘      └─────────────────┘   │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### File Structure
+### 文件结构
 
 ```
 ├── debate/
-│   └── engine.go          # Core debate engine logic
+│   └── engine.go          # 核心辩论引擎逻辑
 ├── api/
-│   └── debate.go          # HTTP handlers and SSE streaming
+│   └── debate.go          # HTTP 处理器和 SSE 流
 ├── store/
-│   └── debate.go          # Database operations and schema
+│   └── debate.go          # 数据库操作和模式
 └── web/src/pages/
-    └── DebateArenaPage.tsx # Frontend UI
+    └── DebateArenaPage.tsx # 前端 UI
 ```
 
 ---
 
-## 2. Backend Components
+## 2. 性格系统
 
-### 2.1 Core Files
+### 2.1 可用性格
 
-| File | Purpose | Key Functions |
-|------|---------|---------------|
-| `debate/engine.go` | Core debate logic | `StartDebate()`, `runDebate()`, `collectVotes()`, `determineConsensus()` |
-| `api/debate.go` | HTTP handlers | `HandleCreateDebate()`, `HandleStartDebate()`, `HandleDebateStream()` |
-| `store/debate.go` | Database ops | `CreateSession()`, `AddMessage()`, `AddVote()`, `GetSessionWithDetails()` |
+| 性格 | 图标 | 名称 | 描述 | 交易偏向 |
+|------|------|------|------|----------|
+| Bull | 🐂 | 激进多头 | 寻找做多机会 | 乐观，趋势跟随 |
+| Bear | 🐻 | 谨慎空头 | 关注风险 | 悲观，做空偏向 |
+| Analyst | 📊 | 数据分析师 | 纯数据驱动 | 无偏见，客观分析 |
+| Contrarian | 🔄 | 逆势者 | 挑战多数观点 | 另类视角 |
+| Risk Manager | 🛡️ | 风控经理 | 关注风险控制 | 仓位管理，止损 |
 
-### 2.2 Debate Engine Structure
+### 2.2 性格提示词增强
 
-```go
-// debate/engine.go
-
-type DebateEngine struct {
-    store           *store.DebateStore
-    aiClients       map[string]ai.Client
-    strategyEngine  *strategy.Engine
-    subscribers     map[string]map[chan []byte]bool
-}
-
-// Event callbacks for real-time updates
-var OnRoundStart    func(sessionID string, round int)
-var OnMessage       func(sessionID string, msg *DebateMessage)
-var OnVote          func(sessionID string, vote *DebateVote)
-var OnConsensus     func(sessionID string, decision *DebateDecision)
-var OnError         func(sessionID string, err error)
-```
-
----
-
-## 3. Debate Execution Flow
-
-### 3.1 Session Creation
+**文件位置:** `debate/engine.go:buildDebateSystemPrompt()` (365-426行)
 
 ```
-POST /api/debates
-         │
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│ 1. Validate user authentication                             │
-│ 2. Parse CreateDebateRequest:                               │
-│    - name, strategy_id, symbol, max_rounds, participants    │
-│    - interval_minutes, prompt_variant, auto_execute         │
-│ 3. Validate strategy ownership                              │
-│ 4. Auto-select symbol if not provided:                      │
-│    - Static coins → Use first coin from strategy            │
-│    - CoinPool → Fetch from AI500 API                        │
-│    - OI Top → Fetch from OI ranking API                     │
-│    - Mixed → Try pool first, fallback to OI                 │
-│ 5. Set defaults:                                            │
-│    - max_rounds: 3 (range 2-5)                              │
-│    - interval_minutes: 5                                    │
-│    - prompt_variant: "balanced"                             │
-│ 6. Create DebateSession in database                         │
-│ 7. Add participants with AI models and personalities        │
-│ 8. Return full session with participants                    │
-└─────────────────────────────────────────────────────────────┘
-```
+## 辩论模式 - 第 {round}/{max_rounds} 轮
 
-### 3.2 Debate Start
+你作为 {emoji} {personality} 参与辩论。
 
-**Location:** `debate/engine.go:StartDebate()` (Lines 114-154)
-
-```
-POST /api/debates/:id/start
-         │
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│ 1. Validate session status (must be pending)                │
-│ 2. Validate participants (minimum 2)                        │
-│ 3. Initialize AI clients for all participants               │
-│ 4. Get strategy configuration                               │
-│ 5. Update status to "running"                               │
-│ 6. Launch goroutine: runDebate()                            │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### 3.3 Market Context Building
-
-**Location:** `debate/engine.go:buildMarketContext()` (Lines 292-362)
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ buildMarketContext()                                        │
-├─────────────────────────────────────────────────────────────┤
-│ 1. Get candidate coins from strategy engine                 │
-│ 2. Fetch market data for each candidate:                    │
-│    - Multiple timeframes (15m, 1h, 4h)                      │
-│    - K-line count from strategy config                      │
-│    - OHLCV data, indicators                                 │
-│ 3. Fetch quantitative data batch:                           │
-│    - Capital flow                                           │
-│    - Position changes                                       │
-│ 4. Fetch OI ranking data (market-wide)                      │
-│ 5. Build Context object with:                               │
-│    - Account info (simulated: $1000 equity)                 │
-│    - Candidate coins                                        │
-│    - Market data map                                        │
-│    - Quant data map                                         │
-│    - OI ranking data                                        │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### 3.4 Debate Rounds
-
-**Location:** `debate/engine.go:runDebate()` (Lines 157-289)
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ For each round (1 to max_rounds):                           │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ 1. Broadcast "round_start" event                        │ │
-│ │ 2. For each participant (in speak_order):               │ │
-│ │    ┌─────────────────────────────────────────────────┐  │ │
-│ │    │ a. Build personality-enhanced system prompt     │  │ │
-│ │    │ b. Build user prompt with:                      │  │ │
-│ │    │    - Market data (from strategy engine)         │  │ │
-│ │    │    - Previous debate messages (if round > 1)    │  │ │
-│ │    │ c. Call AI model with 60s timeout               │  │ │
-│ │    │ d. Parse multi-coin decisions from response     │  │ │
-│ │    │ e. Save message to database                     │  │ │
-│ │    │ f. Broadcast "message" event                    │  │ │
-│ │    └─────────────────────────────────────────────────┘  │ │
-│ │ 3. Broadcast "round_end" event                          │ │
-│ └─────────────────────────────────────────────────────────┘ │
-│                                                             │
-│ After all rounds:                                           │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ 1. Enter voting phase (status = "voting")               │ │
-│ │ 2. Collect final votes from all participants            │ │
-│ │ 3. Determine multi-coin consensus                       │ │
-│ │ 4. Store final decisions                                │ │
-│ │ 5. Update status to "completed"                         │ │
-│ │ 6. Broadcast "consensus" event                          │ │
-│ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 4. Personality System
-
-### 4.1 Available Personalities
-
-| Personality | Emoji | Name | Description | Trading Bias |
-|------------|-------|------|-------------|--------------|
-| Bull | 🐂 | Aggressive Bull | Looks for long opportunities | Optimistic, trend-following |
-| Bear | 🐻 | Cautious Bear | Skeptical, focuses on risks | Pessimistic, short bias |
-| Analyst | 📊 | Data Analyst | Neutral, purely data-driven | No bias, objective analysis |
-| Contrarian | 🔄 | Contrarian | Challenges majority view | Alternative perspectives |
-| Risk Manager | 🛡️ | Risk Manager | Focus on risk control | Position sizing, stop loss |
-
-### 4.2 Personality Prompt Enhancement
-
-**Location:** `debate/engine.go:buildDebateSystemPrompt()` (Lines 365-426)
-
-```
-## DEBATE MODE - ROUND {round}/{max_rounds}
-
-You are participating as {emoji} {personality}.
-
-### Your Debate Role:
+### 你的辩论角色:
 {personality_description}
 
-### Debate Rules:
-1. Analyze ALL candidate coins
-2. Support arguments with specific data
-3. Respond to other participants (round > 1)
-4. Be persuasive but data-driven
-5. Can recommend multiple coins with different actions
+### 辩论规则:
+1. 分析所有候选币种
+2. 用具体数据支持论点
+3. 回应其他参与者 (第2轮起)
+4. 有说服力但基于数据
+5. 可以推荐多个不同操作的币种
 
-### Output Format (STRICT JSON):
+### 输出格式 (严格 JSON):
 <reasoning>
-  - Market analysis with data references
-  - Main trading thesis
-  - Response to others (if round > 1)
+  - 带数据引用的市场分析
+  - 主要交易论点
+  - 对他人的回应 (第2轮起)
 </reasoning>
 
 <decision>
@@ -255,82 +97,106 @@ You are participating as {emoji} {personality}.
 </decision>
 ```
 
-### 4.3 Personality-Specific Prompts
+---
 
-**Bull (🐂):**
-```
-As a bull, you are optimistic about market trends.
-Look for long opportunities, identify bullish patterns,
-and support your thesis with technical and fundamental data.
-Focus on: breakout patterns, momentum, support levels.
-```
+## 3. 辩论执行流程
 
-**Bear (🐻):**
-```
-As a bear, you are cautious and skeptical.
-Look for short opportunities, identify bearish patterns,
-and highlight risks and potential downside.
-Focus on: resistance levels, divergences, overbought conditions.
-```
+### 3.1 会话创建
 
-**Analyst (📊):**
 ```
-As a data analyst, you are completely neutral.
-Provide objective analysis based purely on data.
-No emotional bias - let the numbers speak.
-Focus on: key metrics, statistical patterns, historical comparisons.
-```
-
-**Contrarian (🔄):**
-```
-As a contrarian, challenge the majority view.
-Look for overlooked opportunities and hidden risks.
-Play devil's advocate to strengthen the debate.
-Focus on: crowd positioning, sentiment extremes, neglected signals.
+POST /api/debates
+         │
+         ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 1. 验证用户认证                                              │
+│ 2. 解析 CreateDebateRequest:                                │
+│    - name, strategy_id, symbol, max_rounds, participants    │
+│    - interval_minutes, prompt_variant, auto_execute         │
+│ 3. 验证策略所有权                                            │
+│ 4. 自动选择币种 (如未提供):                                  │
+│    - 静态币种 → 使用策略第一个币种                           │
+│    - CoinPool → 从 AI500 API 获取                           │
+│    - OI Top → 从 OI 排行 API 获取                           │
+│    - Mixed → 先尝试池，回退到 OI                            │
+│ 5. 设置默认值:                                               │
+│    - max_rounds: 3 (范围 2-5)                               │
+│    - interval_minutes: 5                                    │
+│    - prompt_variant: "balanced"                             │
+│ 6. 在数据库创建 DebateSession                               │
+│ 7. 添加带 AI 模型和性格的参与者                              │
+│ 8. 返回完整会话及参与者                                      │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-**Risk Manager (🛡️):**
+### 3.2 辩论轮次执行
+
+**文件位置:** `debate/engine.go:runDebate()` (157-289行)
+
 ```
-As a risk manager, focus on capital preservation.
-Evaluate position sizing, stop loss levels, and risk/reward ratios.
-Ensure all decisions have appropriate risk controls.
-Focus on: max drawdown, position limits, volatility-adjusted sizing.
+┌─────────────────────────────────────────────────────────────┐
+│ 每轮 (1 到 max_rounds):                                     │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ 1. 广播 "round_start" 事件                              │ │
+│ │ 2. 每个参与者 (按 speak_order):                         │ │
+│ │    ┌─────────────────────────────────────────────────┐  │ │
+│ │    │ a. 构建性格增强的系统提示词                      │  │ │
+│ │    │ b. 构建用户提示词:                               │  │ │
+│ │    │    - 市场数据 (来自策略引擎)                     │  │ │
+│ │    │    - 之前的辩论消息 (第2轮起)                    │  │ │
+│ │    │ c. 调用 AI 模型，60秒超时                        │  │ │
+│ │    │ d. 从响应解析多币种决策                          │  │ │
+│ │    │ e. 保存消息到数据库                              │  │ │
+│ │    │ f. 广播 "message" 事件                           │  │ │
+│ │    └─────────────────────────────────────────────────┘  │ │
+│ │ 3. 广播 "round_end" 事件                                │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ 所有轮次后:                                                 │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ 1. 进入投票阶段 (status = "voting")                     │ │
+│ │ 2. 收集所有参与者的最终投票                             │ │
+│ │ 3. 确定多币种共识                                       │ │
+│ │ 4. 存储最终决策                                         │ │
+│ │ 5. 更新状态为 "completed"                               │ │
+│ │ 6. 广播 "consensus" 事件                                │ │
+│ └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 5. Consensus Algorithm
+## 4. 共识算法
 
-### 5.1 Vote Collection
+### 4.1 投票收集
 
-**Location:** `debate/engine.go:collectVotes()` (Lines 542-567)
+**文件位置:** `debate/engine.go:collectVotes()` (542-567行)
 
 ```
-For each participant:
+每个参与者:
 ┌─────────────────────────────────────────────────────────────┐
-│ 1. Build voting system prompt                               │
-│ 2. Build voting user prompt with debate summary             │
-│ 3. Call AI model for final vote                             │
-│ 4. Parse multi-coin decisions                               │
-│ 5. Validate/fix symbols against session.Symbol             │
-│ 6. Save vote to database                                    │
-│ 7. Broadcast "vote" event                                   │
+│ 1. 构建投票系统提示词                                        │
+│ 2. 构建带辩论摘要的投票用户提示词                            │
+│ 3. 调用 AI 模型获取最终投票                                  │
+│ 4. 解析多币种决策                                            │
+│ 5. 验证/修复币种与 session.Symbol 一致                       │
+│ 6. 保存投票到数据库                                          │
+│ 7. 广播 "vote" 事件                                          │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 5.2 Multi-Coin Consensus Determination
+### 4.2 多币种共识确定
 
-**Location:** `debate/engine.go:determineMultiCoinConsensus()` (Lines 752-924)
+**文件位置:** `debate/engine.go:determineMultiCoinConsensus()` (752-924行)
 
-**Algorithm:**
+**算法:**
 
 ```
-1. Collect all coin decisions from all votes
-2. Group by: symbol → action → aggregated data
+1. 收集所有投票中的所有币种决策
+2. 按 symbol → action → 聚合数据 分组
 
-3. For each vote decision:
+3. 对每个投票决策:
    weight = confidence / 100.0
-   Accumulate:
+   累加:
    ┌─────────────────────────────────────────────────────────┐
    │ score += weight                                         │
    │ total_confidence += confidence                          │
@@ -341,30 +207,30 @@ For each participant:
    │ count++                                                 │
    └─────────────────────────────────────────────────────────┘
 
-4. For each symbol:
-   Find winning action (max score)
-   Calculate averages:
+4. 对每个币种:
+   找到胜出操作 (最高 score)
+   计算平均值:
    ┌─────────────────────────────────────────────────────────┐
    │ avg_confidence = total_confidence / count               │
    │ avg_leverage = clamp(total_leverage / count, 1, 20)     │
    │ avg_position_pct = clamp(total_pct / count, 0.1, 1.0)   │
-   │ avg_stop_loss = default 3% if not set                   │
-   │ avg_take_profit = default 6% if not set                 │
+   │ avg_stop_loss = 默认 3% (如未设置)                       │
+   │ avg_take_profit = 默认 6% (如未设置)                     │
    └─────────────────────────────────────────────────────────┘
 
-5. Return array of consensus decisions
+5. 返回共识决策数组
 ```
 
-### 5.3 Consensus Example
+### 4.3 共识示例
 
-**Input Votes:**
+**输入投票:**
 ```
-AI1 (Bull):     BTC open_long  (conf=80, lev=10, pos=0.3)
-AI2 (Bear):     BTC open_short (conf=60, lev=5, pos=0.2)
-AI3 (Analyst):  BTC open_long  (conf=70, lev=8, pos=0.25)
+AI1 (多头):   BTC open_long  (conf=80, lev=10, pos=0.3)
+AI2 (空头):   BTC open_short (conf=60, lev=5, pos=0.2)
+AI3 (分析):   BTC open_long  (conf=70, lev=8, pos=0.25)
 ```
 
-**Calculation:**
+**计算:**
 ```
 open_long:
   score = 0.80 + 0.70 = 1.50
@@ -378,10 +244,10 @@ open_short:
   avg_lev = 5
   avg_pos = 0.2
 
-Winner: open_long (score 1.50 > 0.60)
+胜出: open_long (score 1.50 > 0.60)
 ```
 
-**Output:**
+**输出:**
 ```json
 {
   "symbol": "BTCUSDT",
@@ -396,28 +262,28 @@ Winner: open_long (score 1.50 > 0.60)
 
 ---
 
-## 6. Auto-Execution
+## 5. 自动执行
 
-### 6.1 Execution Flow
+### 5.1 执行流程
 
-**Location:** `debate/engine.go:ExecuteConsensus()` (Lines 932-1052)
+**文件位置:** `debate/engine.go:ExecuteConsensus()` (932-1052行)
 
 ```
 POST /api/debates/:id/execute
          │
          ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ 1. Validate session status = completed                      │
-│ 2. Validate final_decision exists and not executed          │
-│ 3. Validate action is open_long or open_short               │
-│ 4. Get current market price                                 │
-│ 5. Get account balance:                                     │
-│    - Try available_balance                                  │
-│    - Fallback to total_equity or wallet_balance             │
-│ 6. Calculate position size:                                 │
+│ 1. 验证会话状态 = completed                                  │
+│ 2. 验证 final_decision 存在且未执行                         │
+│ 3. 验证操作是 open_long 或 open_short                       │
+│ 4. 获取当前市场价格                                          │
+│ 5. 获取账户余额:                                             │
+│    - 尝试 available_balance                                  │
+│    - 回退到 total_equity 或 wallet_balance                  │
+│ 6. 计算仓位大小:                                             │
 │    position_size_usd = available_balance × position_pct     │
-│    (minimum $12 to meet exchange requirements)              │
-│ 7. Calculate stop loss and take profit prices:              │
+│    (最小 $12 以满足交易所要求)                               │
+│ 7. 计算止损和止盈价格:                                       │
 │    ┌───────────────────────────────────────────────────┐    │
 │    │ open_long:                                        │    │
 │    │   SL = price × (1 - stop_loss_pct)               │    │
@@ -426,56 +292,41 @@ POST /api/debates/:id/execute
 │    │   SL = price × (1 + stop_loss_pct)               │    │
 │    │   TP = price × (1 - take_profit_pct)             │    │
 │    └───────────────────────────────────────────────────┘    │
-│ 8. Create Decision object                                   │
-│ 9. Call executor.ExecuteDecision()                          │
-│ 10. Update final_decision:                                  │
+│ 8. 创建 Decision 对象                                        │
+│ 9. 调用 executor.ExecuteDecision()                          │
+│ 10. 更新 final_decision:                                    │
 │     - executed = true/false                                 │
-│     - executed_at = timestamp                               │
-│     - error message if failed                               │
+│     - executed_at = 时间戳                                   │
+│     - error 消息 (如失败)                                    │
 └─────────────────────────────────────────────────────────────┘
-```
-
-### 6.2 Position Size Calculation
-
-```go
-// Calculate position value
-position_size_usd := available_balance * position_pct
-
-// Ensure minimum size for exchange
-if position_size_usd < 12 {
-    position_size_usd = 12
-}
-
-// Calculate quantity
-quantity := position_size_usd / market_price
 ```
 
 ---
 
-## 7. API Reference
+## 6. API 接口
 
-### 7.1 Endpoints
+### 6.1 接口列表
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/debates` | List all debates for user |
-| GET | `/api/debates/personalities` | Get AI personality configs |
-| GET | `/api/debates/:id` | Get debate with full details |
-| POST | `/api/debates` | Create new debate |
-| POST | `/api/debates/:id/start` | Start debate execution |
-| POST | `/api/debates/:id/cancel` | Cancel running debate |
-| POST | `/api/debates/:id/execute` | Execute consensus trade |
-| DELETE | `/api/debates/:id` | Delete debate |
-| GET | `/api/debates/:id/messages` | Get all messages |
-| GET | `/api/debates/:id/votes` | Get all votes |
-| GET | `/api/debates/:id/stream` | SSE live stream |
+| 接口 | 方法 | 描述 |
+|------|------|------|
+| `/api/debates` | GET | 列出用户所有辩论 |
+| `/api/debates/personalities` | GET | 获取 AI 性格配置 |
+| `/api/debates/:id` | GET | 获取辩论详情 |
+| `/api/debates` | POST | 创建新辩论 |
+| `/api/debates/:id/start` | POST | 开始辩论执行 |
+| `/api/debates/:id/cancel` | POST | 取消运行中的辩论 |
+| `/api/debates/:id/execute` | POST | 执行共识交易 |
+| `/api/debates/:id` | DELETE | 删除辩论 |
+| `/api/debates/:id/messages` | GET | 获取所有消息 |
+| `/api/debates/:id/votes` | GET | 获取所有投票 |
+| `/api/debates/:id/stream` | GET | SSE 实时流 |
 
-### 7.2 Create Debate Request
+### 6.2 创建辩论请求
 
 ```json
 POST /api/debates
 {
-  "name": "BTC Market Debate",
+  "name": "BTC 市场辩论",
   "strategy_id": "strategy-uuid",
   "symbol": "BTCUSDT",
   "max_rounds": 3,
@@ -494,98 +345,47 @@ POST /api/debates
 }
 ```
 
-### 7.3 Create Debate Response
-
-```json
-{
-  "id": "debate-uuid",
-  "user_id": "user-uuid",
-  "name": "BTC Market Debate",
-  "strategy_id": "strategy-uuid",
-  "status": "pending",
-  "symbol": "BTCUSDT",
-  "max_rounds": 3,
-  "current_round": 0,
-  "participants": [
-    {
-      "id": "participant-uuid",
-      "ai_model_id": "deepseek-v3",
-      "ai_model_name": "DeepSeek V3",
-      "provider": "deepseek",
-      "personality": "bull",
-      "color": "#22C55E",
-      "speak_order": 0
-    }
-  ],
-  "messages": [],
-  "votes": [],
-  "created_at": "2025-12-15T12:00:00Z"
-}
-```
-
-### 7.4 Execute Consensus Request
-
-```json
-POST /api/debates/:id/execute
-{
-  "trader_id": "trader-uuid"
-}
-```
-
 ---
 
-## 8. Real-Time Updates (SSE)
+## 7. 实时更新 (SSE)
 
-### 8.1 SSE Endpoint
+### 7.1 SSE 接口
 
-**Location:** `api/debate.go:HandleDebateStream()` (Lines 407-453)
+**文件位置:** `api/debate.go:HandleDebateStream()` (407-453行)
 
 ```
 GET /api/debates/:id/stream
          │
          ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ 1. Validate user ownership                                  │
-│ 2. Set SSE headers:                                         │
+│ 1. 验证用户所有权                                            │
+│ 2. 设置 SSE 头:                                              │
 │    Content-Type: text/event-stream                          │
 │    Cache-Control: no-cache                                  │
 │    Connection: keep-alive                                   │
-│ 3. Send initial state                                       │
-│ 4. Subscribe to events                                      │
-│ 5. Stream updates until client disconnects                  │
+│ 3. 发送初始状态                                              │
+│ 4. 订阅事件                                                  │
+│ 5. 流式推送更新直到客户端断开                                │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 8.2 Event Types
+### 7.2 事件类型
 
-| Event | Trigger | Data |
-|-------|---------|------|
-| `initial` | Connection start | Full session state |
-| `round_start` | Round begins | `{round, status}` |
-| `message` | AI speaks | DebateMessage object |
-| `round_end` | Round complete | `{round, status}` |
-| `vote` | AI votes | DebateVote object |
-| `consensus` | Debate complete | DebateDecision object |
-| `error` | Error occurs | `{error: string}` |
-
-### 8.3 SSE Message Format
-
-```
-event: message
-data: {"id":"msg-uuid","session_id":"session-uuid","round":1,"ai_model_name":"DeepSeek V3","personality":"bull","content":"...","decision":{"action":"open_long","symbol":"BTCUSDT","confidence":75}}
-
-event: vote
-data: {"id":"vote-uuid","session_id":"session-uuid","ai_model_name":"DeepSeek V3","action":"open_long","symbol":"BTCUSDT","confidence":80,"reasoning":"..."}
-
-event: consensus
-data: {"action":"open_long","symbol":"BTCUSDT","confidence":75,"leverage":8,"position_pct":0.25,"stop_loss":0.03,"take_profit":0.06}
-```
+| 事件 | 触发时机 | 数据 |
+|------|----------|------|
+| `initial` | 连接开始 | 完整会话状态 |
+| `round_start` | 轮次开始 | `{round, status}` |
+| `message` | AI 发言 | DebateMessage 对象 |
+| `round_end` | 轮次结束 | `{round, status}` |
+| `vote` | AI 投票 | DebateVote 对象 |
+| `consensus` | 辩论完成 | DebateDecision 对象 |
+| `error` | 发生错误 | `{error: string}` |
 
 ---
 
-## 9. Database Schema
+## 8. 数据库模式
 
-### 9.1 Tables
+### 8.1 表结构
 
 **debate_sessions:**
 ```sql
@@ -668,84 +468,54 @@ CREATE TABLE debate_votes (
 );
 ```
 
-### 9.2 Key Store Methods
-
-| Method | Description |
-|--------|-------------|
-| `CreateSession()` | Create new debate session |
-| `GetSession()` | Get session by ID |
-| `GetSessionWithDetails()` | Get session with participants, messages, votes |
-| `UpdateSessionStatus()` | Update session status |
-| `UpdateSessionRound()` | Update current round |
-| `UpdateSessionFinalDecisions()` | Store consensus decisions |
-| `AddParticipant()` | Add AI participant |
-| `AddMessage()` | Store debate message |
-| `AddVote()` | Store final vote |
-
 ---
 
-## 10. Frontend Components
+## 9. 前端组件
 
-### 10.1 Page Structure
+### 9.1 页面结构
 
-**Location:** `web/src/pages/DebateArenaPage.tsx`
+**文件位置:** `web/src/pages/DebateArenaPage.tsx`
 
 ```
 DebateArenaPage
-├── Left Sidebar (w-56)
-│   ├── New Debate Button
-│   ├── Debate Sessions List
-│   │   └── SessionItem (status, name, timestamp)
-│   └── Online Traders List
-│       └── TraderItem (name, status, AI model)
+├── 左侧边栏 (w-56)
+│   ├── 新建辩论按钮
+│   ├── 辩论会话列表
+│   │   └── SessionItem (状态, 名称, 时间戳)
+│   └── 在线交易员列表
+│       └── TraderItem (名称, 状态, AI 模型)
 │
-├── Main Content
-│   ├── Header Bar
-│   │   ├── Session Info (name, status, symbol)
-│   │   ├── Participants Avatars
-│   │   └── Vote Summary
+├── 主内容区
+│   ├── 头部栏
+│   │   ├── 会话信息 (名称, 状态, 币种)
+│   │   ├── 参与者头像
+│   │   └── 投票摘要
 │   │
-│   ├── Content Area (two-column)
-│   │   ├── Left: Discussion Records
-│   │   │   ├── Round Headers
-│   │   │   └── MessageCards (expandable)
+│   ├── 内容区 (双栏)
+│   │   ├── 左: 讨论记录
+│   │   │   ├── 轮次标题
+│   │   │   └── MessageCards (可展开)
 │   │   │
-│   │   └── Right: Final Votes
-│   │       └── VoteCards (action, confidence, reasoning)
+│   │   └── 右: 最终投票
+│   │       └── VoteCards (操作, 置信度, 理由)
 │   │
-│   └── Consensus Bar
-│       ├── Final Decision Display
-│       └── Execute Button (if auto_execute disabled)
+│   └── 共识栏
+│       ├── 最终决策显示
+│       └── 执行按钮 (如果 auto_execute 禁用)
 │
-└── Modals
+└── 弹窗
     ├── CreateModal
-    │   ├── Name Input
-    │   ├── Strategy Selector
-    │   ├── Symbol Input (auto-filled)
-    │   ├── Max Rounds Selector
-    │   └── Participant Picker (AI model + personality)
+    │   ├── 名称输入
+    │   ├── 策略选择器
+    │   ├── 币种输入 (自动填充)
+    │   ├── 最大轮数选择器
+    │   └── 参与者选择器 (AI 模型 + 性格)
     │
     └── ExecuteModal
-        └── Trader Selector
+        └── 交易员选择器
 ```
 
-### 10.2 UI Components
-
-**MessageCard:**
-- Expandable message display
-- Shows AI avatar, personality emoji, decision
-- Parses reasoning/analysis sections from content
-- Displays decision details (leverage, position, SL/TP)
-- Supports multi-coin decisions
-
-**VoteCard:**
-- Confidence bar visualization
-- Action indicator (long/short/hold/wait)
-- Leverage and position size display
-- Stop loss and take profit display
-- Reasoning preview
-
-### 10.3 Status Colors
+### 9.2 状态颜色
 
 ```typescript
 const STATUS_COLOR = {
@@ -757,7 +527,7 @@ const STATUS_COLOR = {
 }
 ```
 
-### 10.4 Action Styling
+### 9.3 操作样式
 
 ```typescript
 const ACT = {
@@ -788,122 +558,48 @@ const ACT = {
 }
 ```
 
-### 10.5 Personality Colors
+---
 
-```typescript
-const PERS = {
-  bull: { emoji: '🐂', color: '#22C55E', name: '多头', nameEn: 'Bull' },
-  bear: { emoji: '🐻', color: '#EF4444', name: '空头', nameEn: 'Bear' },
-  analyst: { emoji: '📊', color: '#3B82F6', name: '分析', nameEn: 'Analyst' },
-  contrarian: { emoji: '🔄', color: '#F59E0B', name: '逆势', nameEn: 'Contrarian' },
-  risk_manager: { emoji: '🛡️', color: '#8B5CF6', name: '风控', nameEn: 'Risk Mgr' },
-}
-```
+## 10. 集成点
+
+### 10.1 策略系统
+
+辩论会话依赖保存的策略:
+- **币种来源配置:** static/pool/OI top
+- **市场数据指标:** K线、时间周期、技术指标
+- **风控参数:** 杠杆限制、仓位大小
+- **自定义提示词:** 角色定义、交易规则
+
+### 10.2 AI 模型系统
+
+每个参与者需要:
+- AI 模型配置 (provider, API key, 自定义 URL)
+- 支持的 providers: deepseek, qwen, openai, claude, gemini, grok, kimi
+- 客户端初始化带超时处理 (每次调用 60s)
+
+### 10.3 交易员系统
+
+自动执行需要:
+- 运行中状态的活跃交易员
+- 交易员必须有有效的交易所连接
+- 执行器接口: `ExecuteDecision()`, `GetBalance()`
 
 ---
 
-## 11. Integration Points
+## 总结
 
-### 11.1 Strategy System
+辩论竞技场模块提供了一个复杂的多 AI 协作决策系统:
 
-Debate sessions depend on saved strategies for:
-- **Coin source configuration:** static/pool/OI top
-- **Market data indicators:** K-lines, timeframes, technical indicators
-- **Risk control parameters:** leverage limits, position sizing
-- **Custom prompts:** role definition, trading rules
+- **多性格辩论:** 5 种独特的 AI 性格 (多头、空头、分析师、逆势者、风控经理)，具有独特的交易偏向
+- **共识机制:** 基于置信度的加权投票来确定最终决策
+- **实时更新:** SSE 流推送实时辩论进度
+- **自动执行:** 可选的基于共识的自动交易执行
+- **策略集成:** 与策略配置深度集成，用于市场数据和风控参数
+- **多币种支持:** 能够同时分析和决策多个币种
 
-### 11.2 AI Model System
-
-Each participant requires:
-- AI model configuration (provider, API key, custom URL)
-- Supported providers: deepseek, qwen, openai, claude, gemini, grok, kimi
-- Client initialization with timeout handling (60s per call)
-
-### 11.3 Trader System
-
-For auto-execution:
-- Requires active trader with running status
-- Trader must have valid exchange connection
-- Executor interface: `ExecuteDecision()`, `GetBalance()`
-
-### 11.4 Market Data
-
-Market context building uses:
-- Market data service (K-lines, OHLCV)
-- Quantitative data (capital flow, position changes)
-- OI ranking data (market-wide position changes)
+该系统使用户能够利用多个 AI 视角做出更稳健的交易决策，同时保持对执行的完全控制。
 
 ---
 
-## 12. Error Handling
-
-### 12.1 Cleanup on Startup
-
-**Location:** `debate/engine.go:cleanupStaleDebates()` (Lines 58-71)
-
-```go
-// On server restart, cancel all running/voting debates
-func cleanupStaleDebates() {
-    sessions := debateStore.ListAllSessions()
-    for _, session := range sessions {
-        if session.Status == running || session.Status == voting {
-            debateStore.UpdateSessionStatus(session.ID, cancelled)
-        }
-    }
-}
-```
-
-### 12.2 AI Call Timeout
-
-```go
-// 60 seconds per participant response
-select {
-case res := <-resultCh:
-    response = res.response
-case <-time.After(60 * time.Second):
-    return nil, fmt.Errorf("AI call timeout")
-}
-```
-
-### 12.3 Symbol Validation
-
-```go
-// Force all decisions to use session symbol if specified
-if session.Symbol != "" {
-    for _, d := range decisions {
-        if d.Symbol == "" || d.Symbol != session.Symbol {
-            logger.Warnf("Fixing invalid symbol '%s' -> '%s'", d.Symbol, session.Symbol)
-            d.Symbol = session.Symbol
-        }
-    }
-}
-```
-
-### 12.4 Panic Recovery
-
-```go
-defer func() {
-    if r := recover(); r != nil {
-        logger.Errorf("Debate panic: %v", r)
-        debateStore.UpdateSessionStatus(sessionID, cancelled)
-        if OnError != nil {
-            OnError(sessionID, fmt.Errorf("panic: %v", r))
-        }
-    }
-}()
-```
-
----
-
-## Summary
-
-The Debate Arena module provides a sophisticated multi-AI collaborative decision system with:
-
-- **Multi-Personality Debate:** 5 distinct AI personalities (Bull, Bear, Analyst, Contrarian, Risk Manager) with unique trading biases
-- **Consensus Mechanism:** Weighted voting based on confidence levels to determine final decisions
-- **Real-Time Updates:** SSE streaming for live debate progress
-- **Auto-Execution:** Optional automatic trade execution based on consensus
-- **Strategy Integration:** Deep integration with strategy configuration for market data and risk parameters
-- **Multi-Coin Support:** Ability to analyze and decide on multiple coins simultaneously
-
-The system enables users to leverage multiple AI perspectives for more robust trading decisions while maintaining full control over execution.
+**文档版本:** 1.0.0
+**最后更新:** 2025-01-15

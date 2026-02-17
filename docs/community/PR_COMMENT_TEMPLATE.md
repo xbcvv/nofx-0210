@@ -108,7 +108,7 @@ git push origin <your-branch-name>
 
 ### 📖 了解更多
 
-- [迁移公告](https://github.com/xbcvv/nofx-0210/blob/dev/docs/community/MIGRATION_ANNOUNCEMENT.zh-CN.md)
+- [迁移公告](https://github.com/xbcvv/nofx-0210/blob/dev/docs/community/MIGRATION_ANNOUNCEMENT.md)
 - [贡献指南](https://github.com/xbcvv/nofx-0210/blob/dev/docs/i18n/zh-CN/CONTRIBUTING.md)
 
 ### ❓ 问题？

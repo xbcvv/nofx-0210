@@ -7,8 +7,8 @@ NOFX documentation has been reorganized into a structured `docs/` directory for 
 ## 🗺️ File Locations (Old → New)
 
 ### Deployment Guides
-- `DOCKER_DEPLOY.en.md` → `docs/getting-started/docker-deploy.en.md`
-- `DOCKER_DEPLOY.md` → `docs/getting-started/docker-deploy.zh-CN.md`
+- `DOCKER_DEPLOY.md` → `docs/getting-started/docker-deploy.md`
+- `DOCKER_DEPLOY.md` → `docs/getting-started/docker-deploy.md`
 - `CUSTOM_API.md` → `docs/getting-started/custom-api.md`
 
 ### Community Docs
@@ -17,10 +17,10 @@ NOFX documentation has been reorganized into a structured `docs/` directory for 
 - `INTEGRATION_BOUNTY_ASTER.md` → `docs/community/bounty-aster.md`
 
 ### Internationalization
-- `README.zh-CN.md` → `docs/i18n/zh-CN/README.md`
+- `README.md` → `docs/i18n/zh-CN/README.md`
 - `README.ru.md` → `docs/i18n/ru/README.md`
 - `README.uk.md` → `docs/i18n/uk/README.md`
-- `常见问题.md` → `docs/guides/faq.zh-CN.md`
+- `常见问题.md` → `docs/guides/faq.md`
 
 ### Root Directory (Unchanged)
 These stay in the root for GitHub recognition:
@@ -36,11 +36,11 @@ These stay in the root for GitHub recognition:
 ```
 nofx/
 ├── README.md
-├── README.zh-CN.md
+├── README.md
 ├── README.ru.md
 ├── README.uk.md
 ├── DOCKER_DEPLOY.md
-├── DOCKER_DEPLOY.en.md
+├── DOCKER_DEPLOY.md
 ├── CUSTOM_API.md
 ├── HOW_TO_POST_BOUNTY.md
 ├── INTEGRATION_BOUNTY_HYPERLIQUID.md
@@ -127,8 +127,8 @@ Files GitHub needs to see:
 
 | Old Link | New Link |
 |----------|----------|
-| `DOCKER_DEPLOY.en.md` | `docs/getting-started/docker-deploy.en.md` |
-| `README.zh-CN.md` | `docs/i18n/zh-CN/README.md` |
+| `DOCKER_DEPLOY.md` | `docs/getting-started/docker-deploy.md` |
+| `README.md` | `docs/i18n/zh-CN/README.md` |
 | `HOW_TO_POST_BOUNTY.md` | `docs/community/bounty-guide.md` |
 
 ### If you linked in your own docs:
@@ -136,15 +136,15 @@ Files GitHub needs to see:
 **Update relative links:**
 ```markdown
 <!-- Old -->
-[Docker Deployment](DOCKER_DEPLOY.en.md)
+[Docker Deployment](DOCKER_DEPLOY.md)
 
 <!-- New -->
-[Docker Deployment](docs/getting-started/docker-deploy.en.md)
+[Docker Deployment](docs/getting-started/docker-deploy.md)
 ```
 
 **GitHub URLs automatically redirect!**
-- Old: `github.com/xbcvv/nofx-0210/blob/main/DOCKER_DEPLOY.en.md`
-- Will redirect to: `github.com/.../docs/getting-started/docker-deploy.en.md`
+- Old: `github.com/xbcvv/nofx-0210/blob/main/DOCKER_DEPLOY.md`
+- Will redirect to: `github.com/.../docs/getting-started/docker-deploy.md`
 
 ## 🛠️ For Contributors
 

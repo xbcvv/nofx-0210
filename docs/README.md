@@ -1,4 +1,4 @@
-# 📚 NOFX Documentation Center / 文档中心
+﻿# 📚 NOFX Documentation Center / 文档中心
 
 Welcome to the NOFX documentation! This page helps you find the right documentation quickly.
 
@@ -14,16 +14,16 @@ Welcome to the NOFX documentation! This page helps you find the right documentat
 |----------|-------------|------|
 | [Main README](../README.md) | Project overview, features, quick start | 项目概述、功能、快速入门 |
 | [Getting Started Index (EN)](getting-started/README.md) | All deployment options | 所有部署选项 |
-| [Getting Started Index (中文)](getting-started/README.zh-CN.md) | 所有部署选项 | All deployment options |
-| [Docker Deployment (EN)](getting-started/docker-deploy.en.md) | Deploy with Docker (recommended) | Docker 部署（推荐） |
-| [Docker Deployment (中文)](getting-started/docker-deploy.zh-CN.md) | Docker 部署指南（中文） | Docker deployment guide |
-| [Custom API (EN)](getting-started/custom-api.en.md) | Connect custom AI API providers | 连接自定义 AI API |
+| [Getting Started Index (中文)](getting-started/README.md) | 所有部署选项 | All deployment options |
+| [Docker Deployment (EN)](getting-started/docker-deploy.md) | Deploy with Docker (recommended) | Docker 部署（推荐） |
+| [Docker Deployment (中文)](getting-started/docker-deploy.md) | Docker 部署指南（中文） | Docker deployment guide |
+| [Custom API (EN)](getting-started/custom-api.md) | Connect custom AI API providers | 连接自定义 AI API |
 | [Custom API (中文)](getting-started/custom-api.md) | 连接自定义 AI API 提供商 | Custom AI provider guide |
 
 **Quick Links:**
-- 📖 See all options → [Getting Started](getting-started/README.md) / [快速开始](getting-started/README.zh-CN.md)
-- 🐳 Want easiest setup? → [Docker (EN)](getting-started/docker-deploy.en.md) / [Docker (中文)](getting-started/docker-deploy.zh-CN.md)
-- 🤖 Custom AI model? → [Custom API (EN)](getting-started/custom-api.en.md) / [自定义 API](getting-started/custom-api.md)
+- 📖 See all options → [Getting Started](getting-started/README.md) / [快速开始](getting-started/README.md)
+- 🐳 Want easiest setup? → [Docker (EN)](getting-started/docker-deploy.md) / [Docker (中文)](getting-started/docker-deploy.md)
+- 🤖 Custom AI model? → [Custom API (EN)](getting-started/custom-api.md) / [自定义 API](getting-started/custom-api.md)
 
 ---
 
@@ -34,9 +34,9 @@ Welcome to the NOFX documentation! This page helps you find the right documentat
 | Document | Description | 描述 |
 |----------|-------------|------|
 | [User Guides Index (EN)](guides/README.md) | All usage guides and tips | 所有使用指南和技巧 |
-| [User Guides Index (中文)](guides/README.zh-CN.md) | 所有使用指南和技巧 | All usage guides and tips |
-| [FAQ (English)](guides/faq.en.md) | Frequently asked questions | 常见问题解答 |
-| [FAQ (中文)](guides/faq.zh-CN.md) | 常见问题解答 | Frequently asked questions |
+| [User Guides Index (中文)](guides/README.md) | 所有使用指南和技巧 | All usage guides and tips |
+| [FAQ (English)](guides/faq.md) | Frequently asked questions | 常见问题解答 |
+| [FAQ (中文)](guides/faq.md) | 常见问题解答 | Frequently asked questions |
 | Troubleshooting *(coming soon)* | Common issues and solutions | 故障排查 |
 | Configuration Guide *(coming soon)* | Advanced configuration options | 高级配置选项 |
 | Trading Strategies *(coming soon)* | AI trading strategy examples | AI 交易策略示例 |
@@ -82,7 +82,7 @@ Welcome to the NOFX documentation! This page helps you find the right documentat
 | Document | Description | 描述 |
 |----------|-------------|------|
 | [Architecture Overview (EN)](architecture/README.md) | System architecture, modules, and design | 系统架构、模块和设计 |
-| [Architecture Overview (中文)](architecture/README.zh-CN.md) | 系统架构、模块和设计 | System architecture overview |
+| [Architecture Overview (中文)](architecture/README.md) | 系统架构、模块和设计 | System architecture overview |
 | API Reference *(coming soon)* | HTTP API documentation | HTTP API 文档 |
 | Database Schema *(coming soon)* | SQLite database structure | SQLite 数据库结构 |
 | Testing Guide *(coming soon)* | How to write tests | 如何编写测试 |
@@ -96,7 +96,7 @@ Welcome to the NOFX documentation! This page helps you find the right documentat
 | Document | Description | 描述 |
 |----------|-------------|------|
 | [Roadmap (EN)](roadmap/README.md) | Short-term and long-term roadmap, feature timeline | 短期和长期路线图、功能时间表 |
-| [Roadmap (中文)](roadmap/README.zh-CN.md) | 短期和长期路线图、功能时间表 | Strategic development plan |
+| [Roadmap (中文)](roadmap/README.md) | 短期和长期路线图、功能时间表 | Strategic development plan |
 
 **Roadmap Highlights:**
 - 📈 **Short-term (Q2-Q3 2025)**: Advanced risk management, multi-AI ensemble, new exchange integrations
@@ -110,7 +110,7 @@ Welcome to the NOFX documentation! This page helps you find the right documentat
 |----------|-------------|------|
 | [License (MIT)](../LICENSE) | Open source license | 开源许可证 |
 | [Changelog (EN)](../CHANGELOG.md) | Version history and updates | 版本历史和更新 |
-| [Changelog (中文)](../CHANGELOG.zh-CN.md) | 版本历史和更新 | Version history and updates |
+| [Changelog (中文)](../CHANGELOG.md) | 版本历史和更新 | Version history and updates |
 | [Security Policy](../SECURITY.md) | Vulnerability disclosure | 漏洞披露政策 |
 | [Code of Conduct](../CODE_OF_CONDUCT.md) | Community standards | 社区标准 |
 
@@ -121,7 +121,7 @@ Welcome to the NOFX documentation! This page helps you find the right documentat
 **Find what you need fast:**
 
 ### I want to...
-- 🚀 **Get started quickly** → [Getting Started](getting-started/README.md) / [快速开始](getting-started/README.zh-CN.md)
+- 🚀 **Get started quickly** → [Getting Started](getting-started/README.md) / [快速开始](getting-started/README.md)
 - 🐛 **Report a bug** → [GitHub Issues](https://github.com/xbcvv/nofx-0210/issues/new)
 - 💡 **Suggest a feature** → [Feature Request](https://github.com/xbcvv/nofx-0210/issues/new?template=feature_request.md)
 - 🔒 **Report security issue** → [Security Policy](../SECURITY.md)
@@ -130,11 +130,11 @@ Welcome to the NOFX documentation! This page helps you find the right documentat
 - 💬 **Ask questions** → [Telegram Community](https://t.me/nofx_dev_community)
 
 ### I'm looking for...
-- 🏗️ **System architecture** → [Architecture (EN)](architecture/README.md) / [架构文档](architecture/README.zh-CN.md)
-- 🗺️ **Product roadmap** → [Roadmap (EN)](roadmap/README.md) / [路线图](roadmap/README.zh-CN.md)
+- 🏗️ **System architecture** → [Architecture (EN)](architecture/README.md) / [架构文档](architecture/README.md)
+- 🗺️ **Product roadmap** → [Roadmap (EN)](roadmap/README.md) / [路线图](roadmap/README.md)
 - 📊 **API documentation** → Coming soon
 - 🧪 **Testing guide** → Coming soon
-- 🔧 **Configuration examples** → [Custom API (EN)](getting-started/custom-api.en.md) / [自定义 API](getting-started/custom-api.md)
+- 🔧 **Configuration examples** → [Custom API (EN)](getting-started/custom-api.md) / [自定义 API](getting-started/custom-api.md)
 - 🌐 **Multi-language docs** → [International section](#-international--国际化文档)
 
 ---

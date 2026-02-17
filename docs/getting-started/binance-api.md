@@ -1,4 +1,4 @@
-# Binance API Setup Guide
+﻿# Binance API Setup Guide
 
 This guide explains how to create and configure Binance API keys for use with NOFX.
 

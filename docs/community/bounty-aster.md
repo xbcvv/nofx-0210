@@ -1,4 +1,4 @@
-# 🚀 [BOUNTY] Integrate Aster Exchange Support
+﻿# 🚀 [BOUNTY] Integrate Aster Exchange Support
 
 ## 💰 Bounty Reward
 **To be discussed** - Open to proposals from contributors

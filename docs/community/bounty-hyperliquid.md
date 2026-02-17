@@ -1,4 +1,4 @@
-# 🚀 [BOUNTY] Integrate Hyperliquid Exchange Support
+﻿# 🚀 [BOUNTY] Integrate Hyperliquid Exchange Support
 
 ## 💰 Bounty Reward
 **To be discussed** - Open to proposals from contributors

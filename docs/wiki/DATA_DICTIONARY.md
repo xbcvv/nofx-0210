@@ -1,4 +1,4 @@
-# 📖 交易数据字典与规则 (Data Dictionary & Rules)
+﻿# 📖 交易数据字典与规则 (Data Dictionary & Rules)
 
 本文档是系统 System Prompt 中数据字典的完整参考。
 为了节省 Token，实际发送给 AI 的 System Prompt 仅包含核心字段的简要定义（标记为 ✅）。其他字段（标记为 ℹ️）虽然数据本身会传给 AI，但 AI 会基于其常识理解，不再在 System Prompt 中重复解释。

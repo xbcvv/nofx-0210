@@ -1,4 +1,4 @@
-# OKX API Setup Guide
+﻿# OKX API Setup Guide
 
 This guide explains how to create and configure OKX API keys for use with NOFX.
 

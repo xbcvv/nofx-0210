@@ -1,29 +1,27 @@
-﻿﻿# 🚀 Getting Started with NOFX
+﻿﻿# 🚀 NOFX 快速开始
 
-## ⚠️ This project is a modification based on the main version (2026-02-10) of [xbcvv/nofx-0210](https://github.com/xbcvv/nofx-0210/tree/main)
+## ⚠️ 本项目是基于 [NoFxAiOS/nofx](https://github.com/NoFxAiOS/nofx/tree/main) 的 main 版本（2026-02-10）进行的修改
 
-**Language:** [English](README.md) | [中文](README.zh-CN.md)
+本节包含让 NOFX 运行起来所需的所有文档。
 
-This section contains all the documentation you need to get NOFX up and running.
+## 📋 部署选项
 
-## 📋 Deployment Options
+选择最适合您的方式：
 
-Choose the method that best fits your needs:
+### 🐳 Docker 部署（推荐）
 
-### 🐳 Docker Deployment (Recommended)
+**适合：** 初学者、快速部署、生产环境
 
-**Best for:** Beginners, quick setup, production deployments
+- **中文文档：** [docker-deploy.md](docker-deploy.md)
+- **English:** [docker-deploy.md](docker-deploy.md)
 
-- **English:** [docker-deploy.en.md](docker-deploy.en.md)
-- **中文:** [docker-deploy.zh-CN.md](docker-deploy.zh-CN.md)
+**优势：**
+- ✅ 一键启动
+- ✅ 包含所有依赖
+- ✅ 易于更新和管理
+- ✅ 隔离环境
 
-**Pros:**
-- ✅ One-command setup
-- ✅ All dependencies included
-- ✅ Easy to update and manage
-- ✅ Isolated environment
-
-**Quick Start:**
+**快速开始：**
 ```bash
 cp config.json.example config.json
 ./scripts/start.sh start --build
@@ -32,94 +30,88 @@ cp config.json.example config.json
 ---
 
 
-## 🤖 AI Configuration
+## 🤖 AI 配置
 
-### Custom AI Providers
+### 自定义 AI 提供商
 
-- **English:** [custom-api.en.md](custom-api.en.md)
-- **中文:** [custom-api.md](custom-api.md)
+- **中文文档：** [custom-api.md](custom-api.md)
+- **English:** [custom-api.md](custom-api.md)
 
-Use custom AI models or third-party OpenAI-compatible APIs:
-- Custom DeepSeek endpoints
-- Self-hosted models
-- Other LLM providers
+使用自定义 AI 模型或第三方 OpenAI 兼容 API：
+- 自定义 DeepSeek 端点
+- 本地部署的模型
+- 其他 LLM 提供商
 
 ---
 
-## 🔑 Prerequisites
+## 🔑 环境要求
 
-Before starting, ensure you have:
+开始之前，请确保已安装：
 
-### For Docker Method:
+### Docker 方式：
 - ✅ Docker 20.10+
 - ✅ Docker Compose V2
 
-### For Manual Method:
+### 手动部署方式：
 - ✅ Go 1.21+
 - ✅ Node.js 18+
-- ✅ TA-Lib library
+- ✅ TA-Lib 库
 
 ---
 
-## 📚 Next Steps
+## 🔌 交易所配置指南
 
-After deployment:
-
-1. **Configure AI Models** → Web interface at http://localhost:3000
-2. **Set Up Exchange** → Add Binance/Hyperliquid credentials
-3. **Create Traders** → Combine AI models with exchanges
-4. **Start Trading** → Monitor performance in dashboard
-
-### 🔐 Optional: Enable Admin Mode (Single-User)
-
-For single-tenant/self-hosted usage, you can enable strict admin-only access:
-
-1) In `config.json` set the 2 fields below:
-```jsonc
-{
-	"admin_mode": true,
-  ...
-  "jwt_secret": "YOUR_JWT_SCR"
-}
-```
-2) Set environment variables (Docker compose already wired):
-- `NOFX_ADMIN_PASSWORD` — admin password (plaintext; hashed on startup)
-
-3) Login at `/login` using the admin password. All non-essential endpoints are blocked to unauthenticated users while admin mode is enabled.
+- [Binance API 配置](binance-api.md)
+- [OKX API 配置](okx-api.md)
+- [Bybit API 配置](bybit-api.md)
+- [Hyperliquid 钱包配置](hyperliquid-agent-wallet.md)
+- [Aster DEX 钱包配置](aster-api-wallet.md)
+- [Lighter DEX 钱包配置](lighter-agent-wallet.md)
 
 ---
 
-## ⚠️ Important Notes
+## 📚 下一步
 
-**Before Trading:**
-- ⚠️ Test on testnet first
-- ⚠️ Start with small amounts
-- ⚠️ Understand the risks
-- ⚠️ Read [Security Policy](../../SECURITY.md)
+部署完成后：
 
-**API Keys:**
-- 🔑 Never commit API keys to git
-- 🔑 Use environment variables
-- 🔑 Restrict IP access
-- 🔑 Enable 2FA on exchanges
+1. **配置 AI 模型** → 访问 Web 界面 http://localhost:3000
+2. **设置交易所** → 添加 Binance/Hyperliquid 凭证
+3. **创建交易员** → 将 AI 模型与交易所结合
+4. **开始交易** → 在仪表板中监控表现
 
 ---
 
-## 🆘 Troubleshooting
+## ⚠️ 重要提示
 
-**Common Issues:**
+**交易前：**
+- ⚠️ 先在测试网测试
+- ⚠️ 从小金额开始
+- ⚠️ 了解风险
+- ⚠️ 阅读[安全策略](../../SECURITY.md)
 
-1. **Docker build fails** → Check Docker version, update to 20.10+
-2. **TA-Lib not found** → `brew install ta-lib` (macOS) or `apt-get install libta-lib0-dev` (Ubuntu)
-3. **Port 8080 in use** → Change `API_PORT` in .env file
-4. **Frontend won't connect** → Check backend is running on port 8080
+**API 密钥：**
+- 🔑 永远不要提交 API 密钥到 git
+- 🔑 使用环境变量
+- 🔑 限制 IP 访问
+- 🔑 在交易所启用 2FA
 
-**Need more help?**
-- 📖 [FAQ](../guides/faq.zh-CN.md)
-- 💬 [Telegram Community](https://t.me/nofx_dev_community)
+---
+
+## 🆘 故障排除
+
+**常见问题：**
+
+1. **Docker 构建失败** → 检查 Docker 版本，更新到 20.10+
+2. **找不到 TA-Lib** → `brew install ta-lib` (macOS) 或 `apt-get install libta-lib0-dev` (Ubuntu)
+3. **端口 8080 被占用** → 在 .env 文件中更改 `API_PORT`
+4. **前端无法连接** → 检查后端是否在端口 8080 上运行
+
+**需要更多帮助？**
+- 📖 [常见问题](../guides/faq.md)
+- 💬 [Telegram 社区](https://t.me/nofx_dev_community)
 - 🐛 [GitHub Issues](https://github.com/xbcvv/nofx-0210/issues)
 
 ---
 
-[← Back to Documentation Home](../README.md)
+[← 返回文档首页](../README.md)
 

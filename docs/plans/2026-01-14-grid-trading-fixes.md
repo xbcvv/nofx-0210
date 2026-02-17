@@ -1,4 +1,4 @@
-# AI自适应网格交易系统修复计划
+﻿# AI自适应网格交易系统修复计划
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 

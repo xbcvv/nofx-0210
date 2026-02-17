@@ -1,359 +1,359 @@
-﻿# 📢 PR Management System Update - What Contributors Need to Know
+﻿# 📢 PR 管理系统更新 - 贡献者须知
 
-**Language:** [English](MIGRATION_ANNOUNCEMENT.md) | [中文](MIGRATION_ANNOUNCEMENT.zh-CN.md)
+**语言：** [English](MIGRATION_ANNOUNCEMENT.md) | [中文](MIGRATION_ANNOUNCEMENT.md)
 
-We're introducing a new PR management system to improve code quality and make contributing easier! This guide explains what's changing and what you need to do.
-
----
-
-## 🎯 What's Changing?
-
-We're introducing:
-
-✅ **Clear contribution guidelines** aligned with our [roadmap](../roadmap/README.md)
-✅ **Automated checks** (tests, linting, security scans)
-✅ **Better labeling** for organization and prioritization
-✅ **Faster review turnaround** with pre-checks
-✅ **Transparent process** so you know exactly what to expect
+我们正在引入新的 PR 管理系统，以提高代码质量并让贡献变得更容易！本指南解释了变化内容以及你需要做什么。
 
 ---
 
-## 📅 Timeline
+## 🎯 有什么变化？
+
+我们正在引入：
+
+✅ **清晰的贡献指南** 与我们的[路线图](../roadmap/README.md)对齐
+✅ **自动化检查**（测试、linting、安全扫描）
+✅ **更好的标签** 用于组织和优先级排序
+✅ **更快的审核周转** 通过预检查
+✅ **透明的流程** 让你准确知道期望什么
+
+---
+
+## 📅 时间表
 
 ```
-Week 1-2: Existing PR Review Period
-Week 3:   Soft Launch (checks are advisory only)
-Week 4+:  Full Launch (checks are required)
+第 1-2 周：现有 PR 审核期
+第 3 周：  软启动（检查仅是建议性的）
+第 4 周+： 完全启动（检查是必需的）
 ```
 
-**Important:** This rollout is gradual. You'll have time to adapt!
+**重要：** 这个推出是渐进式的。你将有时间适应！
 
 ---
 
-## 🤔 What This Means for YOU
+## 🤔 这对你意味着什么
 
-### If You Have an Existing Open PR
+### 如果你有现有的打开的 PR
 
-**Good news:** Your PR will NOT be blocked by new rules!
+**好消息：** 你的 PR 不会被新规则阻塞！
 
-- ✅ Your PR will be reviewed under current (relaxed) standards
-- ✅ We'll review and provide feedback within 1-2 weeks
-- ✅ Some PRs may need a quick rebase or minor updates
+- ✅ 你的 PR 将按照当前（宽松）标准进行审核
+- ✅ 我们将在 1-2 周内审核并提供反馈
+- ✅ 一些 PR 可能需要快速 rebase 或次要更新
 
-**What you might need to do:**
-1. **Rebase on latest `dev` branch** if there are conflicts
-2. **Respond to review comments** within 1 week
-3. **Be patient** as we work through the backlog
+**你可能需要做什么：**
+1. **基于最新 `dev` 分支 rebase** 如果有冲突
+2. **在 1 周内回应审核评论**
+3. **保持耐心** 我们正在处理积压
 
-**What happens if I don't respond?**
-- We may close your PR after 2 weeks of inactivity
-- You can always reopen it later with updates!
-- No hard feelings - we're just cleaning up the backlog
+**如果我不回应会怎样？**
+- 我们可能会在 2 周不活动后关闭你的 PR
+- 你随时可以稍后重新打开并更新！
+- 没有恶意 - 我们只是在清理积压
 
-### 🚀 Want to Check Your PR? (Optional)
+### 🚀 想要检查你的 PR？（可选）
 
-We've created a **PR health check tool** to help you see if your PR meets the new standards!
+我们创建了一个 **PR 健康检查工具**来帮助你看 PR 是否符合新标准！
 
-**Run this in your local fork:**
+**在你的本地 fork 中运行：**
 ```bash
 ./scripts/pr-check.sh
 ```
 
-**What it does:**
-- 🔍 Analyzes your PR (doesn't modify anything)
-- ✅ Shows what's good
-- ⚠️ Points out issues
-- 💡 Gives you specific fix suggestions
-- 📊 Overall health score
+**它做什么：**
+- 🔍 分析你的 PR（不修改任何内容）
+- ✅ 显示什么是好的
+- ⚠️ 指出问题
+- 💡 给你具体的修复建议
+- 📊 整体健康评分
 
-**Then fix issues and push:**
+**然后修复问题并推送：**
 ```bash
-# Fix the issues (see suggestions from script)
-# Run check again
+# 修复问题（查看脚本的建议）
+# 再次运行检查
 ./scripts/pr-check.sh
 
-# Push when ready
+# 准备好后推送
 git push -f origin <your-branch>
 ```
 
-**📖 Full Guide:** [How to Migrate Your PR](HOW_TO_MIGRATE_YOUR_PR.md)
+**📖 完整指南：** [如何迁移你的 PR](HOW_TO_MIGRATE_YOUR_PR.md)
 
-**Remember:** This is completely **optional** for existing PRs!
-
----
-
-### If You're Submitting a NEW PR
-
-**Timeline matters:**
-
-#### Week 3 (Soft Launch):
-- ✅ Automated checks will run (tests, linting, security)
-- ⚠️ **Checks are advisory only** - they won't block your PR
-- ✅ This is a learning period - we're here to help!
-- ✅ Get familiar with the new [Contributing Guidelines](../../CONTRIBUTING.md)
-
-#### Week 4+ (Full Launch):
-- ✅ All automated checks must pass before merge
-- ✅ PR must follow [Conventional Commits](https://www.conventionalcommits.org/) format
-- ✅ PR template must be filled out
-- ✅ Must align with [roadmap](../roadmap/README.md) priorities
+**记住：** 对于现有 PR，这是完全**可选的**！
 
 ---
 
-## ✅ How to Prepare for New System
+### 如果你要提交新的 PR
 
-### 1. Read the Contributing Guidelines
+**时间很重要：**
 
-📖 [CONTRIBUTING.md](../../CONTRIBUTING.md)
+#### 第 3 周（软启动）：
+- ✅ 自动化检查将运行（测试、linting、安全性）
+- ⚠️ **检查仅是建议性的** - 不会阻塞你的 PR
+- ✅ 这是一个学习期 - 我们在这里帮助！
+- ✅ 熟悉新的[贡献指南](../../docs/i18n/zh-CN/CONTRIBUTING.md)
 
-**Key points:**
-- We accept PRs aligned with our roadmap (security, AI, exchanges, UI/UX)
-- PRs should be focused and small (<300 lines preferred)
-- Use Conventional Commits format: `feat(area): description`
-- Include tests for new features
+#### 第 4 周+（完全启动）：
+- ✅ 所有自动化检查必须通过才能合并
+- ✅ PR 必须遵循 [Conventional Commits](https://www.conventionalcommits.org/) 格式
+- ✅ 必须填写 PR 模板
+- ✅ 必须与[路线图](../roadmap/README.md)优先级对齐
 
-### 2. Check the Roadmap
+---
 
-🗺️ [Roadmap](../roadmap/README.md)
+## ✅ 如何为新系统做准备
 
-**Current priorities (Phase 1):**
-- 🔒 Security enhancements
-- 🧠 AI model integrations
-- 🔗 Exchange integrations (OKX, Bybit, Lighter, EdgeX)
-- 🎨 UI/UX improvements
-- ⚡ Performance optimizations
-- 🐛 Bug fixes
+### 1. 阅读贡献指南
 
-**Lower priority (Phase 2+):**
-- Universal market expansion (stocks, futures)
-- Advanced AI features
-- Enterprise features
+📖 [CONTRIBUTING.md](../../docs/i18n/zh-CN/CONTRIBUTING.md)
 
-💡 **Pro tip:** If your PR aligns with Phase 1, it'll be reviewed faster!
+**关键点：**
+- 我们接受与路线图对齐的 PR（安全性、AI、交易所、UI/UX）
+- PR 应该集中且小型（<300 行优先）
+- 使用 Conventional Commits 格式：`feat(area): description`
+- 为新功能包含测试
 
-### 3. Set Up Local Testing
+### 2. 查看路线图
 
-Before submitting a PR, test locally:
+🗺️ [路线图](../roadmap/README.md)
+
+**当前优先级（Phase 1）：**
+- 🔒 安全增强
+- 🧠 AI 模型集成
+- 🔗 交易所集成（OKX、Bybit、Lighter、EdgeX）
+- 🎨 UI/UX 改进
+- ⚡ 性能优化
+- 🐛 Bug 修复
+
+**较低优先级（Phase 2+）：**
+- 通用市场扩展（股票、期货）
+- 高级 AI 功能
+- 企业功能
+
+💡 **专业提示：** 如果你的 PR 与 Phase 1 对齐，它会被更快审核！
+
+### 3. 设置本地测试
+
+提交 PR 前，在本地测试：
 
 ```bash
-# Backend tests
+# 后端测试
 go test ./...
 go fmt ./...
 go vet ./...
 
-# Frontend tests
+# 前端测试
 cd web
 npm run lint
 npm run type-check
 npm run build
 ```
 
-This helps your PR pass automated checks on first try!
+这有助于你的 PR 第一次就通过自动化检查！
 
 ---
 
-## 📝 PR Title Format
+## 📝 PR 标题格式
 
-Use [Conventional Commits](https://www.conventionalcommits.org/) format:
+使用 [Conventional Commits](https://www.conventionalcommits.org/) 格式：
 
 ```
 <type>(<scope>): <description>
 
-Examples:
+示例：
 feat(exchange): add OKX futures support
 fix(trader): resolve position tracking bug
 docs(readme): update installation instructions
 perf(ai): optimize prompt generation
 ```
 
-**Types:**
-- `feat` - New feature
-- `fix` - Bug fix
-- `docs` - Documentation
-- `refactor` - Code refactoring
-- `perf` - Performance improvement
-- `test` - Test updates
-- `chore` - Build/config changes
-- `security` - Security improvements
+**类型：**
+- `feat` - 新功能
+- `fix` - Bug 修复
+- `docs` - 文档
+- `refactor` - 代码重构
+- `perf` - 性能改进
+- `test` - 测试更新
+- `chore` - 构建/配置变更
+- `security` - 安全改进
 
 ---
 
-## 🎯 What Makes a Good PR?
+## 🎯 什么是好的 PR？
 
-### ✅ Good PR Example
+### ✅ 好的 PR 示例
 
 ```
-Title: feat(exchange): add OKX exchange integration
+标题：feat(exchange): add OKX exchange integration
 
-Description:
-Implements OKX exchange support with the following features:
-- Order placement and cancellation
-- Balance and position retrieval
-- Leverage configuration
-- Error handling and retry logic
+描述：
+使用以下功能实现 OKX 交易所支持：
+- 订单下达和取消
+- 余额和仓位检索
+- 杠杆配置
+- 错误处理和重试逻辑
 
-Closes #123
+关闭 #123
 
-Testing:
-- [x] Unit tests added and passing
-- [x] Manually tested with real API
-- [x] Documentation updated
+测试：
+- [x] 单元测试已添加并通过
+- [x] 使用真实 API 手动测试
+- [x] 文档已更新
 ```
 
-**Why it's good:**
-- ✅ Clear, descriptive title
-- ✅ Explains what and why
-- ✅ Links to issue
-- ✅ Includes testing details
-- ✅ Small, focused change
+**为什么好：**
+- ✅ 清晰、描述性标题
+- ✅ 解释了什么和为什么
+- ✅ 链接到 issue
+- ✅ 包含测试详情
+- ✅ 小型、集中的变更
 
-### ❌ Avoid These
+### ❌ 避免这些
 
-**Too vague:**
+**太模糊：**
 ```
-Title: update code
-Description: made some changes
-```
-
-**Too large:**
-```
-Title: feat: complete rewrite of entire trading system
-Files changed: 2,500+
+标题：update code
+描述：made some changes
 ```
 
-**Off roadmap:**
+**太大：**
 ```
-Title: feat: add support for stock trading
-(This is Phase 3, not current priority)
+标题：feat: complete rewrite of entire trading system
+文件变更：2,500+
+```
+
+**不在路线图上：**
+```
+标题：feat: add support for stock trading
+（这是 Phase 3，不是当前优先级）
 ```
 
 ---
 
-## 🐛 If Your PR Fails Checks
+## 🐛 如果你的 PR 检查失败
 
-Don't panic! We're here to help.
+不要恐慌！我们在这里帮助。
 
-**Week 3 (Soft Launch):**
-- Checks are advisory - we'll help you fix issues
-- Ask questions in your PR comments
-- We can guide you through debugging
+**第 3 周（软启动）：**
+- 检查是建议性的 - 我们会帮你解决问题
+- 在你的 PR 评论中提问
+- 我们可以指导你进行调试
 
-**Week 4+ (Full Launch):**
-- Checks must pass, but we still help!
-- Common issues:
-  - Test failures → Run `go test ./...` locally
-  - Linting errors → Run `go fmt` and `npm run lint`
-  - Merge conflicts → Rebase on latest `dev`
+**第 4 周+（完全启动）：**
+- 检查必须通过，但我们仍然会帮助！
+- 常见问题：
+  - 测试失败 → 在本地运行 `go test ./...`
+  - Linting 错误 → 运行 `go fmt` 和 `npm run lint`
+  - 合并冲突 → 基于最新 `dev` rebase
 
-**Need help?** Just ask! Comment in your PR or reach out:
+**需要帮助？** 只管问！在你的 PR 中评论或联系：
 - [GitHub Discussions](https://github.com/xbcvv/nofx-0210/discussions)
-- [Telegram Community](https://t.me/nofx_dev_community)
+- [Telegram 社区](https://t.me/nofx_dev_community)
 
 ---
 
-## 💰 Special Note for Bounty Contributors
+## 💰 悬赏贡献者特别说明
 
-If you're working on a bounty:
+如果你正在做悬赏任务：
 
-✅ **Your PRs get priority review** (24-48 hours)
-✅ **Extra support** to meet requirements
-✅ **Flexible during transition** - we'll work with you
+✅ **你的 PR 获得优先审核**（24-48 小时）
+✅ **额外支持** 以满足要求
+✅ **过渡期间灵活** - 我们会与你合作
 
-Just make sure to:
-- Reference the bounty issue number
-- Meet all acceptance criteria
-- Include demo video/screenshots
-
----
-
-## ❓ FAQ
-
-### Q: Will my existing PR be rejected?
-
-**A:** No! Existing PRs use relaxed standards. We may ask for minor updates (rebase, small fixes), but you won't be held to new strict requirements.
-
-### Q: What if I can't pass the new CI checks?
-
-**A:** Week 3 is a learning period. We'll help you understand and fix issues. By Week 4, you'll be familiar with the process!
-
-### Q: Will this slow down contributions?
-
-**A:** Actually, no! Automated checks catch issues early, making reviews faster. Clear guidelines help you submit better PRs on first try.
-
-### Q: Can I still contribute if I'm a beginner?
-
-**A:** Absolutely! Look for issues labeled `good first issue`. We're here to mentor and help you succeed.
-
-### Q: My PR is large (>1000 lines). What should I do?
-
-**A:** Consider breaking it into smaller PRs. This gets you:
-- ✅ Faster reviews
-- ✅ Easier testing
-- ✅ Higher chance of quick merge
-
-Need help planning? Just ask in your PR!
-
-### Q: What if my feature isn't on the roadmap?
-
-**A:** Open an issue first to discuss! We're open to good ideas, but want to ensure alignment before you spend time coding.
-
-### Q: When will this be fully active?
-
-**A:** Week 4+ (approximately 4 weeks from announcement date). Check the pinned Discussion post for exact dates.
+只需确保：
+- 引用悬赏 issue 编号
+- 满足所有验收标准
+- 包含演示视频/截图
 
 ---
 
-## 🎉 Benefits for Contributors
+## ❓ 常见问题
 
-This new system helps YOU by:
+### Q：我的现有 PR 会被拒绝吗？
 
-✅ **Faster reviews** - Automated pre-checks reduce review time
-✅ **Clear expectations** - You know exactly what's required
-✅ **Better feedback** - Automated checks catch issues early
-✅ **Fair prioritization** - Roadmap-aligned PRs reviewed faster
-✅ **Recognition** - Contributor tiers and recognition program
+**A：** 不会！现有 PR 使用宽松标准。我们可能会要求次要更新（rebase、小修复），但你不会被要求满足新的严格要求。
 
----
+### Q：如果我无法通过新的 CI 检查怎么办？
 
-## 📚 Resources
+**A：** 第 3 周是学习期。我们会帮你理解和修复问题。到第 4 周，你将熟悉这个流程！
 
-### Must Read
-- [Contributing Guidelines](../../CONTRIBUTING.md) - Complete guide
-- [Roadmap](../roadmap/README.md) - Current priorities
+### Q：这会减慢贡献速度吗？
 
-### Helpful Links
-- [Conventional Commits](https://www.conventionalcommits.org/) - Commit format
-- [Good First Issues](https://github.com/xbcvv/nofx-0210/labels/good%20first%20issue) - Beginner-friendly tasks
-- [Bounty Program](../bounty-guide.md) - Get paid to contribute
+**A：** 实际上不会！自动化检查尽早捕获问题，使审核更快。清晰的指南帮助你第一次就提交更好的 PR。
 
-### Get Help
-- [GitHub Discussions](https://github.com/xbcvv/nofx-0210/discussions) - Ask questions
-- [Telegram](https://t.me/nofx_dev_community) - Community chat
-- [Twitter](https://x.com/nofx_official) - Updates and announcements
+### Q：如果我是初学者，我还能贡献吗？
 
----
+**A：** 绝对可以！查找标记为 `good first issue` 的 issue。我们在这里指导并帮助你成功。
 
-## 💬 Feedback Welcome!
+### Q：我的 PR 很大（>1000 行）。我应该怎么做？
 
-This is a new system and we want YOUR input:
+**A：** 考虑将其拆分为更小的 PR。这让你获得：
+- ✅ 更快的审核
+- ✅ 更容易的测试
+- ✅ 更高的快速合并机会
 
-- 📝 What's unclear?
-- 🤔 What concerns do you have?
-- 💡 How can we improve?
+需要帮助规划？在你的 PR 中提问即可！
 
-Share in the [Migration Feedback Discussion](https://github.com/xbcvv/nofx-0210/discussions) (link TBD)
+### Q：如果我的功能不在路线图上怎么办？
+
+**A：** 先开一个 issue 讨论！我们对好想法持开放态度，但在你花时间编码之前想确保对齐。
+
+### Q：这将何时完全激活？
+
+**A：** 第 4 周+（从公告日期起大约 4 周）。查看置顶的 Discussion 帖子了解确切日期。
 
 ---
 
-## 🙏 Thank You!
+## 🎉 对贡献者的好处
 
-We appreciate your contributions and patience during this transition. Together, we're building something amazing!
+这个新系统通过以下方式帮助你：
 
-**Questions?** Don't hesitate to ask. We're here to help! 🚀
+✅ **更快的审核** - 自动化预检查减少审核时间
+✅ **清晰的期望** - 你准确知道需要什么
+✅ **更好的反馈** - 自动化检查尽早捕获问题
+✅ **公平的优先级排序** - 路线图对齐的 PR 审核更快
+✅ **表彰** - 贡献者等级和表彰计划
 
 ---
 
-**Last Updated:** 2025-01-XX
-**Status:** Announcement (Week 0)
-**Full Launch:** Week 4+ (TBD)
+## 📚 资源
+
+### 必读
+- [贡献指南](../../docs/i18n/zh-CN/CONTRIBUTING.md) - 完整指南
+- [路线图](../roadmap/README.md) - 当前优先级
+
+### 有用链接
+- [Conventional Commits](https://www.conventionalcommits.org/) - Commit 格式
+- [Good First Issues](https://github.com/xbcvv/nofx-0210/labels/good%20first%20issue) - 适合初学者的任务
+- [悬赏计划](../bounty-guide.md) - 获得报酬来贡献
+
+### 获取帮助
+- [GitHub Discussions](https://github.com/xbcvv/nofx-0210/discussions) - 提问
+- [Telegram](https://t.me/nofx_dev_community) - 社区聊天
+- [Twitter](https://x.com/nofx_official) - 更新和公告
+
+---
+
+## 💬 欢迎反馈！
+
+这是一个新系统，我们想要你的意见：
+
+- 📝 什么不清楚？
+- 🤔 你有什么顾虑？
+- 💡 我们如何改进？
+
+在[迁移反馈讨论](https://github.com/xbcvv/nofx-0210/discussions)中分享（链接待定）
+
+---
+
+## 🙏 谢谢你！
+
+我们感谢你的贡献和在这次过渡期间的耐心。我们一起正在构建令人惊叹的东西！
+
+**问题？** 不要犹豫提问。我们在这里帮助！🚀
+
+---
+
+**最后更新：** 2025-01-XX
+**状态：** 公告（第 0 周）
+**完全启动：** 第 4 周+（待定）
 

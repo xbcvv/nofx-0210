@@ -1,52 +1,52 @@
-﻿# 📚 Maintainer Documentation
+﻿# 📚 维护者文档
 
-**Language:** [English](README.md) | [中文](README.zh-CN.md)
+**语言：** [English](README.md) | [中文](README.md)
 
-This directory contains documentation for NOFX project maintainers and contributors who want to understand our processes.
-
----
-
-## 📖 Documentation
-
-| Document | Description |
-|----------|-------------|
-| [PR_REVIEW_GUIDE.md](PR_REVIEW_GUIDE.md) | Guide for reviewing pull requests |
-| [PROJECT_MANAGEMENT.md](PROJECT_MANAGEMENT.md) | Project management workflow and processes |
-| [SETUP_GUIDE.md](SETUP_GUIDE.md) | Setup guide for the PR management system |
-
-**Available in:** 🇬🇧 English | 🇨🇳 中文
+此目录包含 NOFX 项目维护者和想要了解我们流程的贡献者的文档。
 
 ---
 
-## 🎯 For New Maintainers
+## 📖 文档
 
-If you're a new maintainer, start here:
+| 文档 | 描述 |
+|------|------|
+| [PR_REVIEW_GUIDE.md](PR_REVIEW_GUIDE.md) | PR 审核指南 |
+| [PROJECT_MANAGEMENT.md](PROJECT_MANAGEMENT.md) | 项目管理工作流程和流程 |
+| [SETUP_GUIDE.md](SETUP_GUIDE.md) | PR 管理系统设置指南 |
 
-1. **Read the documentation** (listed above) to understand the review process
-2. **Shadow an experienced maintainer** for 1-2 weeks
-3. **Start with simple reviews** before handling complex PRs
-4. **Ask questions** in the maintainer channel
-
----
-
-## 🤝 For Contributors
-
-These documents are also helpful for contributors who want to:
-- Understand our review standards
-- Learn our project management workflow
-- See how we prioritize work
-
-Everything here is transparent and designed to help you contribute successfully!
+**可用语言：** 🇬🇧 English | 🇨🇳 中文
 
 ---
 
-## 📞 Questions?
+## 🎯 对于新维护者
 
-- **Public questions:** Use [GitHub Discussions](https://github.com/xbcvv/nofx-0210/discussions)
-- **Maintainer questions:** Use the maintainer channel
-- **Migration questions:** See [Migration Announcement](../community/MIGRATION_ANNOUNCEMENT.md)
+如果你是新维护者，从这里开始：
+
+1. **阅读文档**（上面列出的）以了解审核流程
+2. **跟随有经验的维护者** 1-2 周
+3. **从简单的审核开始**，然后再处理复杂的 PR
+4. **在维护者频道提问**
 
 ---
 
-**Remember:** We're building an open, welcoming community. Documentation should empower contributors while maintaining project quality. 🚀
+## 🤝 对于贡献者
+
+这些文档对想要以下内容的贡献者也很有帮助：
+- 了解我们的审核标准
+- 学习我们的项目管理工作流程
+- 了解我们如何排定工作优先级
+
+这里的一切都是透明的，旨在帮助你成功贡献！
+
+---
+
+## 📞 问题？
+
+- **公开问题：** 使用 [GitHub Discussions](https://github.com/xbcvv/nofx-0210/discussions)
+- **维护者问题：** 使用维护者频道
+- **迁移问题：** 查看[迁移公告](../community/MIGRATION_ANNOUNCEMENT.md)
+
+---
+
+**记住：** 我们正在建立一个开放、热情的社区。文档应该赋能贡献者，同时保持项目质量。🚀
 

@@ -1,4 +1,4 @@
-# 配置驱动架构 (Configuration-Driven Architecture) 修改说明
+﻿# 配置驱动架构 (Configuration-Driven Architecture) 修改说明
 
 > **版本**: V1.1.0
 > **日期**: 2026-02-17

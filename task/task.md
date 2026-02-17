@@ -36,3 +36,51 @@
 - [x] **Global Command**:
     - [x] 确认代码库中不存在 Global Command 相关实现
     - [x] 在 `task/task_archives/` 相关文档中添加 `DEPRECATED` 警告
+
+
+## 量化指标分析 [Analysis]
+- [x] **Prompt23.yaml 量化拆解**:
+    - [x] 提取所有可量化的逻辑 (如 EMA 斜率, 橡皮筋, 动能背离)
+    - [x] 映射为标准数学公式 (Standard Formulas)
+    - [x] 输出思维导图文档 `quantifiable_metrics_analysis.md`
+
+## 配置驱动架构实施 [Implementation]
+- [x] **数据结构升级**:
+    - [x] `market/types.go`: 增加 `EMAs`, `ATRs`, `PriceChanges` 等动态 Map
+    - [x] `market/data.go`: 更新 `GetWithTimeframes` 支持动态计算
+- [x] **引擎与格式化**:
+    - [x] `kernel/engine.go`: 传递 `strategy.json`配置参数
+    - [x] `kernel/formatter.go`: 遍历 Map 注入 System Prompt
+    - [x] `kernel/schema.go`: 更新 Schema 包含新字段定义
+- [ ] **文档**:
+    - [x] 创建 `task/Configuration_Driven_Architecture.md` 交付文档
+
+## 动态 Prompt 整合 [Integration]
+- [x] **Prompt 逻辑更新**:
+    - [x] 修改 `prompt23.yaml` 使用 `PriceChange15m`, `Change_{tf}`, `EMA{period}` 等动态字段
+- [ ] **验证**:
+    - [ ] 验证 Prompt 逻辑与后端数据的对齐
+
+## K线显示数量优化 [Optimization]
+- [x] **配置增强**:
+    - [x] `store/strategy.go`: 在 `KlineConfig` 中增加 `DisplayCount` (默认60)
+    - [x] `kernel/engine.go`: 将 `StrategyConfig` 注入 `Context`
+    - [x] `kernel/formatter.go`: 使用配置的 `DisplayCount` 替代硬编码的 30
+
+## 修复全局锁失效 [Fix]
+- [x] **Prompt 缺少持仓时长**:
+    - [x] `kernel/formatter.go`: 在 `formatCurrentPositions` 中增加 `Hold Duration` 计算与显示
+    - [x] 验证: AI 可见 `⏱️ 持仓时间: 15m`，从而遵守 `< 45m 禁开新仓` 规则
+
+## 文档中文化与索引修复 [Doc]
+- [x] **文档中文化**:
+    - [x] 移除所有多语言切换导航 (保留纯中文)
+    - [x] 将 `docs/i18n/zh-CN/*.md` 提升为主文件，覆盖英文版
+    - [x] 修复 `docs/market-regime-classification.md` 等独立文档
+- [x] **索引与链接修复**:
+    - [x] 在 `README.md` 创建全面文档索引 (涵盖架构、指南、API、Wiki、开发资源)
+    - [x] 修复 `getting-started/README.md` 缺失的交易所指南链接
+    - [x] 修复 `guides/README.md` 缺失的故障排除链接
+    - [x] 修复 `wiki/README.md` 缺失的配置驱动文档链接
+    - [x] 补充开发者资源 (MCP, Web, Hook) 到主页索引
+

@@ -1,4 +1,4 @@
-# AI-Trader: 自主交易代理实时金融市场基准测试系统深度研究报告
+﻿# AI-Trader: 自主交易代理实时金融市场基准测试系统深度研究报告
 
 **项目名称:** AI-Trader: Benchmarking Autonomous Agents in Real-Time Financial Markets
 **研究机构:** 香港大学数据智能实验室 (HKUDS)

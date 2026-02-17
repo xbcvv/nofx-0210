@@ -1,29 +1,29 @@
-﻿# 📘 NOFX User Guides
+﻿# 📘 NOFX 使用指南
 
-**Language:** [English](README.md) | [中文](README.zh-CN.md)
 
-Comprehensive guides to help you use NOFX effectively.
-
----
-
-## 📚 Available Guides
-
-### 🔧 Basic Usage
-
-| Guide | Description | Status |
-|-------|-------------|--------|
-| [FAQ (English)](faq.en.md) | Frequently asked questions | ✅ Available |
-| [FAQ (中文)](faq.zh-CN.md) | 常见问题解答 | ✅ Available |
-| Configuration Guide | Advanced settings and options | 🚧 Coming Soon |
-| Trading Strategies | AI trading strategy examples | 🚧 Coming Soon |
+帮助您有效使用 NOFX 的综合指南。
 
 ---
 
-## 🐛 Troubleshooting
+## 📚 可用指南
 
-### Common Issues
+### 🔧 基础使用
 
-**Issue: TA-Lib not found**
+| 指南 | 描述 | 状态 |
+|------|------|------|
+| [FAQ (中文)](faq.md) | 常见问题解答 | ✅ 可用 |
+| [故障排除](TROUBLESHOOTING.md) | 常见错误修复与诊断 | ✅ 可用 |
+| [FAQ (English)](faq.md) | Frequently asked questions | ✅ 可用 |
+| 配置指南 | 高级设置和选项 | 🚧 即将推出 |
+| 交易策略 | AI 交易策略示例 | 🚧 即将推出 |
+
+---
+
+## 🐛 故障排除
+
+### 常见问题
+
+**问题：找不到 TA-Lib**
 ```bash
 # macOS
 brew install ta-lib
@@ -32,108 +32,107 @@ brew install ta-lib
 sudo apt-get install libta-lib0-dev
 ```
 
-**Issue: Precision error**
-- System auto-handles LOT_SIZE from exchange
-- Check network connection
-- Verify exchange API is accessible
+**问题：精度错误**
+- 系统自动处理交易所的 LOT_SIZE
+- 检查网络连接
+- 验证交易所 API 可访问
 
-**Issue: AI API timeout**
-- Check API key validity
-- Verify network connection
-- Check API balance/credits
-- Timeout is set to 120 seconds
+**问题：AI API 超时**
+- 检查 API 密钥有效性
+- 验证网络连接
+- 检查 API 余额/额度
+- 超时设置为 120 秒
 
-**Issue: Frontend can't connect**
-- Ensure backend is running (http://localhost:8080)
-- Check if port 8080 is available
-- Check browser console for errors
-
----
-
-## 📖 Usage Tips
-
-### Best Practices
-
-**1. Risk Management**
-- Start with small amounts (100-500 USDT)
-- Use subaccounts for additional safety
-- Set reasonable leverage limits
-- Monitor daily loss limits
-
-**2. Performance Monitoring**
-- Check decision logs regularly
-- Analyze win rate and profit factor
-- Review AI reasoning (Chain of Thought)
-- Track equity curve trends
-
-**3. Configuration**
-- Test on testnet first
-- Gradually increase trading amounts
-- Adjust scan intervals (3-5 minutes recommended)
-- Use default coin list for beginners
+**问题：前端无法连接**
+- 确保后端正在运行 (http://localhost:8080)
+- 检查端口 8080 是否可用
+- 检查浏览器控制台错误
 
 ---
 
-## 🎯 Advanced Topics
+## 📖 使用技巧
 
-### Multi-Trader Competition
-Run multiple AI models simultaneously:
-- Qwen vs DeepSeek head-to-head
-- Compare performance in real-time
-- Identify best-performing strategies
+### 最佳实践
 
-### Custom Coin Pools
-- Use external API for coin selection
-- Combine AI500 + OI Top data
-- Filter by liquidity and volume
+**1. 风险管理**
+- 从小金额开始（100-500 USDT）
+- 使用子账户增加安全性
+- 设置合理的杠杆限制
+- 监控每日亏损限制
 
-### Exchange Integration
-- Binance Futures (CEX)
-- Hyperliquid (DEX)
-- Aster DEX (Binance-compatible)
+**2. 性能监控**
+- 定期检查决策日志
+- 分析胜率和盈利因子
+- 审查 AI 推理（思维链）
+- 跟踪权益曲线趋势
 
----
-
-## 📊 Understanding Metrics
-
-### Key Performance Indicators
-
-**Win Rate**
-- Percentage of profitable trades
-- Target: >50% for consistent profit
-
-**Profit Factor**
-- Ratio of gross profit to gross loss
-- Target: >1.5 (1.5:1 or better)
-
-**Sharpe Ratio**
-- Risk-adjusted return measure
-- Higher is better (>1.0 is good)
-
-**Maximum Drawdown**
-- Largest peak-to-trough decline
-- Keep under 20% for safety
+**3. 配置**
+- 先在测试网测试
+- 逐步增加交易金额
+- 调整扫描间隔（推荐 3-5 分钟）
+- 初学者使用默认币种列表
 
 ---
 
-## 🔗 Related Documentation
+## 🎯 进阶主题
 
-- [Getting Started (EN)](../getting-started/README.md) - Initial setup
-- [Getting Started (中文)](../getting-started/README.zh-CN.md) - 初始设置
-- [Community](../community/README.md) - Contributing and bounties
-- [FAQ (English)](faq.en.md) - Common questions
-- [FAQ (中文)](faq.zh-CN.md) - 常见问题
+### 多交易员竞赛
+同时运行多个 AI 模型：
+- Qwen vs DeepSeek 对决
+- 实时比较性能
+- 识别表现最佳的策略
+
+### 自定义币种池
+- 使用外部 API 进行币种选择
+- 结合 AI500 + OI Top 数据
+- 按流动性和交易量过滤
+
+### 交易所集成
+- Binance Futures（中心化交易所）
+- Hyperliquid（去中心化交易所）
+- Aster DEX（兼容 Binance）
 
 ---
 
-## 🆘 Need Help?
+## 📊 理解指标
 
-**Can't find what you need?**
-- 💬 [Telegram Community](https://t.me/nofx_dev_community)
+### 关键性能指标
+
+**胜率（Win Rate）**
+- 盈利交易的百分比
+- 目标：>50% 以获得稳定盈利
+
+**盈利因子（Profit Factor）**
+- 总盈利与总亏损的比率
+- 目标：>1.5（1.5:1 或更好）
+
+**夏普比率（Sharpe Ratio）**
+- 风险调整后的收益衡量
+- 越高越好（>1.0 为良好）
+
+**最大回撤（Maximum Drawdown）**
+- 从峰值到谷值的最大跌幅
+- 为安全起见保持在 20% 以下
+
+---
+
+## 🔗 相关文档
+
+- [快速开始](../getting-started/README.md) - 初始设置
+- [社区](../community/README.md) - 贡献和悬赏
+- [FAQ 中文](faq.md) - 常见问题
+- [FAQ English](faq.md) - Common questions
+
+---
+
+## 🆘 需要帮助？
+
+**找不到您需要的内容？**
+- 💬 [Telegram 社区](https://t.me/nofx_dev_community)
 - 🐛 [GitHub Issues](https://github.com/xbcvv/nofx-0210/issues)
 - 🐦 [Twitter @nofx_official](https://x.com/nofx_official)
 
 ---
 
-[← Back to Documentation Home](../README.md)
+[← 返回文档首页](../README.md)
 

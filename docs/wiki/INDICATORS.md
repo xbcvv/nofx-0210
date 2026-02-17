@@ -1,4 +1,4 @@
-# 技术指标指南 (Technical Indicators Guide)
+﻿# 技术指标指南 (Technical Indicators Guide)
 
 本文档列出了交易系统中所有可用的技术指标，包括其配置参数、默认值以及在 AI Prompt 中的呈现格式。
 

@@ -1,4 +1,4 @@
-# Lighter Agent Wallet Setup Guide
+﻿# Lighter Agent Wallet Setup Guide
 
 This guide explains how to create and configure an Agent Wallet for secure trading on Lighter.
 
