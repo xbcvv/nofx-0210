@@ -78,9 +78,12 @@
     - [x] 将 `docs/i18n/zh-CN/*.md` 提升为主文件，覆盖英文版
     - [x] 修复 `docs/market-regime-classification.md` 等独立文档
 - [x] **索引与链接修复**:
-    - [x] 在 `README.md` 创建全面文档索引 (涵盖架构、指南、API、Wiki、开发资源)
+    - [x] 更新 `CONTRIBUTING.md` 增加文档维护规则 (GitHub Flow)
+    - [x] 更新 `README.md` 索引链接
+- [x] **文档完善与修正**:
+    - [x] 恢复 `INDICATORS.md` 遗漏细节 (Global Context, ADX, Funding Rate)
+    - [x] 修正系统风控规则 (移除硬编码的 Global Lock)
     - [x] 修复 `getting-started/README.md` 缺失的交易所指南链接
     - [x] 修复 `guides/README.md` 缺失的故障排除链接
     - [x] 修复 `wiki/README.md` 缺失的配置驱动文档链接
     - [x] 补充开发者资源 (MCP, Web, Hook) 到主页索引
-
