@@ -1,0 +1,74 @@
+# 当前任务追踪 (Current Task Tracking)
+
+## 任务归档与整理 [Archived]
+- [x] 创建 `task/` 和 `task/task_archives/` 目录
+- [x] 归档旧的实施计划和演练文档
+- [x] 创建自动化归档脚本 `scripts/archive_task.ps1`
+- [x] 重置 `task.md` 为当前任务状态
+
+## 修复持仓时间归零问题 [Fix]
+- [x] **问题分析**:
+    - [x] 确认 `kernel/register.go` 和 `trader/binance/futures.go` 的逻辑缺陷
+    - [x] 确认 `Runtime` 重置导致的时间归零
+    - [x] 确认数据库存储为大写 `LONG/SHORT` 而系统使用小写 `long/short` 导致的读取失败
+- [x] **方案制定**:
+    - [x] 选择系统级修复方案 (修复数据库读取逻辑)
+- [x] **代码实施**:
+    - [x] 修改 `store/position.go` 的 `GetOpenPositionBySymbol` 方法
+    - [x] 添加 `side = strings.ToUpper(side)` 以兼容大小写
+- [x] **验证与审计**:
+    - [x] 反向审计修复逻辑 (确保 DB 写入和读取的一致性)
+    - [x] 确认代码已正确应用
+
+## 系统增强 [Enhancement]
+- [x] **K线数据增强**:
+    - [x] 在 `market/types.go` 和 `market/data.go` 中增加 `PriceChange15m` 字段
+    - [x] 更新 `kernel/formatter.go` 提示词，明确展示 15m 涨跌幅，防止 AI 幻觉
+
+## Prompt 验证 [Verification]
+- [x] **prompt23.yaml 分析**:
+    - [x] 确认 "全局指挥" 逻辑依赖 BTC 数据
+    - [x] 修复 `kernel/engine.go` 强制获取 BTC 数据用于上下文
+    - [x] 更新 `kernel/formatter.go` 增加 "Global Market Context" 版块
+    - [x] 确认 BTC 在 AI500 列表时可正常交易 (非硬编码排除)
+
+## 功能废弃 [Deprecation]
+- [x] **Global Command**:
+    - [x] 确认代码库中不存在 Global Command 相关实现
+    - [x] 在 `task/task_archives/` 相关文档中添加 `DEPRECATED` 警告
+
+
+## 量化指标分析 [Analysis]
+- [x] **Prompt23.yaml 量化拆解**:
+    - [x] 提取所有可量化的逻辑 (如 EMA 斜率, 橡皮筋, 动能背离)
+    - [x] 映射为标准数学公式 (Standard Formulas)
+    - [x] 输出思维导图文档 `quantifiable_metrics_analysis.md`
+
+## 配置驱动架构实施 [Implementation]
+- [x] **数据结构升级**:
+    - [x] `market/types.go`: 增加 `EMAs`, `ATRs`, `PriceChanges` 等动态 Map
+    - [x] `market/data.go`: 更新 `GetWithTimeframes` 支持动态计算
+- [x] **引擎与格式化**:
+    - [x] `kernel/engine.go`: 传递 `strategy.json`配置参数
+    - [x] `kernel/formatter.go`: 遍历 Map 注入 System Prompt
+    - [x] `kernel/schema.go`: 更新 Schema 包含新字段定义
+- [ ] **文档**:
+    - [x] 创建 `task/Configuration_Driven_Architecture.md` 交付文档
+
+## 动态 Prompt 整合 [Integration]
+- [x] **Prompt 逻辑更新**:
+    - [x] 修改 `prompt23.yaml` 使用 `PriceChange15m`, `Change_{tf}`, `EMA{period}` 等动态字段
+- [ ] **验证**:
+    - [ ] 验证 Prompt 逻辑与后端数据的对齐
+
+## K线显示数量优化 [Optimization]
+- [x] **配置增强**:
+    - [x] `store/strategy.go`: 在 `KlineConfig` 中增加 `DisplayCount` (默认60)
+    - [x] `kernel/engine.go`: 将 `StrategyConfig` 注入 `Context`
+    - [x] `kernel/formatter.go`: 使用配置的 `DisplayCount` 替代硬编码的 30
+
+## 修复全局锁失效 [Fix]
+- [x] **Prompt 缺少持仓时长**:
+    - [x] `kernel/formatter.go`: 在 `formatCurrentPositions` 中增加 `Hold Duration` 计算与显示
+    - [x] 验证: AI 可见 `⏱️ 持仓时间: 15m`，从而遵守 `< 45m 禁开新仓` 规则
+

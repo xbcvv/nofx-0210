@@ -244,6 +244,26 @@ func formatCurrentPositionsZH(ctx *Context) string {
 		sb.WriteString(fmt.Sprintf("保证金 %.0f USDT | ", pos.MarginUsed))
 		sb.WriteString(fmt.Sprintf("强平价 %.4f\n", pos.LiquidationPrice))
 
+		// Add Entry Time and Duration for Global Lock Rule (45m)
+		if pos.UpdateTime > 0 {
+			entryTime := time.UnixMilli(pos.UpdateTime)
+			duration := time.Since(entryTime)
+			
+			// Format duration (e.g., "45m", "1h30m")
+			durationStr := duration.Round(time.Minute).String()
+			if duration < time.Minute {
+				durationStr = "<1m"
+			}
+			// Remove "0s" suffix if present and complex
+			if strings.HasSuffix(durationStr, "m0s") {
+				durationStr = strings.TrimSuffix(durationStr, "0s")
+			}
+
+			sb.WriteString(fmt.Sprintf("   ⏱️ **持仓时间**: %s (进场: %s)\n", 
+				durationStr, entryTime.Format("15:04")))
+		}
+
+
 		// 添加分析提示
 		if drawdown < -0.30*pos.PeakPnLPct && pos.PeakPnLPct > 0.02 {
 			sb.WriteString(fmt.Sprintf("   ⚠️ **止盈提示**: 当前盈亏从峰值 %.2f%% 回撤到 %.2f%%，回撤幅度 %.2f%%，建议考虑止盈\n",
@@ -598,6 +618,25 @@ func formatCurrentPositionsEN(ctx *Context) string {
 		sb.WriteString(fmt.Sprintf("Leverage %dx | ", pos.Leverage))
 		sb.WriteString(fmt.Sprintf("Margin %.0f USDT | ", pos.MarginUsed))
 		sb.WriteString(fmt.Sprintf("Liq Price %.4f\n", pos.LiquidationPrice))
+
+		// Add Entry Time and Duration for Global Lock Rule (45m)
+		if pos.UpdateTime > 0 {
+			entryTime := time.UnixMilli(pos.UpdateTime)
+			duration := time.Since(entryTime)
+			
+			// Format duration
+			durationStr := duration.Round(time.Minute).String()
+			if duration < time.Minute {
+				durationStr = "<1m"
+			}
+			if strings.HasSuffix(durationStr, "m0s") {
+				durationStr = strings.TrimSuffix(durationStr, "0s")
+			}
+
+			sb.WriteString(fmt.Sprintf("   ⏱️ **Hold Duration**: %s (Entry: %s)\n", 
+				durationStr, entryTime.Format("15:04")))
+		}
+
 
 		// Analysis hints
 		if drawdown < -0.30*pos.PeakPnLPct && pos.PeakPnLPct > 0.02 {

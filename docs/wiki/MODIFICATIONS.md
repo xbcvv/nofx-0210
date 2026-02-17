@@ -202,6 +202,25 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
   2. **Config Driven**: `GetWithTimeframes` accepts `emaPeriods` and `selected_timeframes` from config.
   3. **Formatter**: Automatically iterates maps to generate Prompt (e.g. `EMA60: ...`).
   4. **Schema**: Updated System Prompt to define `Change_{tf}`, `EMA{period}`, `ATR{period}` with Chinese support.
-- **Reference**: See complete documentation in [CONFIGURATION_DRIVEN.md](CONFIGURATION_DRIVEN.md)
+
+## 8. K-Line Display Optimization (Enhancement)
+**修改文件**: `fsdownload/RightSide_Flow_Hunter_V3.0.json`, `kernel/formatter.go`, `store/strategy.go`, `kernel/engine.go`
+**描述**:
+1.  **配置化**: 在策略配置文件的 `klines` 节点下新增 `display_count` 字段（默认 60）。
+2.  **逻辑优化**: `kernel/formatter.go` 不再硬编码显示 30 根 K 线，而是读取配置值。
+3.  **目的**: 让 AI 能看到更长周期的 K 线结构（如 60根 15m K线 = 15小时），从而更好地判断日内趋势和支撑阻力位，避免因数据截断导致的误判。
+
+## 9. 修复全局锁失效问题 (Global Lock Fix)
+**修改文件**: `kernel/formatter.go`
+**描述**:
+1.  **问题**: AI 无法遵守 "持仓 < 45m 禁开新仓" 的规则，因为 Prompt 中并未提供持仓时长信息。
+2.  **修复**: 修改 `formatCurrentPositions`，在持仓信息中显式增加 `⏱️ 持仓时间 (Hold Duration)` 和 `进场时间 (Entry Time)`。
+3.  **效果**: AI 现在能明确看到 `持仓时间: 15m`，从而正确触发规则拦截。
+
+## 10. 全局指令配置化 (Global Command Config) - [Planned]
+**修改文件**: `store/strategy.go` (预埋)
+**描述**:
+预埋了 `GlobalCommandConfig` 结构，为后续将“全局指挥”逻辑从代码硬编码迁移到 JSON 配置做准备。
+
 
 

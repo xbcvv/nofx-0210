@@ -89,3 +89,22 @@ AI 对 "日涨跌幅" 的逻辑判断存在歧义。
 - **配置**: 在 `RightSide_Flow_Hunter_V3.0.json` 中添加 `display_count`。
 - **逻辑**: 更新 `kernel/formatter.go` 使用此配置值（若未设置则默认为 30）。
 - **默认值**: 在策略文件中将默认值设为 **60** (15 小时)，使 AI 能在 15m 图表上看到完整的日内结构。
+
+## 9. 修复全局锁失效问题 (Global Lock Fix)
+
+### 问题描述
+用户反馈在策略设定“任意持仓 < 45m 禁开新仓”的情况下，AI 仍然尝试开新仓。
+
+### 根本原因
+提供给 AI 的 Prompt 中，持仓信息只包含价格和盈亏，缺失了 **持仓时长 (Hold Duration)**。AI 无法判断持仓是否满足 45分钟的限制。
+
+### 修复方案
+- 修改 `kernel/formatter.go`，在 `formatCurrentPositions` 函数中增加时长计算。
+- 现在 AI 会看到如下信息：
+  ```text
+  1. INITUSDT LONG | ... | ⏱️ 持仓时间: 10m (进场: 12:40)
+  ```
+- AI 现在可以准确执行 `if duration < 45m then STOP` 的逻辑。
+
+### 相关文件
+- `kernel/formatter.go` [查看修改](file:///d:/code/nofx-0210/kernel/formatter.go)
