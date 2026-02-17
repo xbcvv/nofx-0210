@@ -27,7 +27,15 @@
     - `Change_{tf}` 对应 "周期涨跌幅" (e.g. "日涨跌幅").
     - `EMA{period}` 对应 "指数均线" (Value=点位, Slope=斜率, Spread=乖离).
     - `ATR{period}` 对应 "平均真实波幅".
+    - `ATR{period}` 对应 "平均真实波幅".
     - 确保 AI 能完美理解中文 Prompt (如 "EMA60斜率 > 10")。
+
+### 1.4 K线显示优化 (K-Line Display Optimization)
+- **文件**: `store/strategy.go`, `kernel/formatter.go`
+- **功能增强**:
+  - `klines` 配置中新增 `display_count` 参数 (默认 30)。
+  - 允许将显示给 AI 的 K 线数量提升至 60-96 根，以覆盖更完整的日内市场结构 (Day Structure)，解决 AI 视野过短的问题。
+  - 移除了代码中硬编码的 30 根限制。
 
 ---
 
@@ -62,7 +70,10 @@
         7,     // <--- 添加 7，自动生成 ATR7
         14
       ]
-    }
+    },
+    // [3] K线显示数量配置
+    // 默认为 30，建议设为 60+ 以覆盖日内结构
+    "display_count": 60
   }
 }
 ```

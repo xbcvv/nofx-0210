@@ -362,7 +362,11 @@ func formatCandidateCoinsZH(ctx *Context) string {
 
 				// K线数据（多时间框架）
 				if mdata.TimeframeData != nil {
-					sb.WriteString(formatKlineDataZH(coin.Symbol, mdata.TimeframeData, ctx.Timeframes))
+					displayCount := 30 // default
+					if ctx.StrategyConfig != nil && ctx.StrategyConfig.Indicators.Klines.DisplayCount > 0 {
+						displayCount = ctx.StrategyConfig.Indicators.Klines.DisplayCount
+					}
+					sb.WriteString(formatKlineDataZH(coin.Symbol, mdata.TimeframeData, ctx.Timeframes, displayCount))
 				}
 			}
 		}
@@ -397,8 +401,12 @@ func formatCandidateCoinsZH(ctx *Context) string {
 }
 
 // formatKlineDataZH 格式化K线数据（中文）
-func formatKlineDataZH(symbol string, tfData map[string]*market.TimeframeSeriesData, timeframes []string) string {
+func formatKlineDataZH(symbol string, tfData map[string]*market.TimeframeSeriesData, timeframes []string, displayCount int) string {
 	var sb strings.Builder
+
+	if displayCount <= 0 {
+		displayCount = 30
+	}
 
 	for _, tf := range timeframes {
 		if data, ok := tfData[tf]; ok && len(data.Klines) > 0 {
@@ -406,10 +414,10 @@ func formatKlineDataZH(symbol string, tfData map[string]*market.TimeframeSeriesD
 			sb.WriteString("```\n")
 			sb.WriteString("时间(UTC)      开盘      最高      最低      收盘      成交量\n")
 
-			// 只显示最近30根K线
+			// 只显示最近 N 根K线
 			startIdx := 0
-			if len(data.Klines) > 30 {
-				startIdx = len(data.Klines) - 30
+			if len(data.Klines) > displayCount {
+				startIdx = len(data.Klines) - displayCount
 			}
 
 			for i := startIdx; i < len(data.Klines); i++ {
@@ -706,7 +714,11 @@ func formatCandidateCoinsEN(ctx *Context) string {
 				sb.WriteString("\n")
 
 				if mdata.TimeframeData != nil {
-					sb.WriteString(formatKlineDataEN(coin.Symbol, mdata.TimeframeData, ctx.Timeframes))
+					displayCount := 30
+					if ctx.StrategyConfig != nil && ctx.StrategyConfig.Indicators.Klines.DisplayCount > 0 {
+						displayCount = ctx.StrategyConfig.Indicators.Klines.DisplayCount
+					}
+					sb.WriteString(formatKlineDataEN(coin.Symbol, mdata.TimeframeData, ctx.Timeframes, displayCount))
 				}
 			}
 		}
@@ -739,8 +751,12 @@ func formatCandidateCoinsEN(ctx *Context) string {
 }
 
 // formatKlineDataEN 格式化K线数据（英文）
-func formatKlineDataEN(symbol string, tfData map[string]*market.TimeframeSeriesData, timeframes []string) string {
+func formatKlineDataEN(symbol string, tfData map[string]*market.TimeframeSeriesData, timeframes []string, displayCount int) string {
 	var sb strings.Builder
+
+	if displayCount <= 0 {
+		displayCount = 30
+	}
 
 	// Sort timeframes for consistent output
 	sortedTF := make([]string, len(timeframes))
@@ -754,8 +770,8 @@ func formatKlineDataEN(symbol string, tfData map[string]*market.TimeframeSeriesD
 			sb.WriteString("Time(UTC)      Open      High      Low       Close     Volume\n")
 
 			startIdx := 0
-			if len(data.Klines) > 30 {
-				startIdx = len(data.Klines) - 30
+			if len(data.Klines) > displayCount {
+				startIdx = len(data.Klines) - displayCount
 			}
 
 			for i := startIdx; i < len(data.Klines); i++ {

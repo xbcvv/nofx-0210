@@ -114,6 +114,7 @@ type Context struct {
 	Positions          []PositionInfo                     `json:"positions"`
 	CandidateCoins     []CandidateCoin                    `json:"candidate_coins"`
 	PromptVariant      string                             `json:"prompt_variant,omitempty"`
+	StrategyConfig     *store.StrategyConfig              `json:"-"` // Configuration-driven architecture: Strategy access
 	TradingStats       *TradingStats                      `json:"trading_stats,omitempty"`
 	RecentOrders       []RecentOrder                      `json:"recent_orders,omitempty"`
 	MarketDataMap      map[string]*market.Data            `json:"-"`
@@ -266,6 +267,9 @@ func GetFullDecisionWithStrategy(ctx *Context, mcpClient mcp.AIClient, engine *S
 		defaultConfig := store.GetDefaultStrategyConfig("en")
 		engine = NewStrategyEngine(&defaultConfig)
 	}
+
+	// Inject strategy config into context for formatter access
+	ctx.StrategyConfig = engine.config
 
 	// 1. Fetch market data using strategy config
 	if len(ctx.MarketDataMap) == 0 {

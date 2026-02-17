@@ -198,7 +198,7 @@ type KlineConfig struct {
 	EnableMultiTimeframe bool `json:"enable_multi_timeframe"`
 	// selected timeframe list (new: supports multi-timeframe selection)
 	SelectedTimeframes []string `json:"selected_timeframes,omitempty"`
-	// Max K-line count to display in prompt to save tokens (0 = auto-optimize)
+	// display count for prompt (default 30, suggested 60-96)
 	DisplayCount int `json:"display_count,omitempty"`
 }
 
