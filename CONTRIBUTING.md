@@ -25,6 +25,17 @@ This project adheres to the [Code of Conduct](CODE_OF_CONDUCT.md). By participat
 
 ---
 
+## 📚 Documentation Standards
+
+**Critical Rule**: The file `docs/AI_TRADING_REFERENCE.md` is the **Single Source of Truth** for:
+- AI System Prompts and Templates
+- Data Dictionary and Field Definitions
+- Technical Indicators and Configuration
+
+Any changes related to these topics **MUST** be updated in `docs/AI_TRADING_REFERENCE.md`. Do not create separate documentation files for these core components.
+
+---
+
 ## 🎯 How Can I Contribute?
 
 ### 1. Report Bugs 🐛

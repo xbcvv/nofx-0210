@@ -4,7 +4,6 @@ Welcome to the trading system Wiki.
 
 ## Documentation
 
-- [Data Dictionary](DATA_DICTIONARY.md) - Definitions of fields used in the system.
-- [Indicators Guide](INDICATORS.md) - Explanation of all technical indicators.
+- [AI Trading Reference (Data & Indicators)](../AI_TRADING_REFERENCE.md) - The master guide for Prompts, Data Dictionary, and Technical Indicators.
 - [Modifications Log](MODIFICATIONS.md) - Log of changes made to the system.
 - [Configuration Driven Architecture](CONFIGURATION_DRIVEN.md) - Guide to specific configuration options.

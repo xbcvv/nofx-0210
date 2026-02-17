@@ -426,7 +426,7 @@ sudo apt-get install libta-lib0-dev
 |------|------|
 | **[快速开始](docs/getting-started/README.md)** | 部署、API 配置与钱包设置 |
 | **[Wiki 知识库](docs/wiki/README.md)** | 数据字典、指标说明、变更日志 |
-| **[Prompt 指南](docs/prompt-guide.md)** | 如何编写和优化 AI 提示词 |
+| **[Prompt 指南](docs/AI_TRADING_REFERENCE.md)** | **[核心]** 提示词编写、数据字典与指标手册 |
 | **[盈亏计算](docs/pnl.md)** | PnL 计算逻辑详解 |
 | **[常见问题](docs/guides/faq.md)** | FAQ 与疑难解答 |
 | **[故障排除](docs/guides/README.md)** | 错误诊断与修复指南 |
