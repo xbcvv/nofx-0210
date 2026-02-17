@@ -132,10 +132,17 @@ graph LR
 
 所有技术指标均可在 `strategy.json` 或配置中心开启/关闭。启用后，系统会自动计算并在 Prompt 中呈现数据。
 
-### 1. 全局市场背景 (Market Context)
+### 1. 全局市场背景 (Global Market Context)
 *强制开启*，用于提供宏观市场感知。
-- **Price Change**: 15m (快), 1h (中), 4h (慢) 涨跌幅。
-- **ADX**: 趋势强度 (判断是否震荡)。
+- **描述**: 在 Prompt 顶部强制展示 BTCUSDT 的关键数据（"全局指挥"）。即使交易其他币种，AI 也会先看到 BTC 的状态。
+- **Prompt 呈现**:
+    ```text
+    ## Global Market Context (Reference Only)
+    **BTCUSDT**:
+    - Price: 68000.00
+    - Change: 15m -0.50% | 1h +1.20% | 4h +3.50%
+    - ADX: 45.2 (Strong Trend)
+    ```
 
 ### 2. 趋势指标 (Trend)
 
@@ -145,38 +152,68 @@ graph LR
 - **用法**:
     - **Slope (斜率)**: 正值看涨，负值看跌。
     - **Spread (乖离)**: 价格距均线过远可能回归。
+    - **金叉/死叉**: EMA20 上穿 EMA60 为多头信号。
 
 #### MACD (异同移动平均)
 - **配置**: `"enable_macd": true`
-- **Prompt 格式**: `MACD: 120.5` (DIF值)
-- **用法**: 正值多头，负值空头；持续上升代表动能增强。
+- **参数**: 固定为 (12, 26, 9)
+- **Prompt 格式**: `MACD: 120.5`
+- **注意**: 系统提供的 MACD 仅为 **DIF 值** (快线 - 慢线)，不提供 Histogram 柱状图。
+- **用法**: 正值多头，负值空头；数值持续上升代表动能增强。
+
+#### ADX (平均方向指数)
+- **配置**: `"enable_adx": true`
+- **Prompt 格式**: `ADX(14): 25.5`
+- **用法**:
+    - **> 25**: 趋势强劲，适合趋势跟踪策略。
+    - **< 20**: 市场无趋势（震荡），建议观望或使用网格策略。
 
 ### 3. 动量与波动 (Momentum & Volatility)
 
 #### RSI (相对强弱指数)
 - **配置**: `"enable_rsi": true`, `"periods": [7, 14]`
-- **用法**: >70 超买 (警惕回调), <30 超卖 (关注反弹)。
+- **Prompt 格式**: `RSI7: [75.2, 78.5, ...]` (提供最近数个值以判断方向)
+- **用法**:
+    - **超买/超卖**: >70 超买, <30 超卖。
+    - **背离 (Divergence)**: 价格创新高但 RSI 未创新高 -> **强烈反转信号**。
 
 #### ATR (平均真实波幅)
 - **配置**: `"enable_atr": true`
 - **用法**: 计算动态止损距离 (如 `StopLoss = Price - 2 * ATR`)。
+- **提示**: 波动率越高，建议开仓份数越小。
 
 #### Bollinger Bands (布林带)
 - **配置**: `"enable_boll": true` (默认关闭)
-- **用法**: 价格触轨反转策略，或布林收口突破策略。
+- **Prompt 格式**: `BOLL: Upper 66000, Middle 65000, Lower 64000`
+- **用法**:
+    - **收口 (Squeeze)**: 带宽收窄预示即将变盘。
+    - **触轨**: 价格触及上轨可能回调。
 
 ### 4. 资金流与量化 (Flow & Quant)
 
 #### OI (持仓量 Open Interest)
 - **配置**: `"enable_oi": true`
+- **Prompt 格式**: `Open Interest: Latest: 500.2M`
 - **核心逻辑**:
     - `OI↑ + Price↑` = **真突破 (Bull Inflow)** -> 追涨
-    - `OI↓ + Price↑` = **空头回补 (Shorts Covering)** -> 谨慎
-    - `OI↓ + Price↓` = **多头踩踏 (Longs Liquidation)** -> 超跌
+    - `OI↓ + Price↓` = **多头踩踏 (Longs Liquidation)** -> 超跌反弹机会
+
+#### Funding Rate (资金费率)
+- **配置**: `"enable_funding_rate": true` (默认关闭)
+- **Prompt 格式**: `Funding Rate: 0.0001` (即 0.01%)
+- **用法**: 正费率过高代表多头拥挤，可能回调；负费率过高代表空头拥挤，可能轧空。
 
 #### Quant Data (量化增强)
 - **配置**: `"enable_quant_data": true`
-- **PriceChange15m**: 核心风控字段，用于识别并在 Prompt 中标记 "恶性暴跌"。
+- **Prompt 格式**:
+    ```text
+    Price Change: 15m: +0.5% | 1h: +1.2%
+    Fund Flow: Inst Futures +1.2M | Retail -5.0M
+    ```
+- **核心功能**:
+    - **15m 涨跌幅**: 用于风控识别"恶性暴跌"。
+    - **资金流向**: 区分机构与散户资金 (若配置 NofxOS API)。
+
 
 ---
 
