@@ -95,4 +95,4 @@
 
 ## 修复 AI Timeout [Fix]
 - [x] **增加默认超时时间**:
-    - [x] `mcp/client.go`: 将 `DefaultTimeout` 从 120s 增加到 360s 以适配推理模型和代理延迟
+    - [x] `mcp/client.go`: 将 `DefaultTimeout` 从 120s 增加到 360s (已回退到 120s，因无效果)
