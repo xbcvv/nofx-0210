@@ -91,3 +91,8 @@
     - [x] 修复 `guides/README.md` 缺失的故障排除链接
     - [x] 修复 `wiki/README.md` 缺失的配置驱动文档链接
     - [x] 补充开发者资源 (MCP, Web, Hook) 到主页索引
+    - [x] 修复 AI 客户端超时问题 (Context Deadline Exceeded)
+
+## 修复 AI Timeout [Fix]
+- [x] **增加默认超时时间**:
+    - [x] `mcp/client.go`: 将 `DefaultTimeout` 从 120s 增加到 360s 以适配推理模型和代理延迟
