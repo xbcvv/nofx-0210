@@ -126,4 +126,9 @@ dmypy.json
 PR_DESCRIPTION.md
 
 # Local data directory
+# Local data directory
 fsdownload/
+
+# Private Strategies
+strategies/
+RightSide_Flow_Hunter*
