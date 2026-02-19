@@ -1281,15 +1281,30 @@ func (at *AutoTrader) executeOpenLongWithRecord(decision *kernel.Decision, actio
 		return fmt.Errorf("failed to get positions: %w", err)
 	}
 
-	// [CODE ENFORCED] Check max positions limit
-	if err := at.enforceMaxPositions(len(positions)); err != nil {
-		return err
+	// Check if there's already a position in the same symbol
+	var existingQty float64
+	isPyramiding := false
+
+	for _, pos := range positions {
+		if pos["symbol"] == decision.Symbol {
+			if pos["side"] == "long" {
+				// Allow pyramiding for same side
+				logger.Infof("🚀 Pyramiding detected for %s: Adding to existing LONG position", decision.Symbol)
+				isPyramiding = true
+				if qty, ok := pos["positionAmt"].(float64); ok {
+					existingQty = qty
+				}
+			} else {
+				return fmt.Errorf("❌ %s already has short position, close it first", decision.Symbol)
+			}
+			break
+		}
 	}
 
-	// Check if there's already a position in the same symbol and direction
-	for _, pos := range positions {
-		if pos["symbol"] == decision.Symbol && pos["side"] == "long" {
-			return fmt.Errorf("❌ %s already has long position, close it first", decision.Symbol)
+	// [CODE ENFORCED] Check max positions limit (Skip if pyramiding)
+	if !isPyramiding {
+		if err := at.enforceMaxPositions(len(positions)); err != nil {
+			return err
 		}
 	}
 
@@ -1319,10 +1334,25 @@ func (at *AutoTrader) executeOpenLongWithRecord(decision *kernel.Decision, actio
 		equity = availableBalance // Fallback to available balance
 	}
 
-	// [CODE ENFORCED] Position Value Ratio Check: position_value <= equity × ratio
-	adjustedPositionSize, wasCapped := at.enforcePositionValueRatio(decision.PositionSizeUSD, equity, decision.Symbol)
+	// [CODE ENFORCED] Position Value Ratio Check: total_position_value <= equity × ratio
+	// Calculate existing value
+	existingPositionValue := existingQty * marketData.CurrentPrice
+	totalTargetValue := decision.PositionSizeUSD + existingPositionValue
+
+	adjustedTotalValue, wasCapped := at.enforcePositionValueRatio(totalTargetValue, equity, decision.Symbol)
 	if wasCapped {
-		decision.PositionSizeUSD = adjustedPositionSize
+		// Adjust new position size based on remaining room
+		decision.PositionSizeUSD = adjustedTotalValue - existingPositionValue
+		if decision.PositionSizeUSD < 0 {
+			decision.PositionSizeUSD = 0
+		}
+		logger.Infof("⚠️ Position capped by value ratio. Limit: %.2f, Existing: %.2f, Adjusted New: %.2f", 
+			adjustedTotalValue, existingPositionValue, decision.PositionSizeUSD)
+	}
+	
+	// If no room left, return error
+	if decision.PositionSizeUSD <= 0 {
+		return fmt.Errorf("position limit reached (Existing: %.2f, Limit: %.2f)", existingPositionValue, adjustedTotalValue)
 	}
 
 	// ⚠️ Auto-adjust position size if insufficient margin
@@ -1375,13 +1405,16 @@ func (at *AutoTrader) executeOpenLongWithRecord(decision *kernel.Decision, actio
 
 	// Record position opening time
 	posKey := decision.Symbol + "_long"
-	at.positionFirstSeenTime[posKey] = time.Now().UnixMilli()
+	if !isPyramiding {
+		at.positionFirstSeenTime[posKey] = time.Now().UnixMilli()
+	}
 
-	// Set stop loss and take profit
-	if err := at.trader.SetStopLoss(decision.Symbol, "LONG", quantity, decision.StopLoss); err != nil {
+	// Set stop loss and take profit (Use TOTAL Quantity)
+	totalQuantity := quantity + existingQty
+	if err := at.trader.SetStopLoss(decision.Symbol, "LONG", totalQuantity, decision.StopLoss); err != nil {
 		logger.Infof("  ⚠ Failed to set stop loss: %v", err)
 	}
-	if err := at.trader.SetTakeProfit(decision.Symbol, "LONG", quantity, decision.TakeProfit); err != nil {
+	if err := at.trader.SetTakeProfit(decision.Symbol, "LONG", totalQuantity, decision.TakeProfit); err != nil {
 		logger.Infof("  ⚠ Failed to set take profit: %v", err)
 	}
 
@@ -1398,15 +1431,31 @@ func (at *AutoTrader) executeOpenShortWithRecord(decision *kernel.Decision, acti
 		return fmt.Errorf("failed to get positions: %w", err)
 	}
 
-	// [CODE ENFORCED] Check max positions limit
-	if err := at.enforceMaxPositions(len(positions)); err != nil {
-		return err
+	// Check if there's already a position in the same symbol
+	var existingQty float64
+	isPyramiding := false
+
+	for _, pos := range positions {
+		if pos["symbol"] == decision.Symbol {
+			if pos["side"] == "short" {
+				// Allow pyramiding for same side
+				logger.Infof("🚀 Pyramiding detected for %s: Adding to existing SHORT position", decision.Symbol)
+				isPyramiding = true
+				if qty, ok := pos["positionAmt"].(float64); ok {
+					if qty < 0 { qty = -qty } // Ensure positive quantity
+					existingQty = qty
+				}
+			} else {
+				return fmt.Errorf("❌ %s already has long position, close it first", decision.Symbol)
+			}
+			break
+		}
 	}
 
-	// Check if there's already a position in the same symbol and direction
-	for _, pos := range positions {
-		if pos["symbol"] == decision.Symbol && pos["side"] == "short" {
-			return fmt.Errorf("❌ %s already has short position, close it first", decision.Symbol)
+	// [CODE ENFORCED] Check max positions limit (Skip if pyramiding)
+	if !isPyramiding {
+		if err := at.enforceMaxPositions(len(positions)); err != nil {
+			return err
 		}
 	}
 
@@ -1436,10 +1485,25 @@ func (at *AutoTrader) executeOpenShortWithRecord(decision *kernel.Decision, acti
 		equity = availableBalance // Fallback to available balance
 	}
 
-	// [CODE ENFORCED] Position Value Ratio Check: position_value <= equity × ratio
-	adjustedPositionSize, wasCapped := at.enforcePositionValueRatio(decision.PositionSizeUSD, equity, decision.Symbol)
+	// [CODE ENFORCED] Position Value Ratio Check: total_position_value <= equity × ratio
+	// Calculate existing value
+	existingPositionValue := existingQty * marketData.CurrentPrice
+	totalTargetValue := decision.PositionSizeUSD + existingPositionValue
+
+	adjustedTotalValue, wasCapped := at.enforcePositionValueRatio(totalTargetValue, equity, decision.Symbol)
 	if wasCapped {
-		decision.PositionSizeUSD = adjustedPositionSize
+		// Adjust new position size based on remaining room
+		decision.PositionSizeUSD = adjustedTotalValue - existingPositionValue
+		if decision.PositionSizeUSD < 0 {
+			decision.PositionSizeUSD = 0
+		}
+		logger.Infof("⚠️ Position capped by value ratio. Limit: %.2f, Existing: %.2f, Adjusted New: %.2f", 
+			adjustedTotalValue, existingPositionValue, decision.PositionSizeUSD)
+	}
+	
+	// If no room left, return error
+	if decision.PositionSizeUSD <= 0 {
+		return fmt.Errorf("position limit reached (Existing: %.2f, Limit: %.2f)", existingPositionValue, adjustedTotalValue)
 	}
 
 	// ⚠️ Auto-adjust position size if insufficient margin
@@ -1492,13 +1556,16 @@ func (at *AutoTrader) executeOpenShortWithRecord(decision *kernel.Decision, acti
 
 	// Record position opening time
 	posKey := decision.Symbol + "_short"
-	at.positionFirstSeenTime[posKey] = time.Now().UnixMilli()
+	if !isPyramiding {
+		at.positionFirstSeenTime[posKey] = time.Now().UnixMilli()
+	}
 
-	// Set stop loss and take profit
-	if err := at.trader.SetStopLoss(decision.Symbol, "SHORT", quantity, decision.StopLoss); err != nil {
+	// Set stop loss and take profit (Use TOTAL Quantity)
+	totalQuantity := quantity + existingQty
+	if err := at.trader.SetStopLoss(decision.Symbol, "SHORT", totalQuantity, decision.StopLoss); err != nil {
 		logger.Infof("  ⚠ Failed to set stop loss: %v", err)
 	}
-	if err := at.trader.SetTakeProfit(decision.Symbol, "SHORT", quantity, decision.TakeProfit); err != nil {
+	if err := at.trader.SetTakeProfit(decision.Symbol, "SHORT", totalQuantity, decision.TakeProfit); err != nil {
 		logger.Infof("  ⚠ Failed to set take profit: %v", err)
 	}
 

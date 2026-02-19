@@ -24,6 +24,10 @@
 - [x] **K线数据增强**:
     - [x] 在 `market/types.go` 和 `market/data.go` 中增加 `PriceChange15m` 字段
     - [x] 更新 `kernel/formatter.go` 提示词，明确展示 15m 涨跌幅，防止 AI 幻觉
+- [x] **浮盈加仓支持 (Pyramiding)**:
+    - [x] 修改 `trader/auto_trader.go`: 允许同方向持仓加仓 (Add-on)
+    - [x] 升级风控: `enforcePositionValueRatio` 支持计算总仓位价值 (Total Exposure)
+    - [x] 升级止损: `SetStopLoss` 自动应用到总仓位 (Existing + New)
 
 ## Prompt 验证 [Verification]
 - [x] **prompt23.yaml 分析**:
