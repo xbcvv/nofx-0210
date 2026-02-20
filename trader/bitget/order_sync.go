@@ -48,7 +48,6 @@ func (t *BitgetTrader) GetTrades(startTime time.Time, limit int) ([]BitgetTrade,
 		return nil, fmt.Errorf("failed to get fill history: %w", err)
 	}
 
-
 	// Bitget fill structure - supports both one-way and hedge mode
 	type BitgetFill struct {
 		TradeID    string `json:"tradeId"`
@@ -75,9 +74,14 @@ func (t *BitgetTrader) GetTrades(startTime time.Time, limit int) ([]BitgetTrade,
 	var directFills []BitgetFill
 
 	// Try wrapped format first
-	if err := json.Unmarshal(data, &wrappedResp); err == nil && len(wrappedResp.FillList) > 0 {
-		logger.Infof("🔍 Bitget: parsed as wrapped format, fillList count: %d", len(wrappedResp.FillList))
-		directFills = wrappedResp.FillList
+	if err := json.Unmarshal(data, &wrappedResp); err == nil && (wrappedResp.FillList != nil || strings.Contains(string(data), "\"fillList\"")) {
+		if wrappedResp.FillList != nil {
+			directFills = wrappedResp.FillList
+			logger.Infof("🔍 Bitget: parsed as wrapped format, fillList count: %d", len(wrappedResp.FillList))
+		} else {
+			directFills = []BitgetFill{}
+			logger.Infof("🔍 Bitget: parsed as wrapped format (empty), fillList is null")
+		}
 	} else {
 		// Try direct array format
 		if err := json.Unmarshal(data, &directFills); err != nil {

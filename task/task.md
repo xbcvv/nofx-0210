@@ -101,3 +101,16 @@
 - [x] 分析 `kernel/engine.go` 中关于 BTC 全局环境数据的提取逻辑
 - [x] 修复 `BuildUserPrompt` 方法中对 `BTCUSDT` 数据格式化的硬编码问题，将 `btcData.CurrentADX` 补充进发给 AI 的提示词内
 - [x] 提交到 GitHub
+
+## 修复 Bitget 止盈止损及订单同步问题 [Fix]
+- [x] **止盈止损修复**:
+    - [x] 修改 `trader/bitget/trader.go`，将 `SetStopLoss` 的 `planType` 替换为 `pos_loss`
+    - [x] 修改 `trader/bitget/trader.go`，将 `SetTakeProfit` 的 `planType` 替换为 `pos_profit`
+    - [x] 修改 `CancelStopLossOrders` 和 `CancelTakeProfitOrders`，使用正确的 `pos_loss` 和 `pos_profit`
+    - [x] 清理残留的旧常量
+- [x] **局部平仓支持**:
+    - [x] 代码审查确认：`ClosePosition` 已传递 `quantity` 且使用了 `reduceOnly`，原生支持部分平仓机制
+- [x] **局部止盈止损验证**:
+    - [x] 代码审查确认：`SetTakeProfit/SetStopLoss` 原生支持传输 `size`，随 `pos_profit` 等计划类型生效
+- [x] **订单同步 JSON 解析修复**:
+    - [x] 修改 `trader/bitget/order_sync.go` 针对 `{"fillList":null}` 的处理逻辑，防止强制向 `[]BitgetFill` 转换导致的崩溃
