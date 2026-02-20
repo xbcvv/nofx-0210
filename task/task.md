@@ -96,3 +96,8 @@
 ## 修复 AI Timeout [Fix]
 - [x] **增加默认超时时间**:
     - [x] `mcp/client.go`: 将 `DefaultTimeout` 从 120s 增加到 360s (已回退到 120s，因无效果)
+
+## 修复 BTC ADX 缺失问题 [Fix]
+- [x] 分析 `kernel/engine.go` 中关于 BTC 全局环境数据的提取逻辑
+- [x] 修复 `BuildUserPrompt` 方法中对 `BTCUSDT` 数据格式化的硬编码问题，将 `btcData.CurrentADX` 补充进发给 AI 的提示词内
+- [x] 提交到 GitHub
