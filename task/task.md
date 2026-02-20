@@ -274,3 +274,8 @@
     - [x] **问题根源**：系统的 AI Prompt 依赖 GetPositions 拉取持仓信息，但交易所的仓位接口原生不返回独立的条件委托单 (StopLoss / TakeProfit)。这导致 AI 一直在盲人摸象，它仅凭自己的内部“记忆寄存器” (Memory Bank) 记得上一次设定的 SL/TP，每次 Hold 时都盲目覆盖重发，导致用户在 App 端的修改被冲刷。
     - [x] **修复方案**：重构底层 	rader/auto_trader.go。在给 AI 装配持仓列表之前，强行插入一步 GetOpenOrders 二次查询。抓取当前所有活跃的 STOP_MARKET 和 TAKE_PROFIT_MARKET 条件单，并与各个仓位一一对应。
     - [x] **AI 赋能**：现在，在 AI 的系统中，Current Positions 字符串将带有完整的 | SL 0.35 | TP 0.40 实时尾巴，它终于能看到您手动修改的止损点了！并基于最新的真实风险进行推演。
+- [x] **修复 Bitget 最新 V2 环境下止盈止损一直挂单失败 (400172 Illegal Type) 问题**:
+    - [x] **问题根源**：之前的代码在给当前开仓部位附加止盈止损时，使用了普通的计划交易终端 /api/v2/mix/order/place-plan-order，但强行塞入了 pos_loss (仓位止损) 这个特权 planType。而自 Bitget V2 以来，普通计划终端强制仅接受 
+ormal_plan，直接抛出了 400172 参数结构非法的验证错误。
+    - [x] **修复方案**：将 SetStopLoss 和 SetTakeProfit 发送请求的目标 URL 彻底更正为专门用于持仓管理条件的特权端点：/api/v2/mix/order/place-pos-tpsl。
+    - [x] **参数映射**：废弃了笼统的 	riggerPrice 字段，严格对标 V2 接口协议，将止损字段映射为 stopLossTriggerPrice，将止盈字段映射为 stopSurplusTriggerPrice。同时显式将执行价格设定为   (市价强平防滑保护)。现在系统在开仓后附加的防护罩将100%立刻挂载。
