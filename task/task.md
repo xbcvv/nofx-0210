@@ -119,3 +119,12 @@
 - [x] 创建 `docs/wiki/EXCHANGE_FEATURES.md` 记录交易所特性差异矩阵
 - [x] 明确标记 Bitget 支持局部止盈止损 (`pos_profit`/`pos_loss` + `size`)，而 Binance 默认不支持局部退出
 - [x] 更新 `docs/wiki/README.md` 索引链接
+
+## 交易策略 Prompt 优化 [Enhancement]
+- [x] **Claude 模型提效优化**:
+    - [x] 在 `custom_prompt` 顶部增加 `<critical_instruction>`，严禁其输出任何思考过程和分析解释，强制输出只包裹在 `<reasoning>` 和 `<decision>` 标签中。
+- [x] **Bitget 阶梯止盈优化**:
+    - [x] 利用 Bitget 原生支持部分减仓特性，修改 `decision_process` 中关于利润管理的断言。
+    - [x] 将全平规则改为：浮盈 > 1.5R 时强制使用 `partial_close 0.2~0.3` 进行阶梯落袋，并推保护损，保留20%底仓让利润奔跑。
+- [x] **隐私保护**:
+    - [x] `fsdownload` 已通过 `.gitignore` 排除，仅在本地更新策略文件，不上传 GitHub。
