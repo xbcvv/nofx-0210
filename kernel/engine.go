@@ -45,13 +45,15 @@ type PositionInfo struct {
 	MarkPrice        float64 `json:"mark_price"`
 	Quantity         float64 `json:"quantity"`
 	Leverage         int     `json:"leverage"`
+	StopLoss         float64 `json:"stop_loss,omitempty"`
+	TakeProfit       float64 `json:"take_profit,omitempty"`
 	UnrealizedPnL    float64 `json:"unrealized_pnl"`
 	UnrealizedPnLPct float64 `json:"unrealized_pnl_pct"`
 	PeakPnLPct       float64 `json:"peak_pnl_pct"` // Historical peak profit percentage
 	LiquidationPrice float64 `json:"liquidation_price"`
 	MarginUsed       float64 `json:"margin_used"`
-	UpdateTime       int64   `json:"update_time"` // Position update timestamp (milliseconds)
-}
+	UpdateTime       int64   `json:"update_time"`
+} // Position update timestamp (milliseconds)
 
 // AccountInfo account information
 type AccountInfo struct {
@@ -1377,9 +1379,21 @@ func (e *StrategyEngine) formatPositionInfo(index int, pos PositionInfo, ctx *Co
 		positionValue = -positionValue
 	}
 
-	sb.WriteString(fmt.Sprintf("%d. %s %s | Entry %.4f Current %.4f | Qty %.4f | Position Value %.2f USDT | PnL%+.2f%% | PnL Amount%+.2f USDT | Peak PnL%.2f%% | Leverage %dx | Margin %.0f | Liq Price %.4f%s\n\n",
+	var stopsInfo string
+	if pos.StopLoss > 0 || pos.TakeProfit > 0 {
+		var slStr, tpStr string
+		if pos.StopLoss > 0 {
+			slStr = fmt.Sprintf(" | SL %.4f", pos.StopLoss)
+		}
+		if pos.TakeProfit > 0 {
+			tpStr = fmt.Sprintf(" | TP %.4f", pos.TakeProfit)
+		}
+		stopsInfo = slStr + tpStr
+	}
+
+	sb.WriteString(fmt.Sprintf("%d. %s %s | Entry %.4f Current %.4f | Qty %.4f | Position Value %.2f USDT | PnL%+.2f%% | PnL Amount%+.2f USDT%s | Peak PnL%.2f%% | Leverage %dx | Margin %.0f | Liq Price %.4f%s\n\n",
 		index, pos.Symbol, strings.ToUpper(pos.Side),
-		pos.EntryPrice, pos.MarkPrice, pos.Quantity, positionValue, pos.UnrealizedPnLPct, pos.UnrealizedPnL, pos.PeakPnLPct,
+		pos.EntryPrice, pos.MarkPrice, pos.Quantity, positionValue, pos.UnrealizedPnLPct, pos.UnrealizedPnL, stopsInfo, pos.PeakPnLPct,
 		pos.Leverage, pos.MarginUsed, pos.LiquidationPrice, holdingDuration))
 
 	if marketData, ok := ctx.MarketDataMap[pos.Symbol]; ok {
@@ -1488,36 +1502,36 @@ func (e *StrategyEngine) formatMarketData(data *market.Data) string {
 						break
 					}
 				}
-				
+
 				// Also include primary and longer timeframe if they are not in selected list
 				if !isSelected {
-					if tf == e.config.Indicators.Klines.PrimaryTimeframe || 
-					   (e.config.Indicators.Klines.EnableMultiTimeframe && tf == e.config.Indicators.Klines.LongerTimeframe) {
+					if tf == e.config.Indicators.Klines.PrimaryTimeframe ||
+						(e.config.Indicators.Klines.EnableMultiTimeframe && tf == e.config.Indicators.Klines.LongerTimeframe) {
 						isSelected = true
 					}
 				}
 
 				if isSelected {
 					sb.WriteString(fmt.Sprintf("=== %s Timeframe (oldest → latest) ===\n\n", strings.ToUpper(tf)))
-					
+
 					// Determine display limit based on config (Adaptive Logic)
 					// Default to optimized values (24 for primary, 12 for others) if not set
 					baseLimit := e.config.Indicators.Klines.DisplayCount
 					if baseLimit <= 0 {
 						baseLimit = 24
 					}
-					
+
 					displayLimit := baseLimit
-					
+
 					// If this is NOT the primary timeframe, reduce context to save tokens (50% of base)
 					// But ensure at least 12 bars for context
 					if tf != e.config.Indicators.Klines.PrimaryTimeframe {
 						displayLimit = baseLimit / 2
 						if displayLimit < 12 {
-							displayLimit = 12 
+							displayLimit = 12
 						}
 					}
-					
+
 					e.formatTimeframeSeriesData(&sb, tfData, indicators, displayLimit)
 				}
 			}
@@ -1597,7 +1611,7 @@ func (e *StrategyEngine) formatTimeframeSeriesData(sb *strings.Builder, data *ma
 		}
 		return arr[len(arr)-n:]
 	}
-	
+
 	// Helper to slice klines from the end
 	sliceKlines := func(arr []market.KlineBar, n int) []market.KlineBar {
 		if len(arr) <= n {
@@ -1618,14 +1632,14 @@ func (e *StrategyEngine) formatTimeframeSeriesData(sb *strings.Builder, data *ma
 			if i == len(displayKlines)-1 {
 				marker = " <"
 			}
-			
+
 			// Dynamic precision formatting
 			oStr := formatPriceSmart(k.Open)
 			hStr := formatPriceSmart(k.High)
 			lStr := formatPriceSmart(k.Low)
 			cStr := formatPriceSmart(k.Close)
 			vStr := formatVolumeSmart(k.Volume)
-			
+
 			sb.WriteString(fmt.Sprintf("%s,%s,%s,%s,%s,%s%s\n",
 				timeStr, oStr, hStr, lStr, cStr, vStr, marker))
 		}

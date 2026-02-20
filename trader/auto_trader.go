@@ -902,6 +902,20 @@ func (at *AutoTrader) buildTradingContext() (*kernel.Context, error) {
 		peakPnlPct := at.peakPnLCache[posKey]
 		at.peakPnLCacheMutex.RUnlock()
 
+		// Query active conditional orders to find live StopLoss and TakeProfit limits
+		var currentSL, currentTP float64
+		if activeOrders, err := at.trader.GetOpenOrders(symbol); err == nil {
+			for _, ord := range activeOrders {
+				if strings.EqualFold(ord.PositionSide, side) || ord.PositionSide == "" {
+					if ord.Type == "STOP_MARKET" && ord.Price > 0 {
+						currentSL = ord.Price
+					} else if ord.Type == "TAKE_PROFIT_MARKET" && ord.Price > 0 {
+						currentTP = ord.Price
+					}
+				}
+			}
+		}
+
 		positionInfos = append(positionInfos, kernel.PositionInfo{
 			Symbol:           symbol,
 			Side:             side,
@@ -909,6 +923,8 @@ func (at *AutoTrader) buildTradingContext() (*kernel.Context, error) {
 			MarkPrice:        markPrice,
 			Quantity:         quantity,
 			Leverage:         leverage,
+			StopLoss:         currentSL,
+			TakeProfit:       currentTP,
 			UnrealizedPnL:    unrealizedPnl,
 			UnrealizedPnLPct: pnlPct,
 			PeakPnLPct:       peakPnlPct,
