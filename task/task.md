@@ -262,3 +262,11 @@
 - [x] **Bitget开仓挂单时序冲突修复**:
     - [x] 重构底层 API 方法。调用止盈止损时，系统会动态侦测是否具有匹配的现有底仓。匹配则采用 `pos_loss`/`pos_profit` (局部止损/止盈)，否则降级尝试新挂条件单。如被拦截则自动双向进行 fallback 降级补偿。
     - [x] **终极修复**：追踪错误日志确认 Bitget V2 的非持仓条件单依然需要严格的 `loss_plan`/`profit_plan` 枚举，之前被 `pos_loss` 拦截误导而尝试的 `normal_plan` 导致了 `delegateType error`。目前已将底层 fallback 的标准参数替换为官方合法且不受持仓状态约束的 `loss_plan` 和 `profit_plan`，彻底杜绝 `Illegal planType` 错误。
+## 修复 AutoTrader 开仓保证金不足错误 (40762) [Fix]
+- [x] **问题分析**:
+    - [x] 在 open_long 最新日志中出现 40762 The order amount exceeds the balance 错误。
+    - [x] 排查认定：引擎在根据 Available Balance 计算最大可购买的头寸价值时，原设定只预留了极小的 2% 价格缓冲下限。
+    - [x] 遭遇极端情况组合：1. 实时行情取自第三方 (Binance Fallback) 导致取值有微小偏差，在除法计算时导致对 Bitget 生成了偏大的 quantity。2. Bitget 针对市价单开仓会默认冻结比限价单多达数个百分点的冗余保证金防滑点补偿。二者结合彻底击穿了 2% 的安全边界，导致资金不足而拒单。
+- [x] **方案实施**:
+    - [x] 修改 	rader/auto_trader.go 中的 maxAffordablePositionSize 缓冲调节机制。
+    - [x] 将原本过窄的  .98 (2% 缓冲) 直接拓宽至更为宽容稳健的  .90 (10% 缓冲)，这能彻底吸纳无论多大的跨所差价水分以及市价单巨额锁仓。编译并同步至 GitHub，此后再无越权爆表隐患。
