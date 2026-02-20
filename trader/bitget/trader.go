@@ -761,13 +761,11 @@ func (t *BitgetTrader) GetMarketPrice(symbol string) (float64, error) {
 
 // SetStopLoss sets stop loss order
 func (t *BitgetTrader) SetStopLoss(symbol string, positionSide string, quantity, stopPrice float64) error {
-	// Bitget V2 uses plan order for stop loss
+	// Bitget V2 uses pos-tpsl for stop loss
 	symbol = t.convertSymbol(symbol)
 
-	side := "sell"
 	holdSide := "long"
 	if strings.ToUpper(positionSide) == "SHORT" {
-		side = "buy"
 		holdSide = "short"
 	}
 
@@ -790,22 +788,19 @@ func (t *BitgetTrader) SetStopLoss(symbol string, positionSide string, quantity,
 	}
 
 	body := map[string]interface{}{
-		"planType":     planType,
-		"symbol":       symbol,
-		"productType":  "USDT-FUTURES",
-		"marginMode":   "crossed",
-		"marginCoin":   "USDT",
-		"triggerPrice": fmt.Sprintf("%.8f", stopPrice),
-		"triggerType":  "mark_price",
-		"side":         side,
-		"tradeSide":    "close",
-		"orderType":    "market",
-		"size":         qtyStr,
-		"holdSide":     holdSide,
-		"clientOid":    genBitgetClientOid(),
+		"planType":             planType,
+		"symbol":               symbol,
+		"productType":          "USDT-FUTURES",
+		"marginCoin":           "USDT",
+		"stopLossTriggerPrice": fmt.Sprintf("%.8f", stopPrice),
+		"stopLossTriggerType":  "mark_price",
+		"stopLossExecutePrice": "0", // 0 implies market order for the SL execution
+		"holdSide":             holdSide,
+		"size":                 qtyStr,
+		"clientOid":            genBitgetClientOid(),
 	}
 
-	_, err = t.doRequest("POST", "/api/v2/mix/order/place-plan-order", body)
+	_, err = t.doRequest("POST", "/api/v2/mix/order/place-pos-tpsl", body)
 	if err != nil {
 		// Log the original error before fallback
 		logger.Infof("  ⚠ [Bitget] %s failed: %v", planType, err)
@@ -820,7 +815,7 @@ func (t *BitgetTrader) SetStopLoss(symbol string, positionSide string, quantity,
 		logger.Infof("  ⚠ [Bitget] Falling back to %s", fallbackPlanType)
 		body["planType"] = fallbackPlanType
 		body["clientOid"] = genBitgetClientOid() // generate new ID
-		_, errRetry := t.doRequest("POST", "/api/v2/mix/order/place-plan-order", body)
+		_, errRetry := t.doRequest("POST", "/api/v2/mix/order/place-pos-tpsl", body)
 		if errRetry != nil {
 			return fmt.Errorf("failed to set stop loss with both plan types: %w", errRetry)
 		}
@@ -832,13 +827,11 @@ func (t *BitgetTrader) SetStopLoss(symbol string, positionSide string, quantity,
 
 // SetTakeProfit sets take profit order
 func (t *BitgetTrader) SetTakeProfit(symbol string, positionSide string, quantity, takeProfitPrice float64) error {
-	// Bitget V2 uses plan order for take profit
+	// Bitget V2 uses pos-tpsl for take profit
 	symbol = t.convertSymbol(symbol)
 
-	side := "sell"
 	holdSide := "long"
 	if strings.ToUpper(positionSide) == "SHORT" {
-		side = "buy"
 		holdSide = "short"
 	}
 
@@ -860,22 +853,19 @@ func (t *BitgetTrader) SetTakeProfit(symbol string, positionSide string, quantit
 	}
 
 	body := map[string]interface{}{
-		"planType":     planType,
-		"symbol":       symbol,
-		"productType":  "USDT-FUTURES",
-		"marginMode":   "crossed",
-		"marginCoin":   "USDT",
-		"triggerPrice": fmt.Sprintf("%.8f", takeProfitPrice),
-		"triggerType":  "mark_price",
-		"side":         side,
-		"tradeSide":    "close",
-		"orderType":    "market",
-		"size":         qtyStr,
-		"holdSide":     holdSide,
-		"clientOid":    genBitgetClientOid(),
+		"planType":                planType,
+		"symbol":                  symbol,
+		"productType":             "USDT-FUTURES",
+		"marginCoin":              "USDT",
+		"stopSurplusTriggerPrice": fmt.Sprintf("%.8f", takeProfitPrice),
+		"stopSurplusTriggerType":  "mark_price",
+		"stopSurplusExecutePrice": "0", // 0 implies market order for the TP execution
+		"holdSide":                holdSide,
+		"size":                    qtyStr,
+		"clientOid":               genBitgetClientOid(),
 	}
 
-	_, err = t.doRequest("POST", "/api/v2/mix/order/place-plan-order", body)
+	_, err = t.doRequest("POST", "/api/v2/mix/order/place-pos-tpsl", body)
 	if err != nil {
 		// Log the original error before fallback
 		logger.Infof("  ⚠ [Bitget] %s failed: %v", planType, err)
@@ -889,7 +879,7 @@ func (t *BitgetTrader) SetTakeProfit(symbol string, positionSide string, quantit
 		logger.Infof("  ⚠ [Bitget] Falling back to %s", fallbackPlanType)
 		body["planType"] = fallbackPlanType
 		body["clientOid"] = genBitgetClientOid()
-		_, errRetry := t.doRequest("POST", "/api/v2/mix/order/place-plan-order", body)
+		_, errRetry := t.doRequest("POST", "/api/v2/mix/order/place-pos-tpsl", body)
 		if errRetry != nil {
 			return fmt.Errorf("failed to set take profit with both plan types: %w", errRetry)
 		}
