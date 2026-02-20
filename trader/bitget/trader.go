@@ -814,7 +814,7 @@ func (t *BitgetTrader) SetStopLoss(symbol string, positionSide string, quantity,
 		// or vice versa, try the other plan type.
 		fallbackPlanType := "pos_loss"
 		if planType == "pos_loss" {
-			fallbackPlanType = "normal_plan"
+			fallbackPlanType = "loss_plan"
 		}
 
 		logger.Infof("  ⚠ [Bitget] Falling back to %s", fallbackPlanType)
@@ -883,7 +883,7 @@ func (t *BitgetTrader) SetTakeProfit(symbol string, positionSide string, quantit
 		// Fallback
 		fallbackPlanType := "pos_profit"
 		if planType == "pos_profit" {
-			fallbackPlanType = "normal_plan"
+			fallbackPlanType = "profit_plan"
 		}
 
 		logger.Infof("  ⚠ [Bitget] Falling back to %s", fallbackPlanType)
@@ -902,7 +902,7 @@ func (t *BitgetTrader) SetTakeProfit(symbol string, positionSide string, quantit
 // CancelStopLossOrders cancels stop loss orders
 func (t *BitgetTrader) CancelStopLossOrders(symbol string) error {
 	err1 := t.cancelPlanOrders(symbol, "pos_loss")
-	err2 := t.cancelPlanOrders(symbol, "normal_plan")
+	err2 := t.cancelPlanOrders(symbol, "loss_plan")
 	if err1 != nil {
 		return err1
 	}
@@ -912,7 +912,7 @@ func (t *BitgetTrader) CancelStopLossOrders(symbol string) error {
 // CancelTakeProfitOrders cancels take profit orders
 func (t *BitgetTrader) CancelTakeProfitOrders(symbol string) error {
 	err1 := t.cancelPlanOrders(symbol, "pos_profit")
-	err2 := t.cancelPlanOrders(symbol, "normal_plan")
+	err2 := t.cancelPlanOrders(symbol, "profit_plan")
 	if err1 != nil {
 		return err1
 	}
@@ -998,7 +998,8 @@ func (t *BitgetTrader) CancelAllOrders(symbol string) error {
 	// Also cancel plan orders
 	t.cancelPlanOrders(symbol, "pos_loss")
 	t.cancelPlanOrders(symbol, "pos_profit")
-	t.cancelPlanOrders(symbol, "normal_plan")
+	t.cancelPlanOrders(symbol, "loss_plan")
+	t.cancelPlanOrders(symbol, "profit_plan")
 
 	return nil
 }
