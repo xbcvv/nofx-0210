@@ -23,3 +23,8 @@
    - 区别于 Binance 的全仓绑定，Bitget `pos_profit` 和 `pos_loss` API **原生支持接收 `size` 参数**。
    - 这意味着，当你调用系统或 AI 下达带有明确 `quantity` 的止盈止损指令时，系统能够调用底层 `SetTakeProfit` 和 `SetStopLoss` 把 `quantity` 发送给 Bitget。
    - **效果**：实现阶梯止盈、分批止损等高级交易策略。币安在统一账户架构下目前较难做到一次性提交原生的分批止盈止损订单。
+
+3. **独立条件单嗅探 (Realtime TP/SL Sync)**
+   - 由于 Bitget API 的 `GetPositions` 原生不返回未触发的条件委托单，系统底层强制引入了**实盘防覆盖双重校验**。
+   - 在向 AI 构建持仓风险矩阵前，系统会在毫秒级内下沉调用 `GetOpenOrders` 接口，穿透扫描当前一切处于等待状态的 `STOP_MARKET` / `TAKE_PROFIT_MARKET` 孤立条件单。
+   - **效果**：这使得用户即使在手机 App 或 Web 端直接手动拖拽改动了止损线，该数值也会在下一秒的 Tick 轮询中被系统原样采纳并投喂进 AI Context，彻底杜绝了被量化引擎记忆数据库强行覆盖的“灵异冲突”。
