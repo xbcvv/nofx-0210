@@ -807,14 +807,17 @@ func (t *BitgetTrader) SetStopLoss(symbol string, positionSide string, quantity,
 
 	_, err = t.doRequest("POST", "/api/v2/mix/order/place-plan-order", body)
 	if err != nil {
+		// Log the original error before fallback
+		logger.Infof("  ⚠ [Bitget] %s failed: %v", planType, err)
+
 		// Fallback: If pos_loss fails because position isn't fully registered on Bitget backend yet,
 		// or vice versa, try the other plan type.
 		fallbackPlanType := "pos_loss"
 		if planType == "pos_loss" {
-			fallbackPlanType = "loss_plan"
+			fallbackPlanType = "normal_plan"
 		}
 
-		logger.Infof("  ⚠ [Bitget] %s failed, falling back to %s", planType, fallbackPlanType)
+		logger.Infof("  ⚠ [Bitget] Falling back to %s", fallbackPlanType)
 		body["planType"] = fallbackPlanType
 		body["clientOid"] = genBitgetClientOid() // generate new ID
 		_, errRetry := t.doRequest("POST", "/api/v2/mix/order/place-plan-order", body)
@@ -874,13 +877,16 @@ func (t *BitgetTrader) SetTakeProfit(symbol string, positionSide string, quantit
 
 	_, err = t.doRequest("POST", "/api/v2/mix/order/place-plan-order", body)
 	if err != nil {
+		// Log the original error before fallback
+		logger.Infof("  ⚠ [Bitget] %s failed: %v", planType, err)
+
 		// Fallback
 		fallbackPlanType := "pos_profit"
 		if planType == "pos_profit" {
-			fallbackPlanType = "profit_plan"
+			fallbackPlanType = "normal_plan"
 		}
 
-		logger.Infof("  ⚠ [Bitget] %s failed, falling back to %s", planType, fallbackPlanType)
+		logger.Infof("  ⚠ [Bitget] Falling back to %s", fallbackPlanType)
 		body["planType"] = fallbackPlanType
 		body["clientOid"] = genBitgetClientOid()
 		_, errRetry := t.doRequest("POST", "/api/v2/mix/order/place-plan-order", body)
@@ -895,12 +901,22 @@ func (t *BitgetTrader) SetTakeProfit(symbol string, positionSide string, quantit
 
 // CancelStopLossOrders cancels stop loss orders
 func (t *BitgetTrader) CancelStopLossOrders(symbol string) error {
-	return t.cancelPlanOrders(symbol, "pos_loss")
+	err1 := t.cancelPlanOrders(symbol, "pos_loss")
+	err2 := t.cancelPlanOrders(symbol, "normal_plan")
+	if err1 != nil {
+		return err1
+	}
+	return err2
 }
 
 // CancelTakeProfitOrders cancels take profit orders
 func (t *BitgetTrader) CancelTakeProfitOrders(symbol string) error {
-	return t.cancelPlanOrders(symbol, "pos_profit")
+	err1 := t.cancelPlanOrders(symbol, "pos_profit")
+	err2 := t.cancelPlanOrders(symbol, "normal_plan")
+	if err1 != nil {
+		return err1
+	}
+	return err2
 }
 
 // cancelPlanOrders cancels plan orders
@@ -982,6 +998,7 @@ func (t *BitgetTrader) CancelAllOrders(symbol string) error {
 	// Also cancel plan orders
 	t.cancelPlanOrders(symbol, "pos_loss")
 	t.cancelPlanOrders(symbol, "pos_profit")
+	t.cancelPlanOrders(symbol, "normal_plan")
 
 	return nil
 }
