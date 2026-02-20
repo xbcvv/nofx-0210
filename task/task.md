@@ -270,3 +270,7 @@
 - [x] **方案实施**:
     - [x] 修改 	rader/auto_trader.go 中的 maxAffordablePositionSize 缓冲调节机制。
     - [x] 将原本过窄的  .98 (2% 缓冲) 直接拓宽至更为宽容稳健的  .90 (10% 缓冲)，这能彻底吸纳无论多大的跨所差价水分以及市价单巨额锁仓。编译并同步至 GitHub，此后再无越权爆表隐患。
+- [x] **修复 AI 引擎无法感知手动修改止盈止损问题 (Bitget Sync)**:
+    - [x] **问题根源**：系统的 AI Prompt 依赖 GetPositions 拉取持仓信息，但交易所的仓位接口原生不返回独立的条件委托单 (StopLoss / TakeProfit)。这导致 AI 一直在盲人摸象，它仅凭自己的内部“记忆寄存器” (Memory Bank) 记得上一次设定的 SL/TP，每次 Hold 时都盲目覆盖重发，导致用户在 App 端的修改被冲刷。
+    - [x] **修复方案**：重构底层 	rader/auto_trader.go。在给 AI 装配持仓列表之前，强行插入一步 GetOpenOrders 二次查询。抓取当前所有活跃的 STOP_MARKET 和 TAKE_PROFIT_MARKET 条件单，并与各个仓位一一对应。
+    - [x] **AI 赋能**：现在，在 AI 的系统中，Current Positions 字符串将带有完整的 | SL 0.35 | TP 0.40 实时尾巴，它终于能看到您手动修改的止损点了！并基于最新的真实风险进行推演。
