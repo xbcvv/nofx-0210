@@ -44,13 +44,13 @@ type AutoTraderConfig struct {
 	BybitSecretKey string
 
 	// OKX API configuration
-	OKXAPIKey    string
-	OKXSecretKey string
+	OKXAPIKey     string
+	OKXSecretKey  string
 	OKXPassphrase string
 
 	// Bitget API configuration
-	BitgetAPIKey    string
-	BitgetSecretKey string
+	BitgetAPIKey     string
+	BitgetSecretKey  string
 	BitgetPassphrase string
 
 	// Gate API configuration
@@ -58,8 +58,8 @@ type AutoTraderConfig struct {
 	GateSecretKey string
 
 	// KuCoin API configuration
-	KuCoinAPIKey    string
-	KuCoinSecretKey string
+	KuCoinAPIKey     string
+	KuCoinSecretKey  string
 	KuCoinPassphrase string
 
 	// Hyperliquid configuration
@@ -122,9 +122,9 @@ type AutoTrader struct {
 	config                AutoTraderConfig
 	trader                Trader // Use Trader interface (supports multiple platforms)
 	mcpClient             mcp.AIClient
-	store                 *store.Store             // Data storage (decision records, etc.)
+	store                 *store.Store           // Data storage (decision records, etc.)
 	strategyEngine        *kernel.StrategyEngine // Strategy engine (uses strategy configuration)
-	cycleNumber           int                      // Current cycle number
+	cycleNumber           int                    // Current cycle number
 	initialBalance        float64
 	dailyPnL              float64
 	customPrompt          string // Custom trading strategy prompt
@@ -749,21 +749,21 @@ func (at *AutoTrader) runCycle() error {
 		if config.Register.Enabled && config.Register.MaxRecords > 0 {
 			// 创建寄存器配置
 			registerConfig := kernel.RegisterConfig{
-				Enabled:       config.Register.Enabled,
-				MaxRecords:    config.Register.MaxRecords,
-				IncludeDecisions: config.Register.IncludeDecisions,
+				Enabled:           config.Register.Enabled,
+				MaxRecords:        config.Register.MaxRecords,
+				IncludeDecisions:  config.Register.IncludeDecisions,
 				IncludeMarketData: config.Register.IncludeMarketData,
 			}
-			
+
 			// 创建寄存器实例
 			register := kernel.NewRegister(at.id, registerConfig)
-			
+
 			// 创建寄存器记录
 			executionStatus := "success"
 			if !record.Success {
 				executionStatus = "failed"
 			}
-			
+
 			// 构建简化的决策记录
 			var registerDecisions []kernel.Decision
 			for _, d := range aiDecision.Decisions {
@@ -776,10 +776,10 @@ func (at *AutoTrader) runCycle() error {
 				}
 				registerDecisions = append(registerDecisions, d)
 			}
-			
+
 			// 创建寄存器记录
 			registerRecord := kernel.CreateRecordFromContext(ctx, registerDecisions, executionStatus)
-			
+
 			// 保存到寄存器
 			if err := register.SaveRecord(registerRecord); err != nil {
 				logger.Infof("⚠ Failed to save register record: %v", err)
@@ -1118,13 +1118,13 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 	// If StopLoss or TakeProfit is provided, update them
 	if decision.StopLoss > 0 || decision.TakeProfit > 0 {
 		logger.Infof("  🔒 Hold with updates: %s (SL: %.4f, TP: %.4f)", decision.Symbol, decision.StopLoss, decision.TakeProfit)
-		
+
 		// Find position to determine side
 		positions, err := at.trader.GetPositions()
 		if err != nil {
 			return err
 		}
-		
+
 		var foundPos map[string]interface{}
 		for _, pos := range positions {
 			if pos["symbol"] == decision.Symbol {
@@ -1135,12 +1135,14 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 				}
 			}
 		}
-		
+
 		if foundPos != nil {
 			side := foundPos["side"].(string) // "long" or "short"
 			qty := foundPos["positionAmt"].(float64)
-			if qty < 0 { qty = -qty }
-			
+			if qty < 0 {
+				qty = -qty
+			}
+
 			// Use helper to update stops (cancels old ones first)
 			if err := at.updatePositionStops(decision.Symbol, side, qty, decision.StopLoss, decision.TakeProfit); err != nil {
 				return err
@@ -1153,7 +1155,7 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 // executePartialCloseWithRecord executes partial close
 func (at *AutoTrader) executePartialCloseWithRecord(decision *kernel.Decision, actionRecord *store.DecisionAction) error {
 	logger.Infof("  ✂️ Partial Close: %s (%.1f%%)", decision.Symbol, decision.ClosePercentage*100)
-	
+
 	if decision.ClosePercentage <= 0 || decision.ClosePercentage > 1 {
 		return fmt.Errorf("invalid close percentage: %.2f", decision.ClosePercentage)
 	}
@@ -1164,7 +1166,7 @@ func (at *AutoTrader) executePartialCloseWithRecord(decision *kernel.Decision, a
 		logger.Errorf("  ❌ Failed to get positions from exchange: %v", err)
 		return fmt.Errorf("failed to get positions: %w", err)
 	}
-	
+
 	var foundPos map[string]interface{}
 	for _, pos := range positions {
 		if pos["symbol"] == decision.Symbol {
@@ -1174,23 +1176,23 @@ func (at *AutoTrader) executePartialCloseWithRecord(decision *kernel.Decision, a
 			}
 		}
 	}
-	
+
 	if foundPos == nil {
 		return fmt.Errorf("no position found for %s to partial close", decision.Symbol)
 	}
-	
+
 	// Safe type assertion for side field
 	side, ok := foundPos["side"].(string)
 	if !ok {
 		return fmt.Errorf("invalid position side type: %T", foundPos["side"])
 	}
-	
+
 	if side == "long" {
 		return at.executeCloseLongWithRecord(decision, actionRecord)
 	} else if side == "short" {
 		return at.executeCloseShortWithRecord(decision, actionRecord)
 	}
-	
+
 	return fmt.Errorf("unknown position side: %s", side)
 }
 
@@ -1346,10 +1348,10 @@ func (at *AutoTrader) executeOpenLongWithRecord(decision *kernel.Decision, actio
 		if decision.PositionSizeUSD < 0 {
 			decision.PositionSizeUSD = 0
 		}
-		logger.Infof("⚠️ Position capped by value ratio. Limit: %.2f, Existing: %.2f, Adjusted New: %.2f", 
+		logger.Infof("⚠️ Position capped by value ratio. Limit: %.2f, Existing: %.2f, Adjusted New: %.2f",
 			adjustedTotalValue, existingPositionValue, decision.PositionSizeUSD)
 	}
-	
+
 	// If no room left, return error
 	if decision.PositionSizeUSD <= 0 {
 		return fmt.Errorf("position limit reached (Existing: %.2f, Limit: %.2f)", existingPositionValue, adjustedTotalValue)
@@ -1363,9 +1365,10 @@ func (at *AutoTrader) executeOpenLongWithRecord(decision *kernel.Decision, actio
 
 	actualPositionSize := decision.PositionSizeUSD
 	if actualPositionSize > maxAffordablePositionSize {
-		// Use 98% of max to leave buffer for price fluctuation
-		adjustedSize := maxAffordablePositionSize * 0.98
-		logger.Infof("  ⚠️ Position size %.2f exceeds max affordable %.2f, auto-reducing to %.2f",
+		// Use 90% of max to leave a generous 10% buffer for price fluctuation,
+		// market order slippage locks, and cross-exchange price differences
+		adjustedSize := maxAffordablePositionSize * 0.90
+		logger.Infof("  ⚠️ Position size %.2f exceeds max affordable %.2f, auto-reducing to %.2f (10%% buffer)",
 			actualPositionSize, maxAffordablePositionSize, adjustedSize)
 		actualPositionSize = adjustedSize
 		decision.PositionSizeUSD = actualPositionSize
@@ -1442,7 +1445,9 @@ func (at *AutoTrader) executeOpenShortWithRecord(decision *kernel.Decision, acti
 				logger.Infof("🚀 Pyramiding detected for %s: Adding to existing SHORT position", decision.Symbol)
 				isPyramiding = true
 				if qty, ok := pos["positionAmt"].(float64); ok {
-					if qty < 0 { qty = -qty } // Ensure positive quantity
+					if qty < 0 {
+						qty = -qty
+					} // Ensure positive quantity
 					existingQty = qty
 				}
 			} else {
@@ -1497,10 +1502,10 @@ func (at *AutoTrader) executeOpenShortWithRecord(decision *kernel.Decision, acti
 		if decision.PositionSizeUSD < 0 {
 			decision.PositionSizeUSD = 0
 		}
-		logger.Infof("⚠️ Position capped by value ratio. Limit: %.2f, Existing: %.2f, Adjusted New: %.2f", 
+		logger.Infof("⚠️ Position capped by value ratio. Limit: %.2f, Existing: %.2f, Adjusted New: %.2f",
 			adjustedTotalValue, existingPositionValue, decision.PositionSizeUSD)
 	}
-	
+
 	// If no room left, return error
 	if decision.PositionSizeUSD <= 0 {
 		return fmt.Errorf("position limit reached (Existing: %.2f, Limit: %.2f)", existingPositionValue, adjustedTotalValue)
@@ -1611,7 +1616,7 @@ func (at *AutoTrader) executeCloseLongWithRecord(decision *kernel.Decision, acti
 			logger.Errorf("  ❌ Failed to get positions from exchange: %v", err)
 			return fmt.Errorf("failed to get position data: %w", err)
 		}
-		
+
 		positionFound := false
 		for _, pos := range positions {
 			if pos["symbol"] == decision.Symbol && pos["side"] == "long" {
@@ -1625,11 +1630,11 @@ func (at *AutoTrader) executeCloseLongWithRecord(decision *kernel.Decision, acti
 				break
 			}
 		}
-		
+
 		if !positionFound {
 			return fmt.Errorf("no long position found for %s", decision.Symbol)
 		}
-		
+
 		logger.Infof("  📊 Using exchange position data: qty=%.8f, entry=%.2f", quantity, entryPrice)
 	}
 
@@ -1713,7 +1718,7 @@ func (at *AutoTrader) executeCloseShortWithRecord(decision *kernel.Decision, act
 			logger.Errorf("  ❌ Failed to get positions from exchange: %v", err)
 			return fmt.Errorf("failed to get position data: %w", err)
 		}
-		
+
 		positionFound := false
 		for _, pos := range positions {
 			if pos["symbol"] == decision.Symbol && pos["side"] == "short" {
@@ -1727,11 +1732,11 @@ func (at *AutoTrader) executeCloseShortWithRecord(decision *kernel.Decision, act
 				break
 			}
 		}
-		
+
 		if !positionFound {
 			return fmt.Errorf("no short position found for %s", decision.Symbol)
 		}
-		
+
 		logger.Infof("  📊 Using exchange position data: qty=%.8f, entry=%.2f", quantity, entryPrice)
 	}
 
@@ -2516,22 +2521,22 @@ func (at *AutoTrader) recordOrderFill(orderRecordID int64, exchangeOrderID, symb
 	normalizedSymbol := market.Normalize(symbol)
 
 	fill := &store.TraderFill{
-		TraderID:         at.id,
-		ExchangeID:       at.exchangeID,
-		ExchangeType:     at.exchange,
-		OrderID:          orderRecordID,
-		ExchangeOrderID:  exchangeOrderID,
-		ExchangeTradeID:  tradeID,
-		Symbol:           normalizedSymbol,
-		Side:             side,
-		Price:            price,
-		Quantity:         quantity,
-		QuoteQuantity:    price * quantity,
-		Commission:       fee,
-		CommissionAsset:  "USDT",
-		RealizedPnL:      0, // Will be calculated for close orders
-		IsMaker:          false, // Market orders are usually taker
-		CreatedAt:        time.Now().UTC().UnixMilli(),
+		TraderID:        at.id,
+		ExchangeID:      at.exchangeID,
+		ExchangeType:    at.exchange,
+		OrderID:         orderRecordID,
+		ExchangeOrderID: exchangeOrderID,
+		ExchangeTradeID: tradeID,
+		Symbol:          normalizedSymbol,
+		Side:            side,
+		Price:           price,
+		Quantity:        quantity,
+		QuoteQuantity:   price * quantity,
+		Commission:      fee,
+		CommissionAsset: "USDT",
+		RealizedPnL:     0,     // Will be calculated for close orders
+		IsMaker:         false, // Market orders are usually taker
+		CreatedAt:       time.Now().UTC().UnixMilli(),
 	}
 
 	// Calculate realized PnL for close orders
@@ -2659,4 +2664,3 @@ func getSideFromAction(action string) string {
 func (at *AutoTrader) GetOpenOrders(symbol string) ([]OpenOrder, error) {
 	return at.trader.GetOpenOrders(symbol)
 }
-
