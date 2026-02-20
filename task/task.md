@@ -114,3 +114,8 @@
     - [x] 代码审查确认：`SetTakeProfit/SetStopLoss` 原生支持传输 `size`，随 `pos_profit` 等计划类型生效
 - [x] **订单同步 JSON 解析修复**:
     - [x] 修改 `trader/bitget/order_sync.go` 针对 `{"fillList":null}` 的处理逻辑，防止强制向 `[]BitgetFill` 转换导致的崩溃
+
+## Wiki 与文档更新 [Doc]
+- [x] 创建 `docs/wiki/EXCHANGE_FEATURES.md` 记录交易所特性差异矩阵
+- [x] 明确标记 Bitget 支持局部止盈止损 (`pos_profit`/`pos_loss` + `size`)，而 Binance 默认不支持局部退出
+- [x] 更新 `docs/wiki/README.md` 索引链接
