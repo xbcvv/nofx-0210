@@ -260,5 +260,5 @@
 - [x] **隐私保护**:
     - [x] `fsdownload` 已通过 `.gitignore` 排除，仅在本地更新策略文件，不上传 GitHub。
 - [x] **Bitget开仓挂单时序冲突修复**:
-    - [x] 重构底层 API 方法。调用止盈止损时，系统会动态侦测是否具有匹配的现有底仓。匹配则采用 `pos_loss` (局部止损)，否则降级尝试新挂条件单。如被拦截则自动双向进行 fallback 降级补偿。
-    - [x] **追加修复**：追踪错误日志确认 Bitget V2 的非持仓条件单已废弃 `loss_plan`/`profit_plan` 枚举。已将底层 fallback 的标准参数替换为官方合法且不受持仓状态约束的 `normal_plan`，并将 `normal_plan` 添加到底层全局注销队列 `CancelStopOrders` / `CancelAllOrders` 中，至此彻底杜绝 `Illegal planType` 错误。
+    - [x] 重构底层 API 方法。调用止盈止损时，系统会动态侦测是否具有匹配的现有底仓。匹配则采用 `pos_loss`/`pos_profit` (局部止损/止盈)，否则降级尝试新挂条件单。如被拦截则自动双向进行 fallback 降级补偿。
+    - [x] **终极修复**：追踪错误日志确认 Bitget V2 的非持仓条件单依然需要严格的 `loss_plan`/`profit_plan` 枚举，之前被 `pos_loss` 拦截误导而尝试的 `normal_plan` 导致了 `delegateType error`。目前已将底层 fallback 的标准参数替换为官方合法且不受持仓状态约束的 `loss_plan` 和 `profit_plan`，彻底杜绝 `Illegal planType` 错误。

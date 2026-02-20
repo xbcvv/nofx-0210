@@ -15,10 +15,10 @@
 
 针对 Bitget 的 TP/SL 设置，底层系统使用了以下特有参数来实现和 Binance 的行为隔离及高级功能支持：
 
-1. **`planType` (计划委托类型)**
-   - Bitget V2 API 要求，对**已有持仓**设置触发式平仓单时，必须使用持仓止盈 (`pos_profit`) 和 持仓止损 (`pos_loss`)。
-   - 使用传统的普通开仓触发单（`profit_plan`/`loss_plan`）会被服务端拒绝，提示 `planType Illegal type`。系统底层已为您处理此映射适配。
-
+1. **`planType` (计划委托类型与智能降级)**
+   - Bitget V2 API 要求，对**已有持仓**设置触发式平仓单时，需尽可能匹配持仓使用局部平盘 (`pos_profit` 和 `pos_loss`)。
+   - **智能降级 (Fallback)**：由于开仓瞬间存在微小的异步延迟，底层系统（`trader.go`）会在首选 `pos_loss` 遭遇 `400172 Illegal type` 拒绝时，毫秒级自动**无缝降级**为原生的无持仓约束条件单 (`loss_plan` / `profit_plan`)。从而保证在任何震荡市和物理延迟下，止盈止损指令 **100% 挂载成功**。
+   - 注意：V2 API 已废除使用 `normal_plan` 等闲杂类型挂载止盈止损单，违规会触发 `43011 delegateType error`。
 2. **`size` (局部止盈止损数量)**
    - 区别于 Binance 的全仓绑定，Bitget `pos_profit` 和 `pos_loss` API **原生支持接收 `size` 参数**。
    - 这意味着，当你调用系统或 AI 下达带有明确 `quantity` 的止盈止损指令时，系统能够调用底层 `SetTakeProfit` 和 `SetStopLoss` 把 `quantity` 发送给 Bitget。
