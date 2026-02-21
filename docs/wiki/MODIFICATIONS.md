@@ -119,3 +119,19 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 2. **策略工作室**: 让左侧导航栏在移动端变为顶部横向滑动。
 3. **全局防溢出**: 修复了 App 级别 X 轴滚动条导致页面晃动的问题。
 
+
+## 12. Context Prompt Optimization & GitHub Action Fix [2026-02-22]
+
+### 12.1 GitHub Actions Go Version Alignment
+**修改文件**: `.github/workflows/test.yml`, `.github/workflows/pr-checks.yml`, `.github/workflows/pr-checks-run.yml`
+**描述**: 
+1. **统一环境**: 修复了由于 `go.mod` 要求 Go 1.25，而 GitHub Actions 仍停留在老旧版本（1.21/1.23）导致的 `go mod download` 和 `go build` 完全罢工甚至无法识别语法环境的核心问题。
+2. **清除无用导入**: 修正了部分源码（如 `filter/coin_filter_manager.go`）中遗留的未使用的导入包（如 `sort`），解决了 Go 编译器严格报错的问题。
+
+### 12.2 Inject 1H Price Change
+**修改文件**: `market/data.go`
+**描述**:
+1. **零性能损耗注入**: 停止通过发送全量 60 根 1H K 线（高达 2000+ Tokens）引发上下文冗余的方式，而是直接在底层利用内存里的分时 K 曲线精确倒推前 60 分钟的价格差。
+2. **格式化输出**: 修改 `Format()` 方法。现在无论是针对大盘（BTC/ETH）还是具体山寨币（如 PEPE, WIF），在输送给大模型的单一资产档案最头部，都会强制附带硬编码字符：`(1h Change: +X.XX%)`。
+3. **目的**: 完美缝合了 \prompt.yaml\ 气候控制中关于 \[资金溢出]\ 和 \1h涨>0.5%\ 的识别盲点，完全杜绝了 AI 对 1H 涨跌幅的心算幻觉。
+
