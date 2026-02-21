@@ -356,7 +356,7 @@ export function TraderDashboardPage({
                         background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.4) 100%)',
                     }}
                 >
-                    <div className="flex items-start justify-between mb-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center items-start justify-between gap-4 mb-4">
                         <h2 className="text-2xl font-bold flex items-center gap-4 text-nofx-text-main">
                             <div className="relative">
                                 <PunkAvatar
@@ -380,7 +380,7 @@ export function TraderDashboardPage({
                             </div>
                         </h2>
 
-                        <div className="flex items-center gap-4">
+                        <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
                             {/* Trader Selector */}
                             {traders && traders.length > 0 && (
                                 <div className="flex items-center gap-2 nofx-glass px-1 py-1 rounded-lg border border-white/5">
@@ -508,7 +508,7 @@ export function TraderDashboardPage({
                 )}
 
                 {/* Account Overview */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                     <StatCard
                         title={t('totalEquity', language)}
                         value={`${account?.total_equity?.toFixed(2) || '0.00'}`}

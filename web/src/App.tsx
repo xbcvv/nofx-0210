@@ -448,7 +448,7 @@ function App() {
       />
 
       {/* Main Content with Page Transitions */}
-      <main className="min-h-screen pt-16">
+      <main className="min-h-screen pt-16 pb-8 md:pb-0 overflow-x-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPage}

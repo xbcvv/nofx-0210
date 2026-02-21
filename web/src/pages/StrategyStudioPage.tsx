@@ -719,9 +719,9 @@ export function StrategyStudioPage() {
       </div>
 
       {/* Main Content - Three Columns */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         {/* Left Column - Strategy List */}
-        <div className="w-48 flex-shrink-0 border-r border-nofx-gold/20 overflow-y-auto bg-nofx-bg/30 backdrop-blur-sm z-10">
+        <div className="w-full md:w-48 h-48 md:h-auto flex-shrink-0 border-b md:border-b-0 md:border-r border-nofx-gold/20 overflow-y-auto bg-nofx-bg/30 backdrop-blur-sm z-10">
           <div className="p-2">
             <div className="flex items-center justify-between mb-2 px-2">
               <span className="text-xs font-medium text-nofx-text-muted">{t('strategies')}</span>

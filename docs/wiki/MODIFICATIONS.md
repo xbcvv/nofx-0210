@@ -224,3 +224,13 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 
 
 
+
+ # #   1 1 .   MRïzûy¨RïzÍT”^_M‘  ( F r o n t e n d   M o b i l e   A d a p t a t i o n ) 
+ * * îO9e‡eöN* * :   \ w e b / s r c / p a g e s / S t r a t e g y S t u d i o P a g e . t s x \ ,   \ w e b / s r c / p a g e s / T r a d e r D a s h b o a r d P a g e . t s x \ ,   \ w e b / s r c / A p p . t s x \ 
+ * * Ïcğ* * : 
+ 1 .     * * §c6RğS  ( T r a d e r D a s h b o a r d ) * * :   \4Yè„v±”S/ ‚‚¹pRbc:SÎN*jT:_6RP–6R9e:NM‘ûy¨Rïz„v­eLˆŒT‚Wôv’cR  ( \  l e x - c o l   s m : f l e x - r o w \ ) ÿv^\  S t a t C a r d   Q<h(Wûy¨Rïz)ÏQ:NUSRbÌSR  ( \ g r i d - c o l s - 1   s m : g r i d - c o l s - 2 \ )   åN2–peW[åb$c0
+ 2 .     * * V{euå]\O¤[  ( S t r a t e g y S t u d i o ) * * :   \æ]¹h„vúVš[½[¦^  ( \ w - 4 8 \ )   îO9e:NÍT”^_„v4YèXàSaSGr^@\  ( \ w - f u l l   m d : w - 4 8 \   Ó~T  \  l e x - c o l   m d : f l e x - r o w \ ) ÿ{_•^ã‰³Q(Wdku˜b—1uNúVš[½[¦^_w„vKb:gïz%NÍ‘…Q¹[$c‹SŒT¢núQ0
+ 3 .     * * hQ@\¹[hV  ( A p p hQ@\) * * :   (W  A p p . t s x   „v;NSO  \ < m a i n > \   ¹[hV
+NX R†N  \ p b - 8   m d : p b - 0 \   v^(WYèX R  \ o v e r f l o w - x - h i d d e n \   2–¢núQÿ2–bkûy¨Rïz•^è…Q¹[«ˆOmÈ‰hVŸSu&^	g„v§c6RagbRwmn!cÿTöeˆmd–NÄ‰ƒ½[¦^„v–_*jTÚn¨Ragî•˜˜0
+  
+ 
