@@ -1002,8 +1002,8 @@ func Format(data *Data) string {
 
 	// Format price with dynamic precision
 	priceStr := formatPriceWithDynamicPrecision(data.CurrentPrice)
-	sb.WriteString(fmt.Sprintf("current_price = %s, current_ema20 = %.3f, current_macd = %.3f, current_rsi (7 period) = %.3f\n\n",
-		priceStr, data.CurrentEMA20, data.CurrentMACD, data.CurrentRSI7))
+	sb.WriteString(fmt.Sprintf("current_price = %s (1h Change: %+.2f%%), current_ema20 = %.3f, current_macd = %.3f, current_rsi (7 period) = %.3f\n\n",
+		priceStr, data.PriceChange1h, data.CurrentEMA20, data.CurrentMACD, data.CurrentRSI7))
 
 	sb.WriteString(fmt.Sprintf("In addition, here is the latest %s open interest and funding rate for perps:\n\n",
 		data.Symbol))
