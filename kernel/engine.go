@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"nofx/filter"
 	"nofx/logger"
 	"nofx/market"
 	"nofx/mcp"
@@ -602,13 +603,24 @@ func (e *StrategyEngine) getAI500Coins(limit int) ([]CandidateCoin, error) {
 		limit = 30
 	}
 
-	symbols, err := e.nofxosClient.GetTopRatedCoins(limit)
+	// 获取足够多的大名单供底层安全过滤池洗刷
+	rawSymbols, err := e.nofxosClient.GetTopRatedCoins(200)
 	if err != nil {
 		return nil, err
 	}
 
+	var finalSymbols []string
+	if filter.GlobalCoinFilter != nil {
+		finalSymbols = filter.GlobalCoinFilter.GetCleanCoins(rawSymbols, limit)
+	} else {
+		finalSymbols = rawSymbols
+		if len(finalSymbols) > limit {
+			finalSymbols = finalSymbols[:limit]
+		}
+	}
+
 	var candidates []CandidateCoin
-	for _, symbol := range symbols {
+	for _, symbol := range finalSymbols {
 		candidates = append(candidates, CandidateCoin{
 			Symbol:  symbol,
 			Sources: []string{"ai500"},

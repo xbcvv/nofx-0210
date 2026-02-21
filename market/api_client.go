@@ -158,3 +158,30 @@ func (c *APIClient) GetCurrentPrice(symbol string) (float64, error) {
 
 	return price, nil
 }
+
+func (c *APIClient) GetAll24hrTickers() ([]Ticker24hr, error) {
+	url := fmt.Sprintf("%s/fapi/v1/ticker/24hr", baseURL)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var tickers []Ticker24hr
+	err = json.Unmarshal(body, &tickers)
+	if err != nil {
+		return nil, err
+	}
+
+	return tickers, nil
+}

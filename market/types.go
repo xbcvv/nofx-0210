@@ -142,6 +142,7 @@ type Ticker24hr struct {
 	PriceChangePercent string `json:"priceChangePercent"`
 	Volume             string `json:"volume"`
 	QuoteVolume        string `json:"quoteVolume"`
+	LastPrice          string `json:"lastPrice"`
 }
 
 // SymbolFeatures feature data structure

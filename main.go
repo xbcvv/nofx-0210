@@ -7,6 +7,7 @@ import (
 	"nofx/config"
 	"nofx/crypto"
 	"nofx/experience"
+	"nofx/filter"
 	"nofx/logger"
 	"nofx/manager"
 	"nofx/mcp"
@@ -95,6 +96,10 @@ func main() {
 	// logger.Info("📊 WebSocket market monitor started")
 	// time.Sleep(500 * time.Millisecond)
 	logger.Info("📊 Using CoinAnk API for all market data (WebSocket cache disabled)")
+
+	// Initialize global coin filter daemon (AI500/OI Top robust cleaner)
+	logger.Info("🛡️  Initializing global coin filter daemon...")
+	filter.InitGlobalCoinFilter()
 
 	// Create TraderManager and BacktestManager
 	traderManager := manager.NewTraderManager()
