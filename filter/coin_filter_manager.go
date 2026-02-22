@@ -226,19 +226,25 @@ func (m *CoinFilterManager) runUpdateCycle() {
 		m.fetchListingDates(newListingRequests)
 	}
 
+	var needsSave bool
+
 	// Update Caches safely
 	m.cacheMux.Lock()
 	m.tickerCache = newTickerCache
 	m.oiCache = newOICache
 	// listingCache is updated inside fetchListingDates and loaded from file initially
 	if !knownListings && len(m.listingCache) > 0 {
-		m.saveListingCache()
+		needsSave = true
 	}
 	m.lastUpdateTime = time.Now()
 	m.cacheMux.Unlock()
 
-	// If we got new listings, save them
 	if len(newListingRequests) > 0 {
+		needsSave = true
+	}
+
+	// If we got new listings or newly loaded them, save them to disk
+	if needsSave {
 		m.saveListingCache()
 	}
 

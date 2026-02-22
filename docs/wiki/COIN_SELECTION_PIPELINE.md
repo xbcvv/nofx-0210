@@ -78,3 +78,6 @@
 - `filter/coin_filter_manager.go`：独立解耦的核心裁决中心。
 - `market/api_client.go`：底层封装的 `GetAll24hrTickers` 大全量数据流。
 - `data/listing_cache.json`：由系统自动生成的币种“出生纸”永久保存库（自动建立）。
+
+---
+> **V1.1.5 架构稳定性更新**: 彻底重构了 `CoinFilterManager` 后台更新时的读写锁临界区，移除了由于初始化网络超时补传时触发读写锁（`sync.RWMutex`）自重入导致的偶发死锁风险，根除了半小时僵死症状，确保了全天候并发安全性。
