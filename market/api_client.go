@@ -21,7 +21,7 @@ type APIClient struct {
 
 func NewAPIClient() *APIClient {
 	client := &http.Client{
-		Timeout: 30 * time.Second,
+		Timeout: 5 * time.Second,
 	}
 
 	hookRes := hook.HookExec[hook.SetHttpClientResult](hook.SET_HTTP_CLIENT, client)

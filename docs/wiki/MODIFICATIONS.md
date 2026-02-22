@@ -135,3 +135,10 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 2. **格式化输出**: 修改 `Format()` 方法。现在无论是针对大盘（BTC/ETH）还是具体山寨币（如 PEPE, WIF），在输送给大模型的单一资产档案最头部，都会强制附带硬编码字符：`(1h Change: +X.XX%)`。
 3. **目的**: 完美缝合了 \prompt.yaml\ 气候控制中关于 \[资金溢出]\ 和 \1h涨>0.5%\ 的识别盲点，完全杜绝了 AI 对 1H 涨跌幅的心算幻觉。
 
+
+### 12.3 API Circuit Breaker (Timeout Optimization)
+**修改文件**: `market/api_client.go`
+**描述**:
+1. **防 Goroutine 雪崩**: 修复了由于上游网络（如币安或 Telegram API）受阻导致底层 HTTP 客户端默认的 30 秒长轮询在批量拉取 K 线数据时，形成高达数十分钟的堵塞列队，最终导致 AI 分析循环完全死机静默的重大缺陷。
+2. **熔断极速降级**: 将 `http.Client` 的请求超时限制强制从 30s 缩减为 5s。现在一遭遇网络断流阻断，系统将迅速抛出超时并忽略本轮（非致命错误），从而保障 3 分钟定时扫描器永远可以顺畅抵达下一个周期并发车。
+
