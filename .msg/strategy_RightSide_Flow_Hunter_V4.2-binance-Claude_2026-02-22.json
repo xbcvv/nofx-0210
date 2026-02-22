@@ -6,8 +6,7 @@
     "coin_source": {
       "source_type": "mixed",
       "static_coins": [
-        "BTCUSDT",
-        "ETHUSDT"
+        "SOLUSDT"
       ],
       "use_ai500": true,
       "ai500_fetch_all": true,
@@ -15,6 +14,7 @@
       "use_binance_top_vol": true,
       "binance_top_vol_limit": 100,
       "binance_filter_interval": 30,
+      "blackbox_cutoff_limit": 5,
       "use_oi_top": false,
       "oi_top_limit": 10,
       "use_oi_low": false,
@@ -97,6 +97,6 @@
       "include_market_data": true
     }
   },
-  "exported_at": "2026-02-22T05:36:28.308Z",
+  "exported_at": "2026-02-22T11:30:21.405Z",
   "version": "1.0"
 }

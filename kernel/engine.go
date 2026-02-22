@@ -637,8 +637,14 @@ func (e *StrategyEngine) GetCandidateCoins() ([]CandidateCoin, error) {
 		}
 
 		// Combine ALL safely
-		finalSymbols = append(finalSymbols, topA...)
-		finalSymbols = append(finalSymbols, randomB...)
+		if coinSource.BlackboxFixedTopA == 0 && coinSource.BlackboxRandomB == 0 {
+			// Legacy mode fallback: if A and B are not configured (like in old JSONs), output the whole dynamic pool.
+			// It will be truncated by the BlackboxCutoffLimit fallback at the end of this function.
+			finalSymbols = append(finalSymbols, dynamicPool...)
+		} else {
+			finalSymbols = append(finalSymbols, topA...)
+			finalSymbols = append(finalSymbols, randomB...)
+		}
 
 		for _, symbol := range finalSymbols {
 			candidates = append(candidates, CandidateCoin{
