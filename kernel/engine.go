@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 	"nofx/filter"
 	"nofx/logger"
@@ -571,19 +572,75 @@ func (e *StrategyEngine) GetCandidateCoins() ([]CandidateCoin, error) {
 			}
 		}
 
-		// Sort symbols to pick the best liquidity stars
-		var sortedSymbols []string
-		for symbol := range symbolSources {
-			sortedSymbols = append(sortedSymbols, symbol)
-		}
-		
-		if filter.GlobalCoinFilter != nil {
-			sortedSymbols = filter.GlobalCoinFilter.SortByVolumeDescending(sortedSymbols)
-		} else {
-			sort.Strings(sortedSymbols)
+		// 1. Separate Static and Dynamic coins. Exclude majors from Dynamic.
+		var finalSymbols []string
+		var dynamicPool []string
+
+		for symbol, sources := range symbolSources {
+			isStatic := false
+			for _, s := range sources {
+				if s == "static" {
+					isStatic = true
+					break
+				}
+			}
+
+			if isStatic {
+				finalSymbols = append(finalSymbols, symbol)
+				continue
+			}
+
+			// Exclude majors from dynamic pool automatically
+			if symbol == "BTCUSDT" || symbol == "ETHUSDT" || symbol == "SOLUSDT" {
+				continue
+			}
+
+			dynamicPool = append(dynamicPool, symbol)
 		}
 
-		for _, symbol := range sortedSymbols {
+		// Sort static coins too for clean output
+		if filter.GlobalCoinFilter != nil {
+			finalSymbols = filter.GlobalCoinFilter.SortByVolumeDescending(finalSymbols)
+			dynamicPool = filter.GlobalCoinFilter.SortByVolumeDescending(dynamicPool)
+		} else {
+			sort.Strings(finalSymbols)
+			sort.Strings(dynamicPool)
+		}
+
+		// Select Top A
+		var topA []string
+		limitA := coinSource.BlackboxFixedTopA
+		if limitA > 0 {
+			if len(dynamicPool) > limitA {
+				topA = dynamicPool[:limitA]
+				dynamicPool = dynamicPool[limitA:]
+			} else {
+				topA = dynamicPool
+				dynamicPool = nil
+			}
+		}
+
+		// Select Random B from the REST of dynamicPool
+		var randomB []string
+		limitB := coinSource.BlackboxRandomB
+		if limitB > 0 && len(dynamicPool) > 0 {
+			if len(dynamicPool) > limitB {
+				// We shuffle dynamicPool
+				r := rand.New(rand.NewSource(time.Now().UnixNano()))
+				r.Shuffle(len(dynamicPool), func(i, j int) {
+					dynamicPool[i], dynamicPool[j] = dynamicPool[j], dynamicPool[i]
+				})
+				randomB = dynamicPool[:limitB]
+			} else {
+				randomB = dynamicPool
+			}
+		}
+
+		// Combine ALL safely
+		finalSymbols = append(finalSymbols, topA...)
+		finalSymbols = append(finalSymbols, randomB...)
+
+		for _, symbol := range finalSymbols {
 			candidates = append(candidates, CandidateCoin{
 				Symbol:  symbol,
 				Sources: symbolSources[symbol],
@@ -592,9 +649,11 @@ func (e *StrategyEngine) GetCandidateCoins() ([]CandidateCoin, error) {
 		
 		filtered := e.filterExcludedCoins(candidates)
 		
-		// Apply global BlackboxCutoffLimit for mixed mode
-		if coinSource.BlackboxCutoffLimit > 0 && len(filtered) > coinSource.BlackboxCutoffLimit {
-			filtered = filtered[:coinSource.BlackboxCutoffLimit]
+		// Fallback: Apply legacy global BlackboxCutoffLimit for backward compat if A & B are both 0 but Limit is set > 0
+		if coinSource.BlackboxFixedTopA == 0 && coinSource.BlackboxRandomB == 0 && coinSource.BlackboxCutoffLimit > 0 {
+			if len(filtered) > coinSource.BlackboxCutoffLimit {
+				filtered = filtered[:coinSource.BlackboxCutoffLimit]
+			}
 		}
 		return filtered, nil
 

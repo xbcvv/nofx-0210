@@ -525,6 +525,8 @@ export interface CoinSourceConfig {
   binance_filter_interval?: number;
 
   blackbox_cutoff_limit?: number;
+  blackbox_fixed_a?: number;
+  blackbox_random_b?: number;
 
   use_oi_top: boolean;
   oi_top_limit?: number;

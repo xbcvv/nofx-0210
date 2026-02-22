@@ -131,6 +131,10 @@ type CoinSourceConfig struct {
 
 	// Blackbox limit (how many candidates finally passed to AI)
 	BlackboxCutoffLimit int `json:"blackbox_cutoff_limit,omitempty"`
+	// Top A fixed high-volume candidates passed to AI
+	BlackboxFixedTopA int `json:"blackbox_fixed_a,omitempty"`
+	// Random B candidates drawn from the mid-cap pool
+	BlackboxRandomB int `json:"blackbox_random_b,omitempty"`
 
 	// whether to use OI Top (持仓增加榜，适合做多)
 	UseOITop bool `json:"use_oi_top"`

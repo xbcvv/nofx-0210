@@ -24,6 +24,8 @@ export function CoinSourceEditor({
       let changed = false;
       const newConfig = { ...config };
       if (newConfig.blackbox_cutoff_limit === undefined) { newConfig.blackbox_cutoff_limit = 5; changed = true; }
+      if (newConfig.blackbox_fixed_a === undefined) { newConfig.blackbox_fixed_a = 2; changed = true; }
+      if (newConfig.blackbox_random_b === undefined) { newConfig.blackbox_random_b = 3; changed = true; }
       if (newConfig.use_binance_top_vol === undefined) { newConfig.use_binance_top_vol = false; changed = true; }
       if (newConfig.binance_top_vol_limit === undefined) { newConfig.binance_top_vol_limit = 100; changed = true; }
       if (newConfig.binance_filter_interval === undefined) { newConfig.binance_filter_interval = 30; changed = true; }
@@ -82,7 +84,8 @@ export function CoinSourceEditor({
       binanceInterval: { zh: '缓存间隔(分)', en: 'Filter Interval (m)' },
       fetchAllData: { zh: '获取全部名单', en: 'Fetch All Data' },
       blackboxSource: { zh: '核心风控黑盒', en: 'Core Blackbox Filter' },
-      blackboxLimit: { zh: '终极名额(交付AI)', en: 'Final Output Limit (To AI)' },
+      blackboxLimitA: { zh: '头部热点保送 (Top A)', en: 'Guaranteed Top Volume (A)' },
+      blackboxLimitB: { zh: '底池摸彩抽查 (Random B)', en: 'Random Mid-Cap (B)' },
       pipelineDesc: { zh: '外部输入源经过风控管线洗选后，统一由黑盒限制最大输出名额。', en: 'Sources are filtered by risk control pipeline, then truncated by blackbox.' },
     }
     return translations[key]?.[language] || key
@@ -738,32 +741,50 @@ export function CoinSourceEditor({
               <TrendingUp className="w-4 h-4 text-nofx-text-muted rotate-90 md:rotate-0 absolute text-nofx-border" />
             </div>
 
-            {/* Column 3: Blackbox Filter Cutoff */}
+            {/* Column 3: Blackbox Filter Cutoff (A+B) */}
             <div className="flex-1 space-y-3 p-3 rounded-lg border border-red-500/20 bg-red-500/5">
               <div className="text-xs font-semibold text-red-400 mb-2 uppercase tracking-wider flex items-center gap-1">
                 <Ban className="w-3.5 h-3.5" />
                 3. {t('blackboxSource')}
               </div>
 
-              <div className="p-3 bg-nofx-bg rounded border border-nofx-border relative overflow-hidden group">
+              <div className="p-3 bg-nofx-bg rounded border border-nofx-border relative overflow-hidden group mb-3">
                 <div className="absolute top-0 right-0 w-16 h-16 bg-red-500/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
                 <div className="text-sm font-medium text-nofx-text mb-2 relative z-10">
-                  {t('blackboxLimit')}
+                  {t('blackboxLimitA')}
                 </div>
                 <div className="flex items-center gap-2 relative z-10">
                   <input
                     type="number"
-                    value={config.blackbox_cutoff_limit || 5}
-                    onChange={(e) => !disabled && onChange({ ...config, blackbox_cutoff_limit: Math.max(1, parseInt(e.target.value) || 5) })}
+                    value={config.blackbox_fixed_a ?? 2}
+                    onChange={(e) => !disabled && onChange({ ...config, blackbox_fixed_a: Math.max(0, parseInt(e.target.value) || 0) })}
                     disabled={disabled}
-                    min={1}
+                    min={0}
                     className="w-full px-3 py-2 rounded text-base font-bold bg-nofx-bg-lighter border border-red-500/30 text-nofx-text text-center focus:border-red-500/50 outline-none transition-colors"
                   />
                 </div>
-                <p className="text-[10px] text-nofx-text-muted mt-3 leading-relaxed relative z-10">
-                  {language === 'zh' ? '无论左侧提取多少数据，经过严苛的本金与存活期清洗后，最多只允许此数量的候选者见 AI。' : 'Max number of survivors allowed to pass to AI after strict pipeline filtration.'}
-                </p>
               </div>
+
+              <div className="p-3 bg-nofx-bg rounded border border-nofx-border relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-16 h-16 bg-red-500/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                <div className="text-sm font-medium text-nofx-text mb-2 relative z-10">
+                  {t('blackboxLimitB')}
+                </div>
+                <div className="flex items-center gap-2 relative z-10">
+                  <input
+                    type="number"
+                    value={config.blackbox_random_b ?? 3}
+                    onChange={(e) => !disabled && onChange({ ...config, blackbox_random_b: Math.max(0, parseInt(e.target.value) || 0) })}
+                    disabled={disabled}
+                    min={0}
+                    className="w-full px-3 py-2 rounded text-base font-bold bg-nofx-bg-lighter border border-red-500/30 text-nofx-text text-center focus:border-red-500/50 outline-none transition-colors"
+                  />
+                </div>
+              </div>
+
+              <p className="text-[10px] text-nofx-text-muted mt-3 leading-relaxed relative z-10">
+                {language === 'zh' ? '主流资产(BTC/ETH/SOL)将被自动过滤。静态列表将免检并入；动态标的则被切分为 [A只最高流动性 + B只池内随机盲抽]，最终合并提交大模型发审。' : 'Majors (BTC/ETH/SOL) are excluded automatically. Static coins bypass filter. Dynamic coins are sliced into [A (Top Volume) + B (Random)] and merged for AI review.'}
+              </p>
             </div>
 
           </div>
@@ -783,7 +804,7 @@ export function CoinSourceEditor({
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-nofx-text-muted">{t('mixedSummary')}:</span>
                   <span className="text-nofx-text font-medium">
-                    {sources.join(' + ')} <span className="text-nofx-text-muted mx-1">➜</span> {t('blackboxLimit')}: {config.blackbox_cutoff_limit || 5}
+                    {sources.join(' + ')} <span className="text-nofx-text-muted mx-1">➜</span> [Static] + {config.blackbox_fixed_a ?? 2}A + {config.blackbox_random_b ?? 3}B
                   </span>
                 </div>
               </div>
