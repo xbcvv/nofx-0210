@@ -470,7 +470,6 @@ func (e *StrategyEngine) GetCandidateCoins() ([]CandidateCoin, error) {
 			}
 			return e.filterExcludedCoins(candidates), nil
 		}
-		}
 		coins, err := e.getAI500Coins(coinSource.AI500Limit, coinSource.AI500FetchAll)
 		if err != nil {
 			return nil, err
