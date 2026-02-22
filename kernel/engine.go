@@ -13,6 +13,7 @@ import (
 	"nofx/security"
 	"nofx/store"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 )
@@ -469,7 +470,8 @@ func (e *StrategyEngine) GetCandidateCoins() ([]CandidateCoin, error) {
 			}
 			return e.filterExcludedCoins(candidates), nil
 		}
-		coins, err := e.getAI500Coins(coinSource.AI500Limit)
+		}
+		coins, err := e.getAI500Coins(coinSource.AI500Limit, coinSource.AI500FetchAll)
 		if err != nil {
 			return nil, err
 		}
@@ -518,12 +520,23 @@ func (e *StrategyEngine) GetCandidateCoins() ([]CandidateCoin, error) {
 
 	case "mixed":
 		if coinSource.UseAI500 {
-			poolCoins, err := e.getAI500Coins(coinSource.AI500Limit)
+			poolCoins, err := e.getAI500Coins(coinSource.AI500Limit, coinSource.AI500FetchAll)
 			if err != nil {
 				logger.Infof("⚠️  Failed to get AI500 coins: %v", err)
 			} else {
 				for _, coin := range poolCoins {
 					symbolSources[coin.Symbol] = append(symbolSources[coin.Symbol], "ai500")
+				}
+			}
+		}
+
+		if coinSource.UseBinanceTopVol {
+			volCoins, err := e.getBinanceTopVolCoins(coinSource.BinanceTopVolLimit)
+			if err != nil {
+				logger.Infof("⚠️  Failed to get Binance Top Volume coins: %v", err)
+			} else {
+				for _, coin := range volCoins {
+					symbolSources[coin.Symbol] = append(symbolSources[coin.Symbol], "binance_top_vol")
 				}
 			}
 		}
@@ -559,13 +572,27 @@ func (e *StrategyEngine) GetCandidateCoins() ([]CandidateCoin, error) {
 			}
 		}
 
-		for symbol, sources := range symbolSources {
+		// Sort symbols to ensure deterministic processing order
+		var sortedSymbols []string
+		for symbol := range symbolSources {
+			sortedSymbols = append(sortedSymbols, symbol)
+		}
+		sort.Strings(sortedSymbols)
+
+		for _, symbol := range sortedSymbols {
 			candidates = append(candidates, CandidateCoin{
 				Symbol:  symbol,
-				Sources: sources,
+				Sources: symbolSources[symbol],
 			})
 		}
-		return e.filterExcludedCoins(candidates), nil
+		
+		filtered := e.filterExcludedCoins(candidates)
+		
+		// Apply global BlackboxCutoffLimit for mixed mode
+		if coinSource.BlackboxCutoffLimit > 0 && len(filtered) > coinSource.BlackboxCutoffLimit {
+			filtered = filtered[:coinSource.BlackboxCutoffLimit]
+		}
+		return filtered, nil
 
 	default:
 		return nil, fmt.Errorf("unknown coin source type: %s", coinSource.SourceType)
@@ -598,9 +625,13 @@ func (e *StrategyEngine) filterExcludedCoins(candidates []CandidateCoin) []Candi
 	return filtered
 }
 
-func (e *StrategyEngine) getAI500Coins(limit int) ([]CandidateCoin, error) {
-	if limit <= 0 {
+func (e *StrategyEngine) getAI500Coins(limit int, fetchAll bool) ([]CandidateCoin, error) {
+	if limit <= 0 && !fetchAll {
 		limit = 30
+	}
+	cleanLimit := limit
+	if fetchAll {
+		cleanLimit = 0
 	}
 
 	// 获取足够多的大名单供底层安全过滤池洗刷
@@ -611,11 +642,11 @@ func (e *StrategyEngine) getAI500Coins(limit int) ([]CandidateCoin, error) {
 
 	var finalSymbols []string
 	if filter.GlobalCoinFilter != nil {
-		finalSymbols = filter.GlobalCoinFilter.GetCleanCoins(rawSymbols, limit)
+		finalSymbols = filter.GlobalCoinFilter.GetCleanCoins(rawSymbols, cleanLimit)
 	} else {
 		finalSymbols = rawSymbols
-		if len(finalSymbols) > limit {
-			finalSymbols = finalSymbols[:limit]
+		if cleanLimit > 0 && len(finalSymbols) > cleanLimit {
+			finalSymbols = finalSymbols[:cleanLimit]
 		}
 	}
 
@@ -624,6 +655,30 @@ func (e *StrategyEngine) getAI500Coins(limit int) ([]CandidateCoin, error) {
 		candidates = append(candidates, CandidateCoin{
 			Symbol:  symbol,
 			Sources: []string{"ai500"},
+		})
+	}
+	return candidates, nil
+}
+
+func (e *StrategyEngine) getBinanceTopVolCoins(limit int) ([]CandidateCoin, error) {
+	if limit <= 0 {
+		limit = 100
+	}
+
+	var finalSymbols []string
+	if filter.GlobalCoinFilter != nil {
+		rawSymbols := filter.GlobalCoinFilter.GetTopVolumeCoins(limit * 2) // Fetch more to allow filtering
+		finalSymbols = filter.GlobalCoinFilter.GetCleanCoins(rawSymbols, limit)
+	} else {
+		logger.Infof("⚠️  GlobalCoinFilter is nil, cannot fetch top volume coins")
+		return nil, nil
+	}
+
+	var candidates []CandidateCoin
+	for _, symbol := range finalSymbols {
+		candidates = append(candidates, CandidateCoin{
+			Symbol:  symbol,
+			Sources: []string{"binance_top_vol"},
 		})
 	}
 	return candidates, nil

@@ -517,7 +517,15 @@ export interface CoinSourceConfig {
   static_coins?: string[];
   excluded_coins?: string[];   // 排除的币种列表
   use_ai500: boolean;
+  ai500_fetch_all?: boolean;
   ai500_limit?: number;
+
+  use_binance_top_vol?: boolean;
+  binance_top_vol_limit?: number;
+  binance_filter_interval?: number;
+
+  blackbox_cutoff_limit?: number;
+
   use_oi_top: boolean;
   oi_top_limit?: number;
   use_oi_low: boolean;

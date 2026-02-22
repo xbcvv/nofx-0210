@@ -117,8 +117,21 @@ type CoinSourceConfig struct {
 	ExcludedCoins []string `json:"excluded_coins,omitempty"`
 	// whether to use AI500 coin pool
 	UseAI500 bool `json:"use_ai500"`
+	// AI500 fetch all
+	AI500FetchAll bool `json:"ai500_fetch_all,omitempty"`
 	// AI500 coin pool maximum count
 	AI500Limit int `json:"ai500_limit,omitempty"`
+	
+	// whether to use Binance Top Volume source
+	UseBinanceTopVol bool `json:"use_binance_top_vol,omitempty"`
+	// Binance Top Volume limit
+	BinanceTopVolLimit int `json:"binance_top_vol_limit,omitempty"`
+	// Binance Filter Interval (in minutes)
+	BinanceFilterInterval int `json:"binance_filter_interval,omitempty"`
+
+	// Blackbox limit (how many candidates finally passed to AI)
+	BlackboxCutoffLimit int `json:"blackbox_cutoff_limit,omitempty"`
+
 	// whether to use OI Top (持仓增加榜，适合做多)
 	UseOITop bool `json:"use_oi_top"`
 	// OI Top maximum count

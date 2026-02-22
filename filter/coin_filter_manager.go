@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -123,6 +124,42 @@ func (m *CoinFilterManager) GetCleanCoins(rawSymbols []string, limit int) []stri
 	}
 
 	return survived
+}
+
+// GetTopVolumeCoins returns the top N coins by 24h quote volume from the local cache
+func (m *CoinFilterManager) GetTopVolumeCoins(limit int) []string {
+	m.cacheMux.RLock()
+	defer m.cacheMux.RUnlock()
+
+	type coinVol struct {
+		symbol string
+		vol    float64
+	}
+
+	var vols []coinVol
+	for symbol, ticker := range m.tickerCache {
+		// Only consider USDT pairs
+		if !strings.HasSuffix(symbol, "USDT") {
+			continue
+		}
+		vol, _ := strconv.ParseFloat(ticker.QuoteVolume, 64)
+		vols = append(vols, coinVol{symbol: symbol, vol: vol})
+	}
+
+	// Sort descending by volume
+	sort.Slice(vols, func(i, j int) bool {
+		return vols[i].vol > vols[j].vol
+	})
+
+	var result []string
+	for i, cv := range vols {
+		if limit > 0 && i >= limit {
+			break
+		}
+		result = append(result, cv.symbol)
+	}
+
+	return result
 }
 
 // daemonLoop updates the cache every 30 minutes
