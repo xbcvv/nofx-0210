@@ -10,7 +10,11 @@
         "ETHUSDT"
       ],
       "use_ai500": true,
+      "ai500_fetch_all": true,
       "ai500_limit": 5,
+      "use_binance_top_vol": true,
+      "binance_top_vol_limit": 100,
+      "binance_filter_interval": 30,
       "use_oi_top": false,
       "oi_top_limit": 10,
       "use_oi_low": false,
@@ -93,6 +97,6 @@
       "include_market_data": true
     }
   },
-  "exported_at": "2026-02-22T01:06:59.994Z",
+  "exported_at": "2026-02-22T05:36:28.308Z",
   "version": "1.0"
 }

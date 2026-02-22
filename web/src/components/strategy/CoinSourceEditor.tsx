@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Plus, X, Database, TrendingUp, TrendingDown, List, Ban, Zap, Shuffle } from 'lucide-react'
 import type { CoinSourceConfig } from '../../types'
 
@@ -17,6 +17,23 @@ export function CoinSourceEditor({
 }: CoinSourceEditorProps) {
   const [newCoin, setNewCoin] = useState('')
   const [newExcludedCoin, setNewExcludedCoin] = useState('')
+
+  // 确保当进入 mixed 模式时，遗漏的参数能获得强制赋予
+  useEffect(() => {
+    if (config.source_type === 'mixed' && !disabled) {
+      let changed = false;
+      const newConfig = { ...config };
+      if (newConfig.blackbox_cutoff_limit === undefined) { newConfig.blackbox_cutoff_limit = 5; changed = true; }
+      if (newConfig.use_binance_top_vol === undefined) { newConfig.use_binance_top_vol = false; changed = true; }
+      if (newConfig.binance_top_vol_limit === undefined) { newConfig.binance_top_vol_limit = 100; changed = true; }
+      if (newConfig.binance_filter_interval === undefined) { newConfig.binance_filter_interval = 30; changed = true; }
+
+      if (changed) {
+        // 使用 setTimeout 避免在渲染阶段直接引发更新警报
+        setTimeout(() => onChange(newConfig), 0);
+      }
+    }
+  }, [config.source_type, disabled]);
 
   const t = (key: string) => {
     const translations: Record<string, Record<string, string>> = {
@@ -496,8 +513,8 @@ export function CoinSourceEditor({
               {/* AI500 */}
               <div
                 className={`p-3 rounded-lg border transition-all cursor-pointer ${config.use_ai500
-                    ? 'bg-nofx-gold/10 border-nofx-gold/50'
-                    : 'bg-nofx-bg border-nofx-border hover:border-nofx-gold/30'
+                  ? 'bg-nofx-gold/10 border-nofx-gold/50'
+                  : 'bg-nofx-bg border-nofx-border hover:border-nofx-gold/30'
                   }`}
                 onClick={() => !disabled && onChange({ ...config, use_ai500: !config.use_ai500, ai500_fetch_all: !config.use_ai500 ? true : config.ai500_fetch_all })}
               >
@@ -546,8 +563,8 @@ export function CoinSourceEditor({
               {/* Binance Top Volume */}
               <div
                 className={`p-3 rounded-lg border transition-all cursor-pointer ${config.use_binance_top_vol
-                    ? 'bg-nofx-success/10 border-nofx-success/50'
-                    : 'bg-nofx-bg border-nofx-border hover:border-nofx-success/30'
+                  ? 'bg-nofx-success/10 border-nofx-success/50'
+                  : 'bg-nofx-bg border-nofx-border hover:border-nofx-success/30'
                   }`}
                 onClick={() => !disabled && onChange({ ...config, use_binance_top_vol: !config.use_binance_top_vol, binance_top_vol_limit: !config.use_binance_top_vol ? 100 : config.binance_top_vol_limit, binance_filter_interval: config.binance_filter_interval || 30 })}
               >

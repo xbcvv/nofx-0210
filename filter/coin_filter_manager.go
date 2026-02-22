@@ -54,7 +54,7 @@ func InitGlobalCoinFilter() {
 
 	GlobalCoinFilter = &CoinFilterManager{
 		config:       DefaultFilterConfig,
-		apiClient:    market.NewAPIClient(),
+		apiClient:    market.NewAPIClientWithTimeout(30 * time.Second),
 		tickerCache:  make(map[string]market.Ticker24hr),
 		oiCache:      make(map[string]float64),
 		listingCache: make(map[string]int64),
