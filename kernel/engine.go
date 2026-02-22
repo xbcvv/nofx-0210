@@ -571,12 +571,17 @@ func (e *StrategyEngine) GetCandidateCoins() ([]CandidateCoin, error) {
 			}
 		}
 
-		// Sort symbols to ensure deterministic processing order
+		// Sort symbols to pick the best liquidity stars
 		var sortedSymbols []string
 		for symbol := range symbolSources {
 			sortedSymbols = append(sortedSymbols, symbol)
 		}
-		sort.Strings(sortedSymbols)
+		
+		if filter.GlobalCoinFilter != nil {
+			sortedSymbols = filter.GlobalCoinFilter.SortByVolumeDescending(sortedSymbols)
+		} else {
+			sort.Strings(sortedSymbols)
+		}
 
 		for _, symbol := range sortedSymbols {
 			candidates = append(candidates, CandidateCoin{

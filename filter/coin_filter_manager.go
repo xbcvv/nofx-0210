@@ -162,6 +162,41 @@ func (m *CoinFilterManager) GetTopVolumeCoins(limit int) []string {
 	return result
 }
 
+// SortByVolumeDescending sorts a given list of symbols descending by their 24h quote volume
+func (m *CoinFilterManager) SortByVolumeDescending(symbols []string) []string {
+	m.cacheMux.RLock()
+	defer m.cacheMux.RUnlock()
+
+	type coinVol struct {
+		symbol string
+		vol    float64
+	}
+	var vols []coinVol
+
+	for _, symbol := range symbols {
+		vol := 0.0
+		if ticker, ok := m.tickerCache[symbol]; ok {
+			v, err := strconv.ParseFloat(ticker.QuoteVolume, 64)
+			if err == nil {
+				vol = v
+			}
+		}
+		vols = append(vols, coinVol{symbol: symbol, vol: vol})
+	}
+
+	// Sort descending by volume
+	sort.SliceStable(vols, func(i, j int) bool {
+		return vols[i].vol > vols[j].vol
+	})
+
+	var result []string
+	for _, cv := range vols {
+		result = append(result, cv.symbol)
+	}
+
+	return result
+}
+
 // daemonLoop updates the cache every 30 minutes
 func (m *CoinFilterManager) daemonLoop() {
 	// First immediate run
