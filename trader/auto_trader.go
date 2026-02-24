@@ -631,6 +631,9 @@ func (at *AutoTrader) runCycle() error {
 			decisionJSON, _ := json.MarshalIndent(aiDecision.Decisions, "", "  ")
 			record.DecisionJSON = string(decisionJSON)
 		}
+
+		// Asynchronously persist raw output to rolling JSON shards (avoids Telegram truncation issues)
+		logger.SaveRawDecision(at.name, aiDecision.CoTTrace, aiDecision.RawResponse)
 	}
 
 	if err != nil {
