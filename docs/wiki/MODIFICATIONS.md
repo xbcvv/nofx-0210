@@ -142,3 +142,9 @@ func (at *AutoTrader) executeHoldWithRecord(decision *kernel.Decision, actionRec
 1. **防 Goroutine 雪崩**: 修复了由于上游网络（如币安或 Telegram API）受阻导致底层 HTTP 客户端默认的 30 秒长轮询在批量拉取 K 线数据时，形成高达数十分钟的堵塞列队，最终导致 AI 分析循环完全死机静默的重大缺陷。
 2. **熔断极速降级**: 将 `http.Client` 的请求超时限制强制从 30s 缩减为 5s。现在一遭遇网络断流阻断，系统将迅速抛出超时并忽略本轮（非致命错误），从而保障 3 分钟定时扫描器永远可以顺畅抵达下一个周期并发车。
 
+### 12.4 Async Raw Logger (Zero-Truncation AI CoT Archiving)
+**修改文件**: `logger/raw_logger.go`, `trader/auto_trader.go`
+**描述**: 
+1. **解决 Telegram 截断**: Telegram 机器人存在字数和排版超限问题，长期导致 AI 推理过程 (CoT) 的尾部遭到无情剪裁，无法有效回溯失败的策略推导链。系统通过将纯净的大模型完整回答 JSON，剥离成旁路的硬盘直写机制，实现完全的推演复盘透明度。
+2. **零开销与 GC 自清理**: 将日志按整点切割独占 `decisions_YYYYMMDD_HH.json` 的方式锚定于只读的 `data/raw/` 目录。因为采用了底层 Goroutine 协程异步，不仅对交易主干发单毫无延迟损伤，同时还内建了安全卫士微型垃圾回收器：系统始终平滑地只保留最新 12 小时的原始文档，有效防御 VPS 挂载卷被常年长机时记录撑爆！
+
