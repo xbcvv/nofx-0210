@@ -1,0 +1,11 @@
+services:
+  nofx:
+    environment:
+      - DATA_ENCRYPTION_KEY=NdC9VqEBjoBpNrl1E0+daUmQckX8ALM5DaaEfwqUF5I=
+      - RSA_PRIVATE_KEY=/run/secrets/rsa_key
+    secrets:
+      - rsa_key
+
+secrets:
+  rsa_key:
+    file: /tmp/rsa_private.pem

@@ -1,0 +1,108 @@
+# NOFX Strategy Evolver 配置
+evolution:
+  # 本地数据路径
+  data_dir: "data"
+  output_dir: "docs/openclaw"
+  strategy_dir: "docs/openclaw/strategies"
+  
+  # 数据库配置
+  database:
+    path: "data/data.db"
+    backup_before_evolution: true
+  
+  # EvoMap 集成配置
+  evomap:
+    enabled: true
+    api_base: "https://evomap.ai/api/v1"
+    agent_name: "xh_lx024"
+    
+    # 自动发布设置
+    auto_publish: true
+    min_improvement_for_publish: 10  # 改进>10%才发布
+    
+    # 基因检索设置
+    auto_search: true
+    min_gene_rating: 4.0
+    max_genes_per_search: 5
+    search_signals:
+      - "consecutive_losses"
+      - "market_regime"
+      - "symbol_specific"
+    
+    # 声誉设置
+    track_reputation: true
+    credit_threshold: 100
+  
+  # 分析参数
+  analysis:
+    # 时间设置
+    hourly_interval: 5  # 每小时第5分钟
+    daily_time: "00:10"  # 每天00:10
+    timezone: "Asia/Shanghai"
+    
+    # 告警阈值
+    min_confidence_threshold: 76
+    max_drawdown_alert: 10  # 百分比
+    consecutive_losses_alert: 3
+    single_loss_alert: 50  # USDT
+    
+    # 分析维度
+    dimensions:
+      - decision_quality
+      - execution_efficiency
+      - profit_loss_distribution
+      - symbol_performance
+      - time_pattern
+      - indicator_effectiveness
+  
+  # 基因融合参数
+  fusion:
+    # 自动应用策略
+    auto_apply_low_risk: true
+    manual_review_high_risk: true
+    
+    # 风险分级
+    risk_thresholds:
+      low: 0.3    # 参数微调，自动应用
+      medium: 0.6 # 结构变更，A/B测试
+      high: 0.9   # 核心逻辑变更，人工审核
+    
+    # A/B测试
+    ab_test_enabled: true
+    ab_test_duration: 3  # 天
+    ab_test_threshold: 0.7  # 胜率提升阈值
+    
+    # 融合限制
+    max_daily_fusions: 3
+    max_imported_genes: 5
+    
+    # 冲突解决
+    conflict_resolution: "smart_merge"  # smart_merge / conservative / aggressive
+  
+  # 报告设置
+  reporting:
+    format: "markdown"
+    include_raw_data: false
+    include_charts: false  # 未来支持
+    auto_commit: false  # 自动提交到GitHub
+    
+    # 通知设置
+    notifications:
+      telegram: true
+      telegram_user_id: "5189839048"
+      alert_on_anomaly: true
+      daily_summary: true
+  
+  # 回滚设置
+  rollback:
+    enabled: true
+    keep_history: 30  # 天
+    auto_rollback_on_failure: true
+    failure_threshold: 5  # 连续亏损笔数触发回滚
+
+# 日志设置
+logging:
+  level: "INFO"
+  file: "logs/evolver.log"
+  max_size: "10MB"
+  backup_count: 7

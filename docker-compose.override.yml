@@ -1,24 +1,24 @@
 services:
   # Backend service (API and core logic)
   nofx:
-    image: qdw1010/nofx-backend:openclaw
     build:
       context: .
       dockerfile: ./docker/Dockerfile.backend
     container_name: nofx-trading
     restart: unless-stopped
-    stop_grace_period: 30s  # 允许应用有 30 秒时间优雅关闭
+    stop_grace_period: 30s
     ports:
       - "${NOFX_BACKEND_PORT:-8080}:8080"
-      - "6060:6060"  # pprof profiling
+      - "6060:6060"
     volumes:
       - ./data:/app/data
       - /etc/localtime:/etc/localtime:ro
-    env_file:
-      - .env
     environment:
-      - TZ=${TZ:-Asia/Shanghai}
+      - TZ=Asia/Shanghai
       - AI_MAX_TOKENS=8000
+      - DATA_ENCRYPTION_KEY=${DATA_ENCRYPTION_KEY}
+      - RSA_PRIVATE_KEY=${RSA_PRIVATE_KEY}
+      - TRANSPORT_ENCRYPTION=false
     networks:
       - nofx-network
     healthcheck:
@@ -30,7 +30,6 @@ services:
 
   # Frontend service (static serving and proxy)
   nofx-frontend:
-    image: qdw1010/nofx-frontend:openclaw
     build:
       context: .
       dockerfile: ./docker/Dockerfile.frontend

@@ -1090,7 +1090,16 @@ func (e *StrategyEngine) BuildSystemPrompt(accountEquity float64, variant string
 	schemaPrompt := GetSchemaPrompt(lang)
 	sb.WriteString(schemaPrompt)
 	sb.WriteString("\n\n")
-	sb.WriteString("---\n\n")
+
+	// 0.1 Dynamic Strategic Override (OpenClaw Commander)
+	overrideText := filter.GetDynamicOverrideText()
+	if overrideText != "" {
+		sb.WriteString("## 🚨 COMMAND OVERRIDE (HIGHEST PRIORITY)\n")
+		sb.WriteString(overrideText)
+		sb.WriteString("\n\n---\n\n")
+	} else {
+		sb.WriteString("---\n\n")
+	}
 
 	// 1. Role definition (editable)
 	if promptSections.RoleDefinition != "" {
