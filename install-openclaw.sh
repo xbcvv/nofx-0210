@@ -1,7 +1,8 @@
 #!/bin/bash
-# NOFX-OpenClaw 一键安装/更新脚本 (增强版 v1.1.2)
-# 修复路径问题：统一使用 /root/nofx
-# 修复变量问题：自动生成必要的加密 KEY
+# NOFX-OpenClaw 一键安装/更新脚本 (修正版 v1.1.3)
+# 修复：
+# 1. 保护现有的 .env 文件不被覆盖
+# 2. 修复 RSA 私钥格式问题 (直接写入 PEM 格式而非 Base64)
 
 set -e
 
@@ -13,7 +14,7 @@ echo "=========================================="
 echo "🚀 正在启动 NOFX-OpenClaw (OpenClaw 版)"
 echo "=========================================="
 
-# 1. 检查并处理目录 (强制使用 /root/nofx)
+# 1. 检查并处理目录
 if [ ! -d "$REPO_DIR" ]; then
     echo "📂 正在克隆仓库到 $REPO_DIR..."
     git clone -b $BRANCH $REPO_URL $REPO_DIR
@@ -22,7 +23,7 @@ else
     echo "✅ 目录 $REPO_DIR 已存在，进入目录..."
     cd $REPO_DIR
     if [ ! -d ".git" ]; then
-        echo "⚠️ 警告: 目录存在但不是 Git 仓库。正在备份并重新克隆..."
+        echo "⚠️ 警告: 目录存在但不是 Git 仓库。正在清理并重新克隆..."
         mv $REPO_DIR ${REPO_DIR}_backup_$(date +%s)
         git clone -b $BRANCH $REPO_URL $REPO_DIR
         cd $REPO_DIR
@@ -33,14 +34,13 @@ else
     fi
 fi
 
-# 2. 检查并生成环境变量 (.env)
+# 2. 检查并生成环境变量 (.env) - 增加保护逻辑
 if [ ! -f ".env" ]; then
     echo "📝 正在生成默认 .env 文件..."
-    # 生成随机的加密 KEY
     DATA_KEY=$(openssl rand -hex 32)
-    # 生成 RSA 私钥 (如果系统需要)
-    openssl genrsa -out rsa_private.key 2048
-    RSA_KEY=$(cat rsa_private.key | base64 -w 0)
+    # 修正：直接生成 PEM 格式的私钥并将其换行处理
+    openssl genrsa 2048 > rsa_private.key
+    RSA_KEY_CONTENT=$(cat rsa_private.key | sed ':a;N;$!ba;s/\n/\\n/g')
     rm rsa_private.key
 
     cat <<EOF > .env
@@ -48,10 +48,12 @@ TZ=Asia/Shanghai
 NOFX_BACKEND_PORT=8080
 NOFX_FRONTEND_PORT=3000
 DATA_ENCRYPTION_KEY=$DATA_KEY
-RSA_PRIVATE_KEY=$RSA_KEY
+RSA_PRIVATE_KEY="$RSA_KEY_CONTENT"
 TRANSPORT_ENCRYPTION=false
 EOF
-    echo "✅ .env 文件已生成，包含自动生成的安全密钥。"
+    echo "✅ 新 .env 文件已生成。"
+else
+    echo "✅ 发现现有的 .env 文件，已跳过生成，保留原有配置。"
 fi
 
 # 3. 拉取专属镜像
@@ -64,6 +66,5 @@ docker compose up -d
 
 echo "=========================================="
 echo "✅ NOFX-OpenClaw 已成功运行！"
-echo "📊 路径: $REPO_DIR"
 echo "🌐 访问: http://你的服务器IP:3000"
 echo "=========================================="
