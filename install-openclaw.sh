@@ -1,7 +1,7 @@
 #!/bin/bash
 # NOFX-OpenClaw 一键安装/更新脚本 (增强版 - 支持全新安装)
-# 版本: 1.1.0
-# 镜像: qdw1010/nofx-*:openclaw
+# 版本: 1.1.1
+# 镜像: qdw1010/nofx-backend:openclaw, qdw1010/nofx-frontend:openclaw
 
 set -e
 
