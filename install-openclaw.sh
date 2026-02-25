@@ -14,7 +14,7 @@ echo "=========================================="
 echo "🚀 正在启动 NOFX-OpenClaw (OpenClaw 版)"
 echo "=========================================="
 
-# 1. 检查并处理目录
+# 1. 检查并处理目录 (安全更新模式)
 if [ ! -d "$REPO_DIR" ]; then
     echo "📂 正在克隆仓库到 $REPO_DIR..."
     git clone -b $BRANCH $REPO_URL $REPO_DIR
@@ -22,15 +22,17 @@ if [ ! -d "$REPO_DIR" ]; then
 else
     echo "✅ 目录 $REPO_DIR 已存在，进入目录..."
     cd $REPO_DIR
-    if [ ! -d ".git" ]; then
-        echo "⚠️ 警告: 目录存在但不是 Git 仓库。正在清理并重新克隆..."
-        mv $REPO_DIR ${REPO_DIR}_backup_$(date +%s)
-        git clone -b $BRANCH $REPO_URL $REPO_DIR
-        cd $REPO_DIR
-    else
-        echo "🔄 正在同步代码..."
+    if [ -d ".git" ]; then
+        echo "🔄 正在同步代码 (保留数据与环境配置)..."
         git fetch origin $BRANCH
         git reset --hard origin/$BRANCH
+    else
+        echo "⚠️ 警告: 目录存在但不是 Git 仓库。正在执行安全就地转换..."
+        # 在临时目录克隆，只移动 Git 核心文件，确保不触碰现有数据
+        git clone -b $BRANCH --depth 1 $REPO_URL /tmp/nofx_tmp
+        cp -r /tmp/nofx_tmp/.git .
+        git reset --hard origin/$BRANCH
+        rm -rf /tmp/nofx_tmp
     fi
 fi
 
