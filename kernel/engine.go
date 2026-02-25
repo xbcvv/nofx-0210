@@ -599,9 +599,9 @@ func (e *StrategyEngine) GetCandidateCoins() ([]CandidateCoin, error) {
 		}
 
 		// Sort static coins too for clean output
-		if filter.GlobalCoinFilter != nil {
-			finalSymbols = filter.GlobalCoinFilter.SortByVolumeDescending(finalSymbols)
-			dynamicPool = filter.GlobalCoinFilter.SortByVolumeDescending(dynamicPool)
+		if commander.GlobalCoinFilter != nil {
+			finalSymbols = commander.GlobalCoinFilter.SortByVolumeDescending(finalSymbols)
+			dynamicPool = commander.GlobalCoinFilter.SortByVolumeDescending(dynamicPool)
 		} else {
 			sort.Strings(finalSymbols)
 			sort.Strings(dynamicPool)
@@ -710,8 +710,8 @@ func (e *StrategyEngine) getAI500Coins(limit int, fetchAll bool) ([]CandidateCoi
 	}
 
 	var finalSymbols []string
-	if filter.GlobalCoinFilter != nil {
-		finalSymbols = filter.GlobalCoinFilter.GetCleanCoins(rawSymbols, cleanLimit)
+	if commander.GlobalCoinFilter != nil {
+		finalSymbols = commander.GlobalCoinFilter.GetCleanCoins(rawSymbols, cleanLimit)
 	} else {
 		finalSymbols = rawSymbols
 		if cleanLimit > 0 && len(finalSymbols) > cleanLimit {
@@ -735,9 +735,9 @@ func (e *StrategyEngine) getBinanceTopVolCoins(limit int) ([]CandidateCoin, erro
 	}
 
 	var finalSymbols []string
-	if filter.GlobalCoinFilter != nil {
-		rawSymbols := filter.GlobalCoinFilter.GetTopVolumeCoins(limit * 2) // Fetch more to allow filtering
-		finalSymbols = filter.GlobalCoinFilter.GetCleanCoins(rawSymbols, limit)
+	if commander.GlobalCoinFilter != nil {
+		rawSymbols := commander.GlobalCoinFilter.GetTopVolumeCoins(limit * 2) // Fetch more to allow filtering
+		finalSymbols = commander.GlobalCoinFilter.GetCleanCoins(rawSymbols, limit)
 	} else {
 		logger.Infof("⚠️  GlobalCoinFilter is nil, cannot fetch top volume coins")
 		return nil, nil
