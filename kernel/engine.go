@@ -6,7 +6,7 @@ import (
 	"io"
 	"math/rand"
 	"net/http"
-	"nofx/filter"
+	commander "nofx/filter"
 	"nofx/logger"
 	"nofx/market"
 	"nofx/mcp"
@@ -1092,7 +1092,7 @@ func (e *StrategyEngine) BuildSystemPrompt(accountEquity float64, variant string
 	sb.WriteString("\n\n")
 
 	// 0.1 Dynamic Strategic Override (OpenClaw Commander)
-	overrideText := filter.GetDynamicOverrideText()
+	overrideText := commander.GetDynamicOverrideText()
 	if overrideText != "" {
 		sb.WriteString("## 🚨 COMMAND OVERRIDE (HIGHEST PRIORITY)\n")
 		sb.WriteString(overrideText)
